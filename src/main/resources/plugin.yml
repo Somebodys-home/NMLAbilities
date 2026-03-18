@@ -2,3 +2,12 @@ name: NMLAbilities
 version: '1.0'
 main: io.github.NoOne.nMLAbilities.NMLAbilities
 api-version: '1.21'
+depend:
+  - DamagePlugin
+  - NMLEnergySystem
+  - NMLShields
+  - NMLWeapons
+commands:
+  expertise:
+    description: Opens the menu to choose your expertise
+    usage: /<command>

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.NoOne</groupId>
-    <artifactId>NMLAbilities</artifactId>
+    <artifactId>nmlAbilities</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>NMLAbilities</name>
+    <name>nmlAbilities</name>
 
     <properties>
         <java.version>21</java.version>
@@ -41,6 +41,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <outputDirectory>C:\Users\hypix\OneDrive\Desktop\No Man's Land\plugins</outputDirectory>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -55,6 +63,10 @@
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -62,6 +74,60 @@
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.21.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>MenuSystem</artifactId>
+            <version>778b7799bf</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>DamagePlugin</artifactId>
+            <version>92e6da6292</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLEnergySystem</artifactId>
+            <version>4dd6002d90</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLItems</artifactId>
+            <version>6bbfaab858</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLShields</artifactId>
+            <version>1b46ca0411</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLPlayerStats</artifactId>
+            <version>391cb009ca</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLSkills</artifactId>
+            <version>8623857344</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLWeapons</artifactId>
+            <version>2048f319a3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
