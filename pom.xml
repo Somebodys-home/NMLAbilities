@@ -32,6 +32,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.5.3</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -86,7 +90,6 @@
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>MenuSystem</artifactId>
             <version>778b7799bf</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
@@ -103,7 +106,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>6bbfaab858</version>
+            <version>6d1d0cfaaa</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

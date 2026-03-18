@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus;
 
+import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -7,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExpertiseMenuItems {
     private final Skills skills;
@@ -17,205 +19,204 @@ public class ExpertiseMenuItems {
 
     public ItemStack soldier() {
         double percent = skills.getSoldierExp() / skills.getExp2LvlUpSoldier() * 100.0;
-        ItemStack soldier = new ItemStack(Material.IRON_SWORD);
-        ItemMeta meta = soldier.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
+        ItemStack soldier = ItemCreator.createItem(
+                Material.IRON_SWORD,
+                1,
+                "§fLv. " + skills.getSoldierLevel() +  " §c§lSoldier",
+                List.of(
+                        "§8" + skills.getSoldierExp() + " / " + skills.getExp2LvlUpSoldier() + " exp (" + percent + "%)",
+                        "",
+                        "§7Me when military proletarianism is kinda based actually",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
+        ItemMeta itemMeta = soldier.getItemMeta();
 
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setDisplayName("§fLv. " + skills.getSoldierLevel() +  " §c§lSoldier");
-        lore.add("§8" + skills.getCombatExp() + " / " + skills.getExp2LvlUpCombat() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Me when military proletarianism is kinda based actually");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        soldier.setItemMeta(meta);
-
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        soldier.setItemMeta(itemMeta);
         return soldier;
     }
 
     public ItemStack assassin() {
         double percent = skills.getAssassinExp() / skills.getExp2LvlUpAssassin() * 100.0;
-        ItemStack assassin = new ItemStack(Material.BLACK_WOOL);
-        ItemMeta meta = assassin.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getAssassinLevel() +  " §0§lAssassin");
-        lore.add("§8" + skills.getAssassinExp() + " / " + skills.getExp2LvlUpAssassin() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7\"Hey what do you got there?\"");
-        lore.add( "§7\"A knife!\"");
-        lore.add("§7\"NO!\"");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        assassin.setItemMeta(meta);
-
-        return assassin;
+        return ItemCreator.createItem(
+                Material.BLACK_WOOL,
+                1,
+                "§fLv. " + skills.getAssassinLevel() +  " §0§lAssassin",
+                List.of(
+                        "§8" + skills.getAssassinExp() + " / " + skills.getExp2LvlUpAssassin() + " exp (" + percent + "%)",
+                        "",
+                        "§7\"Hey what do you got there?\"",
+                        "§7\"A knife!\"",
+                        "§7\"NO!\"",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack marauder() {
         double percent = skills.getMarauderExp() / skills.getExp2LvlUpMarauder() * 100.0;
-        ItemStack marauder = new ItemStack(Material.IRON_AXE);
-        ItemMeta meta = marauder.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
+        ItemStack marauder = ItemCreator.createItem(
+                Material.IRON_AXE,
+                1,
+                "§fLv. " + skills.getMarauderLevel() +  " §4§lMarauder",
+                List.of(
+                        "§8" + skills.getMarauderExp() + " / " + skills.getExp2LvlUpMarauder() + " exp (" + percent + "%)",
+                        "",
+                        "§7Reject modernity, EMBRACE BARBARITY!",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
+        ItemMeta itemMeta = marauder.getItemMeta();
 
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setDisplayName("§fLv. " + skills.getMarauderLevel() +  " §4§lMarauder");
-        lore.add("§8" + skills.getMarauderExp() + " / " + skills.getExp2LvlUpMarauder() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Reject modernity, EMBRACE BARBARITY!");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        marauder.setItemMeta(meta);
-
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        marauder.setItemMeta(itemMeta);
         return marauder;
     }
 
     public ItemStack cavalier() {
         double percent = skills.getCavalierExp() / skills.getExp2LvlUpCavalier() * 100.0;
-        ItemStack cavalier = new ItemStack(Material.MACE);
-        ItemMeta meta = cavalier.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
+        ItemStack cavalier = ItemCreator.createItem(
+                Material.MACE,
+                1,
+                "§fLv. " + skills.getCavalierLevel() +  " §1§lCavalier",
+                List.of(
+                        "§8" + skills.getCavalierExp() + " / " + skills.getExp2LvlUpCavalier() + " exp (" + percent + "%)",
+                        "",
+                        "§7Unfortunately, this has nothing to do with horses.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
+        ItemMeta itemMeta = cavalier.getItemMeta();
 
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setDisplayName("§fLv. " + skills.getCavalierLevel() +  " §1§lCavalier");
-        lore.add("§8" + skills.getCavalierExp() + " / " + skills.getExp2LvlUpCavalier() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Unfortunately, this has nothing to do with horses.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        cavalier.setItemMeta(meta);
-
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        cavalier.setItemMeta(itemMeta);
         return cavalier;
     }
 
     public ItemStack martialArtist() {
         double percent = skills.getMartialArtistExp() / skills.getExp2LvlUpMartialArtist() * 100.0;
-        ItemStack martialArtist = new ItemStack(Material.RED_GLAZED_TERRACOTTA);
-        ItemMeta meta = martialArtist.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getMartialArtistLevel() +  " §4§lMartial Artist");
-        lore.add("§8" + skills.getMartialArtistExp() + " / " + skills.getExp2LvlUpCombat() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Beating up homeless people in the back alley of an Arby's™ pro max");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        martialArtist.setItemMeta(meta);
-
-        return martialArtist;
+        return ItemCreator.createItem(
+                Material.RED_GLAZED_TERRACOTTA,
+                1,
+                "§fLv. " + skills.getMartialArtistLevel() +  " §4§lMartial Artist",
+                List.of(
+                        "§8" + skills.getMartialArtistExp() + " / " + skills.getExp2LvlUpCombat() + " exp (" + percent + "%)",
+                        "",
+                        "§7Beating up homeless people in the back alley",
+                        "§7of an Arby's™ pro max",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack shieldHero() {
         double percent = skills.getShieldHeroExp() / skills.getExp2LvlUpShieldHero() * 100.0;
-        ItemStack shieldHero = new ItemStack(Material.SHIELD);
-        ItemMeta meta = shieldHero.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getShieldHeroLevel() +  " §3§lShield Hero");
-        lore.add("§8" + skills.getShieldHeroExp() + " / " + skills.getExp2LvlUpShieldHero() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Don't worry, you won't be hate crimed...hopefully.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        shieldHero.setItemMeta(meta);
-
-        return shieldHero;
+        return ItemCreator.createItem(
+                Material.SHIELD,
+                1,
+                "§fLv. " + skills.getShieldHeroLevel() +  " §3§lShield Hero",
+                List.of(
+                        "§8" + skills.getShieldHeroExp() + " / " + skills.getExp2LvlUpShieldHero() + " exp (" + percent + "%)",
+                        "",
+                        "§7Don't worry, you won't be hate crimed...hopefully.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack marksman() {
         double percent = skills.getMarksmanExp() / skills.getExp2LvlUpMarksman() * 100.0;
-        ItemStack marksman = new ItemStack(Material.BOW);
-        ItemMeta meta = marksman.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getMarksmanLevel() +  " §a§lMarksman");
-        lore.add("§8" + skills.getMarksmanExp() + " / " + skills.getExp2LvlUpMarksman() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7This is the closest you're getting to a gun.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        marksman.setItemMeta(meta);
-
-        return marksman;
+        return ItemCreator.createItem(
+                Material.BOW,
+                1,
+                "§fLv. " + skills.getMarksmanLevel() +  " §a§lMarksman",
+                List.of(
+                        "§8" + skills.getMarksmanExp() + " / " + skills.getExp2LvlUpMarksman() + " exp (" + percent + "%)",
+                        "",
+                        "§7This is the closest you're getting to a gun.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack sorcerer() {
         double percent = skills.getSorcererExp() / skills.getExp2LvlUpSorcerer() * 100.0;
-        ItemStack sorcerer = new ItemStack(Material.ENCHANTED_BOOK);
-        ItemMeta meta = sorcerer.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getSorcererLevel() +  " §6§lSorcerer");
-        lore.add("§8" + skills.getSorcererExp() + " / " + skills.getExp2LvlUpSorcerer() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7There's no I in team, but there's 6 Is in");
-        lore.add("§7§o\"F§kuck§r§7§o it, I don't care how big the room is, I cast fireball.\"");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        sorcerer.setItemMeta(meta);
-
-        return sorcerer;
+        return ItemCreator.createItem(
+                Material.ENCHANTED_BOOK,
+                1,
+                "§fLv. " + skills.getSorcererLevel() +  " §6§lSorcerer",
+                List.of(
+                        "§8" + skills.getSorcererExp() + " / " + skills.getExp2LvlUpSorcerer() + " exp (" + percent + "%)",
+                        "",
+                        "§7There's no I in team, but there's 6 Is in",
+                        "§7§o\"F§kuck§r§7§o it, I don't care how big the room is, I cast fireball.\"",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack primordial() {
         double percent = skills.getPrimordialExp() / skills.getExp2LvlUpPrimordial() * 100.0;
-        ItemStack primordial = new ItemStack(Material.OAK_SAPLING);
-        ItemMeta meta = primordial.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getPrimordialLevel() +  " §2§lPrimordial");
-        lore.add("§8" + skills.getPrimordialExp() + " / " + skills.getExp2LvlUpPrimordial() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7F§kuck§r§7in hippie.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        primordial.setItemMeta(meta);
-
-        return primordial;
+        return ItemCreator.createItem(
+                Material.OAK_SAPLING,
+                1,
+                "§fLv. " + skills.getPrimordialLevel() +  " §2§lPrimordial",
+                List.of(
+                        "§8" + skills.getPrimordialExp() + " / " + skills.getExp2LvlUpPrimordial() + " exp (" + percent + "%)",
+                        "",
+                        "§7F§kuck§r§7in hippie.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack hallowed() {
         double percent = skills.getHallowedExp() / skills.getExp2LvlUpHallowed() * 100.0;
-        ItemStack hallowed = new ItemStack(Material.OXEYE_DAISY);
-        ItemMeta meta = hallowed.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getHallowedLevel() +  " §f§lHallowed");
-        lore.add("§8" + skills.getHallowedExp() + " / " + skills.getExp2LvlUpHallowed() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Please just be normal.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        hallowed.setItemMeta(meta);
-
-        return hallowed;
+        return ItemCreator.createItem(
+                Material.OXEYE_DAISY,
+                1,
+                "§fLv. " + skills.getHallowedLevel() +  " §f§lHallowed",
+                List.of(
+                        "§8" + skills.getHallowedExp() + " / " + skills.getExp2LvlUpHallowed() + " exp (" + percent + "%)",
+                        "",
+                        "§7Please just be normal.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 
     public ItemStack annulled() {
         double percent = skills.getAnnulledExp() / skills.getExp2LvlUpAnnulled() * 100.0;
-        ItemStack annulled = new ItemStack(Material.CRYING_OBSIDIAN);
-        ItemMeta meta = annulled.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
 
-        meta.setDisplayName("§fLv. " + skills.getAnnulledLevel() +  " §5§lAnnulled");
-        lore.add("§8" + skills.getAnnulledExp() + " / " + skills.getExp2LvlUpAnnulled() + " exp (" + percent + "%)");
-        lore.add("");
-        lore.add("§7Welcome home.");
-        lore.add("");
-        lore.add("§bCLICK TO SELECT!");
-        meta.setLore(lore);
-        annulled.setItemMeta(meta);
-
-        return annulled;
+        return ItemCreator.createItem(
+                Material.CRYING_OBSIDIAN,
+                1,
+                "§fLv. " + skills.getAnnulledLevel() +  " §5§lAnnulled",
+                List.of(
+                        "§8" + skills.getAnnulledExp() + " / " + skills.getExp2LvlUpAnnulled() + " exp (" + percent + "%)",
+                        "",
+                        "§7Welcome home.",
+                        "",
+                        "§bCLICK TO SELECT!"
+                )
+        );
     }
 }

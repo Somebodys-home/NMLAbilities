@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities;
 
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -7,29 +8,18 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedCo
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist.MartialArtistAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist.MartialArtistListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererListener;
 import io.github.NoOne.menuSystem.MenuListener;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
@@ -84,17 +74,7 @@ public final class NMLAbilities extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new SelectedListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
-        getServer().getPluginManager().registerEvents(new SoldierListener(this), this);
-        getServer().getPluginManager().registerEvents(new AssassinListener(this), this);
-        getServer().getPluginManager().registerEvents(new MarauderListener(this), this);
-        getServer().getPluginManager().registerEvents(new CavalierListener(this), this);
-        getServer().getPluginManager().registerEvents(new MartialArtistListener(this), this);
-        getServer().getPluginManager().registerEvents(new ShieldHeroListener(this), this);
-        getServer().getPluginManager().registerEvents(new MarksmanListener(this), this);
-        getServer().getPluginManager().registerEvents(new SorcererListener(this), this);
-        getServer().getPluginManager().registerEvents(new PrimordialListener(this), this);
-        getServer().getPluginManager().registerEvents(new HallowedListener(this), this);
-        getServer().getPluginManager().registerEvents(new AnnulledListener(this), this);
+        getServer().getPluginManager().registerEvents(new AbilityEffectsListener(this), this);
     }
 
     @Override

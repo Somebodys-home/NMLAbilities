@@ -7,14 +7,15 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseConf
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMenu;
 import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
+import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class AnnulledMenu extends Menu {
@@ -70,15 +71,6 @@ public class AnnulledMenu extends Menu {
     @Override
     public void setMenuItems() {
         inventory.setItem(10, AnnulledAbilityItems.blackHole(skills));
-
-        // Backout button
-        ItemStack nvm = new ItemStack(Material.BARRIER);
-        ItemMeta meta = nvm.getItemMeta();
-        assert meta != null;
-
-        meta.setDisplayName("§4§l<= Go back");
-        nvm.setItemMeta(meta);
-
-        inventory.setItem(35, nvm);
+        inventory.setItem(35, ItemCreator.createItem(Material.BARRIER, 1, "§c§l<- Go Back", List.of()));
     }
 }
