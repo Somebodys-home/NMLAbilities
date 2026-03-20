@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -28,39 +28,40 @@ public class MartialArtistAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void tenHitCombo(Player user, int hotbarSlot) { // todo: fix this when
-        user.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+    public static void tenHitCombo(Player player) {
+        player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
 
         HashSet<UUID> hitEntityUUIDs = new HashSet<>();
-        HashMap<DamageType, Double> damageStats = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(
-                profileManager.getPlayerProfile(user.getUniqueId()).getStats()), .25);
+        HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
+                profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .25);
         final boolean[] comboBroken = {false};
 
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 2, hotbarSlot);
-        EnergyManager.useEnergy(user, 10);
-        AttackCooldownSystem.pauseAttackCooldown(user);
+        EnergyManager.useEnergy(player, 10);
+        CooldownManager.putOnHardCooldown(player, .7);
+        AttackCooldownSystem.pauseAttackCooldown(player);
 
         // punch 1
-        dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+        dashUntilCollision(player, 2, 5, new BukkitRunnable() {
             @Override
             public void run() {
-                Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                 Location punch = baseLocation.clone().add(forward);
 
-                user.swingMainHand();
-                user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                player.swingMainHand();
+                player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                CooldownManager.putOnHardCooldown(player, .5);
 
-                for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                    if (entity != user) {
+                for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                    if (entity != player) {
                         hitEntityUUIDs.add(entity.getUniqueId());
                     }
                 }
 
                 for (UUID uuid : hitEntityUUIDs) {
                     if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                         livingEntity.setNoDamageTicks(0);
                     }
                 }
@@ -69,7 +70,8 @@ public class MartialArtistAbilityEffects {
                     @Override
                     public void run() {
                         if (hitEntityUUIDs.isEmpty()) {
-                            AttackCooldownSystem.resumeAttackCooldown(user);
+                            AttackCooldownSystem.resumeAttackCooldown(player);
+                            CooldownManager.removeHardCooldown(player);
                             comboBroken[0] = true;
                         }
                     }
@@ -82,36 +84,35 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
-
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
 
-                        user.swingOffHand();
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.swingOffHand();
+                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
                             }
                         }
@@ -120,7 +121,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -135,36 +136,36 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
 
-                        user.swingMainHand();
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.swingMainHand();
+                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
                             }
                         }
@@ -173,7 +174,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -188,39 +189,39 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
                         Vector jump = new Vector(0, 1, 0);
-                        user.setVelocity(jump);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.setVelocity(jump);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
 
-                        Location baseLocation = user.getLocation().add(0, 4, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
+                        Location baseLocation = player.getLocation().add(0, 4, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
+                        Location kick = baseLocation.clone().add(forward);
 
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 150, 0.15, 1, 0.15);
+                        player.getWorld().spawnParticle(Particle.CRIT, kick, 150, 0.15, 1, 0.15);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(kick, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
                                 livingEntity.setVelocity(jump); // knockback
                             }
@@ -230,7 +231,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -245,39 +246,39 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
                         Vector slam = new Vector(0, -1, 0);
-                        user.setVelocity(slam);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.setVelocity(slam);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
 
-                        Location baseLocation = user.getLocation().add(0, 4, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
+                        Location baseLocation = player.getLocation().add(0, 4, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
+                        Location kick = baseLocation.clone().add(forward);
 
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 150, 0.15, 4, 0.15);
+                        player.getWorld().spawnParticle(Particle.CRIT, kick, 150, 0.15, 4, 0.15);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(user.getLocation(), 2, 4, 2)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 2, 4, 2)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
                                 livingEntity.setVelocity(slam); // knockback
                             }
@@ -287,7 +288,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -302,42 +303,42 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
+                        Location kick = baseLocation.clone().add(forward);
 
-                        Vector tinyDashDirection = user.getLocation().getDirection().normalize();
+                        Vector tinyDashDirection = player.getLocation().getDirection().normalize();
                         Vector tinyDash = tinyDashDirection.clone().multiply(.5).setY(0);
-                        user.setVelocity(tinyDash);
 
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.15, 0.15, 0.15);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.setVelocity(tinyDash);
+                        player.getWorld().spawnParticle(Particle.CRIT, kick, 100, 0.15, 0.15, 0.15);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(kick, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
 
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(user.getLocation().toVector()).normalize().setY(.2);
+                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.2);
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -346,7 +347,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -361,51 +362,50 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .8, hotbarSlot);
-
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = user.getLocation().getDirection().multiply(.5).setY(.25);
+                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
 
-                        user.swingMainHand();
-                        user.setVelocity(tinyJump);
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.swingMainHand();
+                        player.setVelocity(tinyJump);
+                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
                         for (int i = 0; i < 8; i++) {
                             double angle = 2 * Math.PI * i / 8;
                             double x = Math.cos(angle);
                             double z = Math.sin(angle);
 
-                            Location particleLocation = user.getLocation().clone().add(x, 1, z);
-                            user.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
+                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
+                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
                         }
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
 
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(user.getLocation().toVector()).normalize().setY(.1);
+                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -414,7 +414,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -429,51 +429,51 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .8, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = user.getLocation().getDirection().multiply(.5).setY(.25);
+                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
 
-                        user.swingOffHand();
-                        user.setVelocity(tinyJump);
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.swingOffHand();
+                        player.setVelocity(tinyJump);
+                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
                         for (int i = 0; i < 8; i++) {
                             double angle = 2 * Math.PI * i / 8;
                             double x = Math.cos(angle);
                             double z = Math.sin(angle);
 
-                            Location particleLocation = user.getLocation().clone().add(x, 1, z);
-                            user.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
+                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
+                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
                         }
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
 
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(user.getLocation().toVector()).normalize().setY(.1);
+                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -482,7 +482,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -497,51 +497,51 @@ public class MartialArtistAbilityEffects {
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .8, hotbarSlot);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Location baseLocation = user.getLocation().add(0, 1.5, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = user.getLocation().getDirection().multiply(.5).setY(.25);
+                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
 
-                        user.swingMainHand();
-                        user.setVelocity(tinyJump);
-                        user.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.swingMainHand();
+                        player.setVelocity(tinyJump);
+                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
                         for (int i = 0; i < 8; i++) {
                             double angle = 2 * Math.PI * i / 8;
                             double x = Math.cos(angle);
                             double z = Math.sin(angle);
 
-                            Location particleLocation = user.getLocation().clone().add(x, 1, z);
-                            user.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
+                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
+                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
                         }
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
 
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(user.getLocation().toVector()).normalize().setY(.1);
+                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -550,7 +550,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(user);
+                                    AttackCooldownSystem.resumeAttackCooldown(player);
                                     comboBroken[0] = true;
                                 }
                             }
@@ -562,35 +562,35 @@ public class MartialArtistAbilityEffects {
 
         // uppercut 10
         new BukkitRunnable() {
-            HashMap<DamageType, Double> damageStats = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(
-                    profileManager.getPlayerProfile(user.getUniqueId()).getStats()), .75);
+            HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
+                    profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .75);
 
             @Override
             public void run() {
                 if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
                     cancel();
                     return;
                 }
 
-                user.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+                player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
                 hitEntityUUIDs.clear();
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .8, hotbarSlot);
+                CooldownManager.putOnHardCooldown(player, 1);
 
-                dashUntilCollision(user, 2, 5, new BukkitRunnable() {
+                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
                     @Override
                     public void run() {
-                        EnergyManager.useEnergy(user, 10);
+                        EnergyManager.useEnergy(player, 10);
 
-                        Vector jump = user.getLocation().getDirection().multiply(1.5).setY(1.5);
-                        Location baseLocation = user.getLocation().add(0, 4, 0);
-                        Vector forward = user.getLocation().getDirection().normalize().multiply(2);
+                        Vector jump = player.getLocation().getDirection().multiply(1.5).setY(1.5);
+                        Location baseLocation = player.getLocation().add(0, 4, 0);
+                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
                         Location punch = baseLocation.clone().add(forward);
 
-                        user.setVelocity(jump);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.PLAYERS, 3f, 1f);
+                        player.setVelocity(jump);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.PLAYERS, 3f, 1f);
 
                         // uppercut particles
                         new BukkitRunnable() {
@@ -600,8 +600,8 @@ public class MartialArtistAbilityEffects {
 
                             @Override
                             public void run() {
-                                Location baseLocation = user.getLocation().clone().add(0, 1, 0);
-                                Location trail = baseLocation.clone().add(user.getLocation().getDirection().normalize().multiply(-1));
+                                Location baseLocation = player.getLocation().clone().add(0, 1, 0);
+                                Location trail = baseLocation.clone().add(player.getLocation().getDirection().normalize().multiply(-1));
 
                                 for (double j = 0; j < 20; j++) {
                                     double radius = 1.5;
@@ -611,12 +611,12 @@ public class MartialArtistAbilityEffects {
                                     double z = Math.sin(angle) * radius;
                                     double reverseX = Math.cos(reverseAngle) * radius;
                                     double reverseZ = Math.sin(reverseAngle) * radius;
-                                    Location soulFireLocation = user.getLocation().clone().add(x, 2, z);
-                                    Location fireLocation = user.getLocation().clone().add(reverseX,  2, reverseZ);
+                                    Location soulFireLocation = player.getLocation().clone().add(x, 2, z);
+                                    Location fireLocation = player.getLocation().clone().add(reverseX,  2, reverseZ);
 
-                                    user.getWorld().spawnParticle(Particle.SNOWFLAKE, trail, 10, .05, .05, .05, 0);
-                                    user.getWorld().spawnParticle(Particle.FLAME, fireLocation, 30, 0, 0, 0, 0);
-                                    user.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, soulFireLocation, 30, 0, 0, 0, 0);
+                                    player.getWorld().spawnParticle(Particle.SNOWFLAKE, trail, 10, .05, .05, .05, 0);
+                                    player.getWorld().spawnParticle(Particle.FLAME, fireLocation, 30, 0, 0, 0, 0);
+                                    player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, soulFireLocation, 30, 0, 0, 0, 0);
                                 }
 
                                 particleticks--;
@@ -625,15 +625,15 @@ public class MartialArtistAbilityEffects {
                             }
                         }.runTaskTimer(nmlAbilities, 0L, 1L);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != user) {
+                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
+                            if (entity != player) {
                                 hitEntityUUIDs.add(entity.getUniqueId());
                             }
                         }
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
                                 livingEntity.setNoDamageTicks(0);
                                 livingEntity.setVelocity(jump.multiply(2).setY(2)); // knockback
                             }
@@ -643,7 +643,7 @@ public class MartialArtistAbilityEffects {
                             @Override
                             public void run() {
                                 hitEntityUUIDs.clear();
-                                AttackCooldownSystem.resumeAttackCooldown(user);
+                                AttackCooldownSystem.resumeAttackCooldown(player);
                                 comboBroken[0] = true;
                             }
                         }.runTaskLater(nmlAbilities, 1L);
@@ -660,6 +660,7 @@ public class MartialArtistAbilityEffects {
 
         dasher.setVelocity(dash);
         dasher.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(1);
+        CooldownManager.putOnHardCooldown(dasher, .7);
         
         new BukkitRunnable() {
             int ticks = 0;

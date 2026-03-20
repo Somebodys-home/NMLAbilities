@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.listeners.AbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.listeners.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedListener;
@@ -11,7 +11,6 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffe
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityEffects;
@@ -57,7 +56,6 @@ public final class NMLAbilities extends JavaPlugin {
 
         new AbilityItemManager(this);
         new ExpertiseAbilityItemMaker(this);
-        new ExpertiseManager(this);
         new SoldierAbilityEffects(this);
         new AssassinAbilityEffects(this);
         new MarauderAbilityEffects(this);

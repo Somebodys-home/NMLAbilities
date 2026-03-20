@@ -24,7 +24,7 @@ public class PrimordialAbilityItems extends AbilityItemManager {
                     put("primordial", 1);
                 }},
                 "Pick up and chuck a rock. It's not magical or anything, you just find a rock and throw it.", 
-                null,
+                List.of(GROUNDED),
                 false,
                 "Single",
                 20,

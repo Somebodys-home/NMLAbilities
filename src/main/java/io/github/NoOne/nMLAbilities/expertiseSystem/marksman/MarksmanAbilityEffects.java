@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
@@ -35,54 +35,54 @@ public class MarksmanAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void rapidShot(Player user, int hotbarSlot, ItemStack abilityItem) {
-        Stats stats = profileManager.getPlayerProfile(user.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damage = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(stats), .5);
+    public static void rapidShot(Player player, int hotbarSlot, ItemStack abilityItem) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .5);
         boolean toggle = AbilityItemManager.getToggleState(abilityItem);
         final int[] preparedArrows = {0};
 
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, .5, hotbarSlot);
-        user.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 2));
-        AttackCooldownSystem.pauseAttackCooldown(user);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 2));
+        CooldownManager.putOnInfiniteHardCooldown(player);
+        AttackCooldownSystem.pauseAttackCooldown(player);
 
         BukkitRunnable rapidShot = new BukkitRunnable() {
             @Override
             public void run() {
                 // load arrows
                 preparedArrows[0]++;
-                user.sendTitle("§a" + preparedArrows[0] + " \uD83C\uDFF9", "", 5, 30, 5);
-                user.setMetadata("rapid_shot_arrows", new FixedMetadataValue(nmlAbilities, preparedArrows[0]));
-                CooldownManager.putAllOtherAbilitiesOnCooldown(user, .75, hotbarSlot);
-                user.getWorld().playSound(user, Sound.ITEM_CROSSBOW_LOADING_END, 1f, 1f);
+                player.sendTitle("§a" + preparedArrows[0] + " \uD83C\uDFF9", "", 5, 30, 5);
+                player.setMetadata("rapid_shot_arrows", new FixedMetadataValue(nmlAbilities, preparedArrows[0]));
+                player.getWorld().playSound(player, Sound.ITEM_CROSSBOW_LOADING_END, 1f, 1f);
 
                 // fire arrows at 10
                 if (preparedArrows[0] == 10) {
                     AbilityItemManager.toggleAbility(abilityItem, toggle);
-                    CooldownManager.putOnCooldown(user, hotbarSlot, AbilityItemManager.getCooldown(abilityItem));
-                    ongoingEffects.get(user.getUniqueId()).get("rapidShot").cancel();
-                    ongoingEffects.get(user.getUniqueId()).remove("rapidShot");
+//                    CooldownManager.putOnCooldown(player, AbilityItemManager.getCooldown(abilityItem));
+                    ongoingEffects.get(player.getUniqueId()).get("rapidShot").cancel();
+                    ongoingEffects.get(player.getUniqueId()).remove("rapidShot");
                     AbilityItemManager.toggleAbility(abilityItem, false);
 
                     new BukkitRunnable() {
-                        int arrows = user.getMetadata("rapid_shot_arrows").getFirst().asInt();
+                        int arrows = player.getMetadata("rapid_shot_arrows").getFirst().asInt();
 
                         @Override
                         public void run() {
                             arrows--;
 
-                            user.sendTitle("§a" + arrows + " \uD83C\uDFF9", "", 2, 20, 5);
-                            shootArrow(user, 3.5, .5, damage);
-                            user.getWorld().playSound(user, Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
-                            user.removePotionEffect(PotionEffectType.SLOWNESS);
+                            player.sendTitle("§a" + arrows + " \uD83C\uDFF9", "", 2, 20, 5);
+                            shootArrow(player, 3.5, .5, damage);
+                            player.getWorld().playSound(player, Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
+                            player.removePotionEffect(PotionEffectType.SLOWNESS);
 
                             if (arrows == 0) {
-                                AttackCooldownSystem.resumeAttackCooldown(user);
+                                CooldownManager.removeHardCooldown(player);
+                                AttackCooldownSystem.resumeAttackCooldown(player);
                                 cancel();
                             }
                         }
                     }.runTaskTimer(nmlAbilities, 10L, 5L);
 
-                    user.removeMetadata("rapid_shot_arrows", nmlAbilities);
+                    player.removeMetadata("rapid_shot_arrows", nmlAbilities);
                     cancel();
                 }
             }
@@ -90,38 +90,38 @@ public class MarksmanAbilityEffects {
 
         if (toggle) { // toggling ON
             // Make sure player's map exists
-            ongoingEffects.computeIfAbsent(user.getUniqueId(), k -> new HashMap<>());
+            ongoingEffects.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
 
-            if (!ongoingEffects.get(user.getUniqueId()).containsKey("rapidShot")) {
-                EnergyManager.useEnergy(user, 25);
-                ongoingEffects.get(user.getUniqueId()).put("rapidShot", rapidShot.runTaskTimer(nmlAbilities, 0L, 10L));
+            if (!ongoingEffects.get(player.getUniqueId()).containsKey("rapidShot")) {
+                EnergyManager.useEnergy(player, 25);
+                ongoingEffects.get(player.getUniqueId()).put("rapidShot", rapidShot.runTaskTimer(nmlAbilities, 0L, 10L));
             }
 
         } else { // toggling OFF
-            if (ongoingEffects.containsKey(user.getUniqueId()) && ongoingEffects.get(user.getUniqueId()).containsKey("rapidShot")) {
-                ongoingEffects.get(user.getUniqueId()).get("rapidShot").cancel();
-                ongoingEffects.get(user.getUniqueId()).remove("rapidShot");
+            if (ongoingEffects.containsKey(player.getUniqueId()) && ongoingEffects.get(player.getUniqueId()).containsKey("rapidShot")) {
+                ongoingEffects.get(player.getUniqueId()).get("rapidShot").cancel();
+                ongoingEffects.get(player.getUniqueId()).remove("rapidShot");
 
                 new BukkitRunnable() {
-                    int arrows = user.getMetadata("rapid_shot_arrows").getFirst().asInt();
+                    int arrows = player.getMetadata("rapid_shot_arrows").getFirst().asInt();
 
                     @Override
                     public void run() {
                         arrows--;
 
-                        user.sendTitle("§a" + arrows + " \uD83C\uDFF9", "", 2, 20, 5);
-                        shootArrow(user, 3.5, .5, damage);
-                        user.getWorld().playSound(user, Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
-                        user.removePotionEffect(PotionEffectType.SLOWNESS);
+                        player.sendTitle("§a" + arrows + " \uD83C\uDFF9", "", 2, 20, 5);
+                        shootArrow(player, 3.5, .5, damage);
+                        player.getWorld().playSound(player, Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
+                        player.removePotionEffect(PotionEffectType.SLOWNESS);
 
                         if (arrows == 0) {
-                            AttackCooldownSystem.resumeAttackCooldown(user);
+                            AttackCooldownSystem.resumeAttackCooldown(player);
                             cancel();
                         }
                     }
                 }.runTaskTimer(nmlAbilities, 0L, 5L);
 
-                user.removeMetadata("rapid_shot_arrows", nmlAbilities);
+                player.removeMetadata("rapid_shot_arrows", nmlAbilities);
             }
         }
     }

@@ -5,6 +5,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -59,46 +60,51 @@ public class CooldownManager {
         serverCooldownTask.cancel();
     }
 
-    public static void putOnCooldown(Player player, int hotbarSlot, double cooldown) {
+    public static void putOnCooldown(Player player, int hotbarSlot, double seconds) {
         UUID uuid = player.getUniqueId();
         ItemStack originalItem = player.getInventory().getItem(hotbarSlot); // store original item
-
         CooldownInstance ci = getCooldownInstance(player, hotbarSlot);
 
         if (ci != null) {
-            ci.setCooldown(ci.getCooldown() + cooldown); // extend existing cooldown
+            ci.setCooldown(ci.getCooldown() + seconds); // extend existing seconds
         } else {
             ongoingCooldowns
                     .computeIfAbsent(uuid, k -> new HashSet<>())
-                    .add(new CooldownInstance(hotbarSlot, cooldown, originalItem));
+                    .add(new CooldownInstance(hotbarSlot, seconds, originalItem));
 
             // immediately swap the item out
             player.getInventory().setItem(hotbarSlot, AbilityItemManager.cooldownItem());
         }
     }
 
-    public static CooldownInstance getCooldownInstance(Player player, int hotbarSlot) {
-        UUID uuid = player.getUniqueId();
-        if (!ongoingCooldowns.containsKey(uuid)) return null;
+    public static void putOnHardCooldown(Player player, double seconds) {
+        PlayerInventory playerInventory = player.getInventory();
 
-        return ongoingCooldowns.get(uuid).stream()
-                .filter(ci -> ci.getHotbarSlot() == hotbarSlot)
-                .findFirst()
-                .orElse(null);
+        player.setCooldown(playerInventory.getItem(0), (int) (seconds * 20));
+        player.setCooldown(playerInventory.getItem(1), (int) (seconds * 20));
+        player.setCooldown(playerInventory.getItem(2), (int) (seconds * 20));
+        player.setCooldown(playerInventory.getItem(3), (int) (seconds * 20));
+        player.setCooldown(AbilityItemManager.cooldownItem(), (int) (seconds * 20));
     }
 
-    public static void putAllOtherAbilitiesOnCooldown(Player player, double cooldown, int exception) {
-        if (exception != 0) putOnCooldown(player, 0, cooldown);
-        if (exception != 1) putOnCooldown(player, 1, cooldown);
-        if (exception != 2) putOnCooldown(player, 2, cooldown);
-        if (exception != 3) putOnCooldown(player, 3, cooldown);
+    public static void putOnInfiniteHardCooldown(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+
+        player.setCooldown(playerInventory.getItem(0), 9999);
+        player.setCooldown(playerInventory.getItem(1), 9999);
+        player.setCooldown(playerInventory.getItem(2), 9999);
+        player.setCooldown(playerInventory.getItem(3), 9999);
+        player.setCooldown(AbilityItemManager.cooldownItem(), 9999);
     }
 
-    public static void putAllAbilitiesOnCooldown(Player player, double cooldown) {
-        putOnCooldown(player, 0, cooldown);
-        putOnCooldown(player, 1, cooldown);
-        putOnCooldown(player, 2, cooldown);
-        putOnCooldown(player, 3, cooldown);
+    public static void removeHardCooldown(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+
+        player.setCooldown(playerInventory.getItem(0), 0);
+        player.setCooldown(playerInventory.getItem(1), 0);
+        player.setCooldown(playerInventory.getItem(2), 0);
+        player.setCooldown(playerInventory.getItem(3), 0);
+        player.setCooldown(AbilityItemManager.cooldownItem(), 0);
     }
 
     public static void resetCooldown(Player player, int hotbarSlot) {
@@ -124,5 +130,18 @@ public class CooldownManager {
                 player.getInventory().setItem(cooldownInstance.getHotbarSlot(), cooldownInstance.getOriginalItem());
             }
         }
+    }
+
+    public static CooldownInstance getCooldownInstance(Player player, int hotbarSlot) {
+        UUID uuid = player.getUniqueId();
+
+        if (!ongoingCooldowns.containsKey(uuid)) {
+            return null;
+        }
+
+        return ongoingCooldowns.get(uuid).stream()
+                .filter(ci -> ci.getHotbarSlot() == hotbarSlot)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AssassinAbilityItems extends AbilityItemManager {
@@ -22,7 +24,7 @@ public class AssassinAbilityItems extends AbilityItemManager {
                     put("assassin", 1);
                 }},
                 "Dash forwards, dealing damage to anyone in your way", 
-                null,
+                List.of(GROUNDED),
                 false,
                 "Area",
                 10,

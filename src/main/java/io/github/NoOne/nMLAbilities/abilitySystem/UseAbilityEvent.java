@@ -12,14 +12,16 @@ public class UseAbilityEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final ItemStack weapon;
-    private final ItemStack ability;
+    private final ItemStack abilityItem;
     private final int hotbarSlot;
+    private final ItemStack offhandItem;
 
-    public UseAbilityEvent(@NotNull Player player, ItemStack weapon, ItemStack ability, int hotbarSlot) {
+    public UseAbilityEvent(@NotNull Player player, ItemStack weapon, ItemStack abilityItem, int hotbarSlot, ItemStack offhandItem) {
         this.player = player;
         this.weapon = weapon;
-        this.ability = ability;
+        this.abilityItem = abilityItem;
         this.hotbarSlot = hotbarSlot;
+        this.offhandItem = offhandItem;
     }
 
     @Override
@@ -31,10 +33,14 @@ public class UseAbilityEvent extends Event implements Cancellable {
 
     public ItemStack getWeapon() { return weapon; }
 
-    public ItemStack getAbility() { return ability; }
+    public ItemStack getAbilityItem() { return abilityItem; }
 
     public int getHotbarSlot() {
         return hotbarSlot;
+    }
+
+    public ItemStack getOffhandItem() {
+        return offhandItem;
     }
 
     @Override

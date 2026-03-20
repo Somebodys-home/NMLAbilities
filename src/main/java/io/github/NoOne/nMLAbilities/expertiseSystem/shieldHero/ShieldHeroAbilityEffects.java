@@ -23,13 +23,13 @@ public class ShieldHeroAbilityEffects {
         guardingSystem = nmlAbilities.getGuardingSystem();
     }
 
-    public static void secondWind(Player user, int hotbarSlot) {
-        EnergyManager.useEnergy(user, 20);
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 2, hotbarSlot);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 2);
-        user.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 10, false, false, false));
-        user.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 30, 255, false, false, false));
-        user.playSound(user, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
+    public static void secondWind(Player player) {
+        EnergyManager.useEnergy(player, 20);
+        CooldownManager.putOnHardCooldown(player, 2);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 2);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 10, false, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 30, 255, false, false, false));
+        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
 
         new BukkitRunnable() {
             int timer = 0;
@@ -38,22 +38,22 @@ public class ShieldHeroAbilityEffects {
             public void run() {
                 timer++;
 
-                /// charge up
+                // charge up
                 double radius = 5 * (1 - (timer / 30.0));
                 int particleCount = 75;
-                Location center = user.getLocation().clone().add(0, 0.15, 0);
+                Location center = player.getLocation().clone().add(0, 0.15, 0);
 
                 AbilityEffects.horizontalParticleCircle(Particle.END_ROD, center, radius, particleCount);
 
                 if (timer % 10 == 0 && timer != 30) {
-                    user.playSound(user, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
                 }
 
-                /// explosion
+                // explosion
                 if (timer == 30) {
-                    AbilityEffects.expandingParticleSphere(Particle.END_ROD, user.getLocation(), 4, 30, .3);
-                    user.playSound(user, Sound.ITEM_TOTEM_USE, 1f, 1f);
-                    guardingSystem.fullyRegenerateGuard(user);
+                    AbilityEffects.expandingParticleSphere(Particle.END_ROD, player.getLocation(), 4, 30, .3);
+                    player.playSound(player, Sound.ITEM_TOTEM_USE, 1f, 1f);
+                    guardingSystem.fullyRegenerateGuard(player);
                     cancel();
                 }
             }

@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -30,20 +30,20 @@ public class AssassinAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void slashAndDash(Player user, int hotbarSlot) {
-        Stats stats = profileManager.getPlayerProfile(user.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damage = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(stats), 1.5);
+    public static void slashAndDash(Player player) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 1.5);
 
-        EnergyManager.useEnergy(user, 20);
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 1.2, hotbarSlot);
-        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 1.2);
+        EnergyManager.useEnergy(player, 20);
+        CooldownManager.putOnHardCooldown(player, 1.2);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.2);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
         /// dash
-        Vector knockback = user.getLocation().getDirection().multiply(4);
+        Vector knockback = player.getLocation().getDirection().multiply(4);
         knockback.setY(-2);
-        user.setVelocity(knockback);
-        user.setInvulnerable(true);
+        player.setVelocity(knockback);
+        player.setInvulnerable(true);
 
         /// slash
         new BukkitRunnable() {
@@ -51,16 +51,16 @@ public class AssassinAbilityEffects {
 
             @Override
             public void run() {
-                Location particleLocation = user.getLocation().add(0, 1, 0);
+                Location particleLocation = player.getLocation().add(0, 1, 0);
                 Vector direction = particleLocation.getDirection().multiply(1.2); // distance in blocks of particle from player
 
                 particleLocation.add(direction);
-                user.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 0, 0, 0, 0, 0);
+                player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 0, 0, 0, 0, 0);
                 dashTicks--;
 
-                for (Entity entity : user.getWorld().getNearbyEntities(user.getLocation(), 2, 1, 2)) {
-                    if (entity instanceof LivingEntity livingEntity && !entity.equals(user)) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damage));
+                for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 2, 1, 2)) {
+                    if (entity instanceof LivingEntity livingEntity && !entity.equals(player)) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                     }
                 }
 
@@ -72,7 +72,7 @@ public class AssassinAbilityEffects {
         }.runTaskTimer(nmlAbilities, 0L, 1L);
 
         Bukkit.getScheduler().runTaskLater(nmlAbilities, () -> {
-            user.setInvulnerable(false);
+            player.setInvulnerable(false);
         }, 6L);
     }
 }

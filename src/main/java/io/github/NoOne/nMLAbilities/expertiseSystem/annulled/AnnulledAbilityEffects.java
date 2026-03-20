@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
@@ -28,19 +28,20 @@ public class AnnulledAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void blackHole(Player user, int hotbarSlot) {
-        Stats stats = profileManager.getPlayerProfile(user.getUniqueId()).getStats();
-        HashMap<DamageType, Double> necroticdamage = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStat2Damage(stats, "necroticdamage"), 5);
+    public static void blackHole(Player player) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> necroticdamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(stats, "necroticdamage"), 5);
         Particle.DustOptions blackHole = new Particle.DustOptions(Color.fromRGB(0, 0, 0), 1F);
-        EnergyManager.useEnergy(user, 50);
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 1.5, hotbarSlot);
-        AttackCooldownSystem.pauseAttackCooldown(user);
-        user.playSound(user, Sound.ENTITY_WITHER_SHOOT, 1f, 1f);
+
+        EnergyManager.useEnergy(player, 50);
+        CooldownManager.putOnInfiniteHardCooldown(player);
+        AttackCooldownSystem.pauseAttackCooldown(player);
+        player.playSound(player, Sound.ENTITY_WITHER_SHOOT, 1f, 1f);
 
         new BukkitRunnable() {
             int duration = 0;
-            Location center = user.getLocation().clone().add(0, 1, 0);
-            Vector velocity = user.getLocation().getDirection().normalize().multiply(.15);
+            Location center = player.getLocation().clone().add(0, 1, 0);
+            Vector velocity = player.getLocation().getDirection().normalize().multiply(.15);
 
             @Override
             public void run() {
@@ -52,15 +53,16 @@ public class AnnulledAbilityEffects {
                 AbilityEffects.dustSphere(blackHole, center, .5, 7);
 
                 /// triggering big black hole
-                Collection<Entity> triggeringEntities = user.getWorld().getNearbyEntities(center, .5, .5, .5);
-                triggeringEntities.remove(user);
+                Collection<Entity> triggeringEntities = player.getWorld().getNearbyEntities(center, .5, .5, .5);
+                triggeringEntities.remove(player);
 
                 /// big / collapsing black hole
                 if (duration == 100 || !center.getBlock().isPassable() || !triggeringEntities.isEmpty()) {
                     cancel();
-                    user.playSound(user, Sound.ITEM_ELYTRA_FLYING, 2f, 1f);
-                    user.playSound(user, Sound.ENTITY_WITHER_DEATH, 1f, 1f);
-                    AttackCooldownSystem.resumeAttackCooldown(user);
+                    player.playSound(player, Sound.ITEM_ELYTRA_FLYING, 2f, 1f);
+                    player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1f, 1f);
+                    CooldownManager.removeHardCooldown(player);
+                    AttackCooldownSystem.resumeAttackCooldown(player);
 
                     new BukkitRunnable() {
                         int duration = 0;
@@ -77,13 +79,13 @@ public class AnnulledAbilityEffects {
                                 size = Math.min(8, size + 2.5);
                             } else if (duration == 100) {
                                 size = Math.max(1, size - 2);
-                                user.playSound(user, Sound.ENTITY_WITHER_HURT, 1f, 1f);
+                                player.playSound(player, Sound.ENTITY_WITHER_HURT, 1f, 1f);
                             } else if (duration == 115) {
                                 size = Math.max(1, size - 2);
-                                user.playSound(user, Sound.ENTITY_WITHER_HURT, 1f, 1.5f);
+                                player.playSound(player, Sound.ENTITY_WITHER_HURT, 1f, 1.5f);
                             } else if (duration == 130) {
                                 size = Math.max(1, size - 2);
-                                user.playSound(user, Sound.ENTITY_WITHER_HURT, 1f, 2f);
+                                player.playSound(player, Sound.ENTITY_WITHER_HURT, 1f, 2f);
                             }
 
                             particleStep = Math.PI / (size * 2);
@@ -95,13 +97,13 @@ public class AnnulledAbilityEffects {
                                     double z = Math.sin(a) * Math.sin(i) * size;
                                     Location particleLocation = center.clone().add(x, y, z);
 
-                                    user.getWorld().spawnParticle(Particle.SQUID_INK, particleLocation, 3, 0, 0, 0);
+                                    player.getWorld().spawnParticle(Particle.SQUID_INK, particleLocation, 3, 0, 0, 0);
                                 }
                             }
 
                             // pull
                             for (Entity entity : center.getWorld().getNearbyEntities(center, pullradius, pullradius, pullradius)) {
-                                if (entity instanceof LivingEntity && entity != user) {
+                                if (entity instanceof LivingEntity && entity != player) {
                                     Vector toCenter = center.clone().subtract(entity.getLocation()).toVector();
                                     double distance = toCenter.length();
                                     Vector pull = toCenter.normalize().multiply(.03 * distance);
@@ -113,9 +115,9 @@ public class AnnulledAbilityEffects {
                             // explosion
                             if (duration == 155) {
                                 cancel();
-                                user.stopSound(Sound.ITEM_ELYTRA_FLYING);
-                                user.playSound(user, Sound.ENTITY_WITHER_SPAWN, 2f, 1f);
-                                user.playSound(user, Sound.ENTITY_WITHER_DEATH, .5f, 1f);
+                                player.stopSound(Sound.ITEM_ELYTRA_FLYING);
+                                player.playSound(player, Sound.ENTITY_WITHER_SPAWN, 2f, 1f);
+                                player.playSound(player, Sound.ENTITY_WITHER_DEATH, .5f, 1f);
 
                                 double explosionRadius = 8;
                                 for (double i = 0; i <= Math.PI; i += Math.PI / 60) { // vertical circles
@@ -139,20 +141,20 @@ public class AnnulledAbilityEffects {
                                                     double explosionZ = Math.sin(finalA) * explosionRadius * 1.15;
                                                     Location explosionLocation = center.clone().add(explosionX, explosionY, explosionZ);
 
-                                                    user.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, explosionLocation, 1);
+                                                    player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, explosionLocation, 1);
                                                 }
                                             }.runTaskLater(nmlAbilities, 3L);
                                         }
 
-                                        user.getWorld().spawnParticle(Particle.SQUID_INK, particleLocation, 0,
+                                        player.getWorld().spawnParticle(Particle.SQUID_INK, particleLocation, 0,
                                                                         velocity.getX(), velocity.getY(), velocity.getZ(), 7);
                                         particleLocation.subtract(x, y, z); // reset location
                                     }
                                 }
 
-                                for (Entity entity : user.getWorld().getNearbyEntities(center, explosionRadius, explosionRadius, explosionRadius)) {
-                                    if (entity instanceof LivingEntity livingEntity && entity != user) {
-                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, necroticdamage));
+                                for (Entity entity : player.getWorld().getNearbyEntities(center, explosionRadius, explosionRadius, explosionRadius)) {
+                                    if (entity instanceof LivingEntity livingEntity && entity != player) {
+                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, necroticdamage));
                                     }
                                 }
                             }

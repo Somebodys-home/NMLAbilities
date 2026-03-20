@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -29,13 +29,13 @@ public class SorcererAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void magicMissileEX(Player user, int hotbarSlot) {
-        HashMap<DamageType, Double> damage = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(
-                profileManager.getPlayerProfile(user.getUniqueId()).getStats()), .5);
+    public static void magicMissileEX(Player player) {
+        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
+                profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .5);
 
-        EnergyManager.useEnergy(user, 15);
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 2.5, hotbarSlot);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 2.5);
+        EnergyManager.useEnergy(player, 15);
+        CooldownManager.putOnHardCooldown(player, 2.5);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 2.5);
 
         new BukkitRunnable() {
             int missiles = 0;
@@ -47,11 +47,11 @@ public class SorcererAbilityEffects {
                 missiles++;
                 activeMissiles++;
 
-                user.playSound(user.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, .6f, 1f);
+                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, .6f, 1f);
 
                 Set<UUID> hitEntityUUIDs = new HashSet<>();
                 Random random = new Random();
-                Vector direction = user.getEyeLocation().getDirection().normalize();
+                Vector direction = player.getEyeLocation().getDirection().normalize();
 
                 Vector randomVec = new Vector(random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5);
                 if (randomVec.lengthSquared() < 1e-6) randomVec = new Vector(0.001, 0.001, 0.001);
@@ -59,7 +59,7 @@ public class SorcererAbilityEffects {
 
                 Vector curveAxis = direction.clone().crossProduct(randomVec);
                 if (curveAxis.lengthSquared() < 1e-6) {
-                    double yaw = Math.toRadians(user.getEyeLocation().getYaw());
+                    double yaw = Math.toRadians(player.getEyeLocation().getYaw());
                     curveAxis = new Vector(-Math.sin(yaw), 0, Math.cos(yaw));
                 }
                 curveAxis.normalize();
@@ -67,26 +67,26 @@ public class SorcererAbilityEffects {
                 // start on the player's right
                 Vector littleBitRight = direction.clone().crossProduct(new Vector(0, 1, 0));
                 if (littleBitRight.lengthSquared() < 1e-6) {
-                    double yaw = Math.toRadians(user.getEyeLocation().getYaw());
+                    double yaw = Math.toRadians(player.getEyeLocation().getYaw());
                     littleBitRight = new Vector(-Math.sin(yaw), 0, Math.cos(yaw));
                 }
                 littleBitRight.normalize();
 
-                Location start = user.getLocation().add(0, 1.2, 0).add(littleBitRight.multiply(0.4));
+                Location start = player.getLocation().add(0, 1.2, 0).add(littleBitRight.multiply(0.4));
 
                 // where to end
                 Location end;
-                RayTraceResult rayTraceResult = user.getWorld().rayTraceEntities(
-                        user.getEyeLocation(),
-                        user.getLocation().getDirection(),
+                RayTraceResult rayTraceResult = player.getWorld().rayTraceEntities(
+                        player.getEyeLocation(),
+                        player.getLocation().getDirection(),
                         16,
-                        entity -> entity instanceof LivingEntity && !entity.equals(user)
+                        entity -> entity instanceof LivingEntity && !entity.equals(player)
                 );
 
                 if (rayTraceResult != null && rayTraceResult.getHitEntity() instanceof LivingEntity livingEntity) { // successfully traced a target
                     end = livingEntity.getLocation().add(0, 0.5, 0);
                 } else {
-                    Location startLocation = user.getLocation().add(0, 1, 0);
+                    Location startLocation = player.getLocation().add(0, 1, 0);
                     Vector forward = startLocation.getDirection().normalize().multiply(16); // max range
                     end = startLocation.clone().add(forward);
                 }
@@ -107,8 +107,8 @@ public class SorcererAbilityEffects {
                     public void run() {
                         if (i > particleInstances) {
                             activeMissiles--;
-                            user.playSound(user.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, .8f, 1f);
-                            user.getWorld().spawnParticle(Particle.EXPLOSION, end, 1, 0, 1, 0, 0);
+                            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, .8f, 1f);
+                            player.getWorld().spawnParticle(Particle.EXPLOSION, end, 1, 0, 1, 0, 0);
                             cancel();
                             return;
                         }
@@ -116,11 +116,11 @@ public class SorcererAbilityEffects {
                         double progress = (double) i / particleInstances;
 
                         if (i == 0) {
-                            user.getWorld().spawnParticle(Particle.GLOW, start, 50, 0.1, 0.075, 0.1, 0);
+                            player.getWorld().spawnParticle(Particle.GLOW, start, 50, 0.1, 0.075, 0.1, 0);
                             i++;
                             return;
                         } else if (i == particleInstances) {
-                            user.getWorld().spawnParticle(Particle.GLOW, end, 60, 0.1, 0.1, 0.1, 0);
+                            player.getWorld().spawnParticle(Particle.GLOW, end, 60, 0.1, 0.1, 0.1, 0);
                             i++;
                             return;
                         }
@@ -133,24 +133,24 @@ public class SorcererAbilityEffects {
                         double finalX = baseX + finalCurveAxis.getX() * curveOffset;
                         double finalY = baseY + heightFactor * verticalCurveDirection;
                         double finalZ = baseZ + finalCurveAxis.getZ() * curveOffset;
-                        int worldMinY = user.getWorld().getMinHeight();
+                        int worldMinY = player.getWorld().getMinHeight();
 
                         if (Double.isNaN(finalY) || finalY < worldMinY + 0.1) finalY = worldMinY + 0.1;
 
-                        Location particleLocation = new Location(user.getWorld(), finalX, finalY, finalZ);
-                        Collection<Entity> nearbyEntities = user.getWorld().getNearbyEntities(particleLocation, 2, 2, 2);
+                        Location particleLocation = new Location(player.getWorld(), finalX, finalY, finalZ);
+                        Collection<Entity> nearbyEntities = player.getWorld().getNearbyEntities(particleLocation, 2, 2, 2);
 
                         // entity collision
                         for (Entity entity : nearbyEntities) {
-                            if (entity instanceof LivingEntity livingEntity && entity != user) {
+                            if (entity instanceof LivingEntity livingEntity && entity != player) {
                                 if (hitEntityUUIDs.add(entity.getUniqueId())) { // still works
-                                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damage));
+                                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                                     livingEntity.setNoDamageTicks(0);
                                 }
                             }
                         }
 
-                        user.getWorld().spawnParticle(Particle.GLOW, particleLocation, 50, 0.1, 0.075, 0.1, 0);
+                        player.getWorld().spawnParticle(Particle.GLOW, particleLocation, 50, 0.1, 0.075, 0.1, 0);
                         i++;
                     }
                 }.runTaskTimer(nmlAbilities, 0L, 1L);
@@ -160,16 +160,16 @@ public class SorcererAbilityEffects {
         }.runTaskTimer(nmlAbilities, 0L, 5L);
     }
 
-    public static void dragonsBreath(Player user, int hotbarSlot) {
-        HashMap<DamageType, Double> fire = DamageConverter.convertPlayerStat2Damage(profileManager.getPlayerProfile(user.getUniqueId()).getStats(), "firedamage");
+    public static void dragonsBreath(Player player) {
+        HashMap<DamageType, Double> fire = DamageHelper.convertPlayerStat2Damage(profileManager.getPlayerProfile(player.getUniqueId()).getStats(), "firedamage");
         HashSet<LivingEntity> hitEntities = new HashSet<>();
         int chargeUpTime = 40;
 
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 8, hotbarSlot);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 8);
-        EnergyManager.useEnergy(user, 25);
-        user.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, chargeUpTime, 10, false, false, false));
-        user.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, chargeUpTime, 255, false, false, false));
+        CooldownManager.putOnHardCooldown(player, 8);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 8);
+        EnergyManager.useEnergy(player, 25);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, chargeUpTime, 10, false, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, chargeUpTime, 255, false, false, false));
 
         /// charge up
         new BukkitRunnable() {
@@ -179,9 +179,9 @@ public class SorcererAbilityEffects {
             public void run() {
                 timer--;
 
-                Location userLocation = user.getLocation().add(0, 1.65, 0);
-                Vector forward = userLocation.getDirection().normalize();
-                Location center = userLocation.clone().add(forward.clone().multiply(1.5));
+                Location playerLocation = player.getLocation().add(0, 1.65, 0);
+                Vector forward = playerLocation.getDirection().normalize();
+                Location center = playerLocation.clone().add(forward.clone().multiply(1.5));
                 int particleCount = 5;
                 double radius = Math.max((double) timer / 50, .1);
                 Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector
@@ -193,13 +193,13 @@ public class SorcererAbilityEffects {
                     Vector offset = up.clone().multiply(Math.cos(angle)).add(right.clone().multiply(Math.sin(angle))).multiply(radius);
                     Location particleLocation = center.clone().add(offset);
 
-                    user.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, particleLocation, 0);
+                    player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, particleLocation, 0);
                 }
 
-                if (timer != 0 && timer % 13 == 0) user.playSound(user, Sound.ITEM_FLINTANDSTEEL_USE, 2f, 1f);
+                if (timer != 0 && timer % 13 == 0) player.playSound(player, Sound.ITEM_FLINTANDSTEEL_USE, 2f, 1f);
                 if (timer == 0) {
                     cancel();
-                    user.playSound(user, Sound.ITEM_ELYTRA_FLYING, 2f, .5f);
+                    player.playSound(player, Sound.ITEM_ELYTRA_FLYING, 2f, .5f);
                 }
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
@@ -214,44 +214,44 @@ public class SorcererAbilityEffects {
                 timer++;
 
                 /// flamethrower
-                Location userLocation = user.getLocation().add(0, 1.65, 0);
-                Vector forward = userLocation.getDirection().normalize();
-                Location baseLocation = userLocation.clone().add(forward.clone().multiply(1.3));
-                Vector playerDirection = user.getLocation().getDirection();
+                Location playerLocation = player.getLocation().add(0, 1.65, 0);
+                Vector forward = playerLocation.getDirection().normalize();
+                Location baseLocation = playerLocation.clone().add(forward.clone().multiply(1.3));
+                Vector playerDirection = player.getLocation().getDirection();
                 Vector particleVector = playerDirection.clone();
 
                 playerDirection.multiply(5); // length
                 particleVector.divide(new Vector(3, 3, 3)); // Divide it by 2 to shorten length
 
-                Location particleLocation = particleVector.toLocation(user.getWorld()).add(baseLocation);
+                Location particleLocation = particleVector.toLocation(player.getWorld()).add(baseLocation);
 
                 for (int i = 0; i < 12; i++) { // Amount of fire
                     Vector particlePath = playerDirection.clone();
 
                     particlePath.add(new Vector(Math.random() - Math.random(), Math.random() - Math.random(), Math.random() - Math.random()));
 
-                    Location offsetLocation = particlePath.toLocation(user.getWorld());
+                    Location offsetLocation = particlePath.toLocation(player.getWorld());
 
-                    user.getWorld().spawnParticle(Particle.FLAME, particleLocation, 0, offsetLocation.getX() * 1.5, offsetLocation.getY() * 1.5, offsetLocation.getZ() * 1.5, 0.1);
+                    player.getWorld().spawnParticle(Particle.FLAME, particleLocation, 0, offsetLocation.getX() * 1.5, offsetLocation.getY() * 1.5, offsetLocation.getZ() * 1.5, 0.1);
                 }
 
                 // damage
                 if (timer % 5 == 0) {
-                    Vector direction = user.getEyeLocation().getDirection().normalize();
+                    Vector direction = player.getEyeLocation().getDirection().normalize();
 
                     for (double d = 0; d <= 12; d += .5) {
-                        Location checkLoc = user.getEyeLocation().add(direction.clone().multiply(d));
+                        Location checkLoc = player.getEyeLocation().add(direction.clone().multiply(d));
                         Collection<Entity> nearby = checkLoc.getWorld().getNearbyEntities(checkLoc, 1, 1, 1);
 
                         for (Entity entity : nearby) {
-                            if (entity instanceof LivingEntity livingEntity && entity != user) {
+                            if (entity instanceof LivingEntity livingEntity && entity != player) {
                                 hitEntities.add(livingEntity);
                             }
                         }
                     }
 
                     for (LivingEntity livingEntity : hitEntities) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, fire));
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, fire));
                     }
 
                     hitEntities.clear();
@@ -259,12 +259,12 @@ public class SorcererAbilityEffects {
 
 
                 if (timer == 80) {
-                    user.stopSound(Sound.ITEM_ELYTRA_FLYING);
-                    user.playSound(user, Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1f);
+                    player.stopSound(Sound.ITEM_ELYTRA_FLYING);
+                    player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1f);
 
-                    userLocation = user.getLocation().add(0, 1.65, 0);
-                    forward = userLocation.getDirection().normalize();
-                    Location center = userLocation.clone().add(forward.clone().multiply(1.5));
+                    playerLocation = player.getLocation().add(0, 1.65, 0);
+                    forward = playerLocation.getDirection().normalize();
+                    Location center = playerLocation.clone().add(forward.clone().multiply(1.5));
                     Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector
                     Vector up = right.clone().crossProduct(forward).normalize(); // orthogonal basis vector
                     int particleCount = 20;
@@ -276,7 +276,7 @@ public class SorcererAbilityEffects {
                         particleLocation = center.clone().add(offset);
                         Vector velocity = offset.clone().multiply(.65);
 
-                        user.getWorld().spawnParticle(Particle.FLAME, particleLocation, 0, velocity.getX(), velocity.getY(), velocity.getZ());
+                        player.getWorld().spawnParticle(Particle.FLAME, particleLocation, 0, velocity.getX(), velocity.getY(), velocity.getZ());
                     }
 
                     cancel();

@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -26,16 +26,16 @@ public class SoldierAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void slash(Player user, int hotbarSlot) {
-        Stats stats = profileManager.getPlayerProfile(user.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damageStats = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(stats), 1.2);
-        Location location = user.getLocation();
+    public static void slash(Player player) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 1.2);
+        Location location = player.getLocation();
         HashSet<LivingEntity> hitEntities = new HashSet<>();
 
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 1, hotbarSlot);
-        EnergyManager.useEnergy(user, 15);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 1);
-        user.playSound(location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+        CooldownManager.putOnHardCooldown(player, 1);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1);
+        EnergyManager.useEnergy(player, 15);
+        player.playSound(location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
         for (double i = -Math.PI / 2; i <= Math.PI / 2; i += Math.PI / 10) {
             double x = Math.sin(i) * 2;
@@ -43,17 +43,17 @@ public class SoldierAbilityEffects {
             Vector offset = new Vector(x, 1, z).rotateAroundY(-Math.toRadians(location.getYaw()));
             Location particleLocation = location.clone().add(offset);
 
-            user.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1);
+            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1);
 
-            for (Entity entity : user.getWorld().getNearbyEntities(particleLocation, 1.5, 1.5, 1.5)) {
-                if (!entity.equals(user) && entity instanceof LivingEntity livingEntity) {
+            for (Entity entity : player.getWorld().getNearbyEntities(particleLocation, 1.5, 1.5, 1.5)) {
+                if (!entity.equals(player) && entity instanceof LivingEntity livingEntity) {
                     hitEntities.add(livingEntity);
                 }
             }
         }
 
         for (LivingEntity livingEntity : hitEntities) {
-            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damageStats));
+            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
         }
     }
 }

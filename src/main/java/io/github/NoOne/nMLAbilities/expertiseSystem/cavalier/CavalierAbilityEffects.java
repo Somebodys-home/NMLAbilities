@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageConverter;
+import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -31,56 +31,56 @@ public class CavalierAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void seismicSlam(Player user, int hotbarSlot) {
-        user.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+    public static void seismicSlam(Player player) {
+        player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
 
-        Stats stats = profileManager.getPlayerProfile(user.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damage = DamageConverter.multiplyDamageMap(DamageConverter.convertPlayerStats2Damage(stats), 2.5);
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 2.5);
 
-        EnergyManager.useEnergy(user, 30);
-        CooldownManager.putAllOtherAbilitiesOnCooldown(user, 4, hotbarSlot);
-        AttackCooldownSystem.setOrPauseAttackCooldown(user, 3);
-        user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 2f);
+        EnergyManager.useEnergy(player, 30);
+        CooldownManager.putOnHardCooldown(player, 1.5);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 2f);
 
-        /// jump
-        Vector jump = user.getLocation().getDirection().multiply(.5);
+        // jump
+        Vector jump = player.getLocation().getDirection().multiply(.5);
         jump.setY(1.5);
-        user.setVelocity(jump);
+        player.setVelocity(jump);
 
-        /// trail particles
+        // trail particles
         BukkitTask flyingParticles = new BukkitRunnable() {
             @Override
             public void run() {
-                user.getWorld().spawnParticle(Particle.SNOWFLAKE, user.getLocation(), 75, .15, 1, .15, 0);
+                player.getWorld().spawnParticle(Particle.SNOWFLAKE, player.getLocation(), 75, .15, 1, .15, 0);
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
 
-        /// slam
+        // slam
         Bukkit.getScheduler().runTaskLater(nmlAbilities, () -> {
-            Vector slam = user.getLocation().getDirection().multiply(1.5);
+            Vector slam = player.getLocation().getDirection().multiply(1.5);
             slam.setY(-2.2);
-            user.setVelocity(slam);
-            user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
-            user.playSound(user.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
+            player.setVelocity(slam);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
 
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (user.isOnGround()) {
-                        user.removeMetadata("falling", nmlAbilities);
+                    if (player.isOnGround()) {
+                        player.removeMetadata("falling", nmlAbilities);
 
                         flyingParticles.cancel();
-                        user.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, user.getLocation().add(0, .5, 0), 3, .25, 0, .25, 0);
-                        user.playSound(user.getLocation(), Sound.ITEM_MACE_SMASH_GROUND_HEAVY, 3f, 1f);
-                        user.playSound(user.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, .8f, 1f);
+                        player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, player.getLocation().add(0, .5, 0), 3, .25, 0, .25, 0);
+                        player.playSound(player.getLocation(), Sound.ITEM_MACE_SMASH_GROUND_HEAVY, 3f, 1f);
+                        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, .8f, 1f);
 
-                        for (Entity entity : user.getWorld().getNearbyEntities(user.getLocation(), 4, 2, 4)) {
-                            if (!entity.equals(user) && entity instanceof LivingEntity livingEntity) {
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(user.getLocation().toVector()).normalize().multiply(1.2);
+                        for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 4, 2, 4)) {
+                            if (!entity.equals(player) && entity instanceof LivingEntity livingEntity) {
+                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.2);
                                 knockback.setY(.75);
                                 livingEntity.setVelocity(knockback);
 
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, user, damage));
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                             }
                         }
 

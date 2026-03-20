@@ -164,9 +164,7 @@ public class ExpertiseAbilityItemMaker {
 
         if (weapons != null) { // usable weapons keys
             if (weapons.isEmpty()) {
-                for (ItemType type : getAllWeaponTypes()) {
-                    pdc.set(new NamespacedKey(nmlAbilities, getItemTypeString(type)), PersistentDataType.BOOLEAN, true);
-                }
+                pdc.set(new NamespacedKey(nmlAbilities, "all_weapons"), PersistentDataType.BOOLEAN, true);
             } else {
                 for (ItemType weapon : weapons) {
                     pdc.set(new NamespacedKey(nmlAbilities, getItemTypeString(weapon)), PersistentDataType.BOOLEAN, true);

@@ -1,14 +1,17 @@
-package io.github.NoOne.nMLAbilities.abilitySystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.listeners;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.UseAbilityEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseManager;
+import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
@@ -22,17 +25,20 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AbilityListener implements Listener {
+    private static NMLAbilities nmlAbilities;
     private ProfileManager profileManager;
     private final ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
     private final ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
 
     public AbilityListener(NMLAbilities nmlAbilities) {
+        this.nmlAbilities = nmlAbilities;
         this.profileManager = nmlAbilities.getProfileManager();
     }
 
@@ -44,48 +50,52 @@ public class AbilityListener implements Listener {
         int newSlot = event.getNewSlot();
         ItemStack abilityItem = player.getInventory().getItem(newSlot);
         ItemStack weapon = player.getInventory().getItem(event.getPreviousSlot());
+        ItemStack offhand = player.getInventory().getItemInOffHand();
 
         if (AbilityItemManager.isAnAbility(abilityItem)) { // if it's an ability item
             event.setCancelled(true);
 
-            // blank ability check
-            if (abilityItem.getType() == Material.LIGHT_BLUE_DYE ||
-                abilityItem.getType() == Material.GRAY_DYE ||
-                abilityItem.getType() == Material.MAGENTA_DYE) {
+            // blank ability / hard cooldown check
+            if (player.hasCooldown(abilityItem) ||
+                abilityItem.getType() == ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getType() ||
+                abilityItem.getType() == AbilityItemManager.emptyStyleAbilityItem().getType() ||
+                abilityItem.getType() == AbilityItemManager.cooldownItem().getType()) {
                 return;
             }
 
             // prerequisite check
             if (AbilityItemManager.hasPrerequisites(abilityItem) && !AbilityItemManager.meetsPrerequisites(player, abilityItem)) {
+                player.sendMessage("§c⚠ §nPrerequisites not met!§r§c ⚠");
+                return;
+            }
+
+            // weapon check
+            if (!isHoldingWeaponForAbility(player, abilityItem)) {
                 player.sendMessage("§c⚠ §nRequirements not met!§r§c ⚠");
                 return;
             }
 
-            if (!ExpertiseManager.isHoldingWeaponForAbility(player, abilityItem, weapon)) {
-                event.getPlayer().sendMessage("§c⚠ §nRequirements not met!§r§c ⚠");
-            } else {
-                if (AbilityItemManager.isToggleable(abilityItem)) { // if it's a toggleable ability
-                    boolean toggle = !AbilityItemManager.getToggleState(abilityItem); // boolean of its inverse state
+            if (AbilityItemManager.isToggleable(abilityItem)) { // if it's a toggleable ability
+                boolean toggle = !AbilityItemManager.getToggleState(abilityItem); // boolean of its inverse state
 
-                    AbilityItemManager.toggleAbility(abilityItem, toggle);
+                AbilityItemManager.toggleAbility(abilityItem, toggle);
 
-                    if (!toggle) { // if were turning it off, put it on cooldown
-                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
-                        CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
-                    } else { // if turning on, energy check
-                        if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) {
-                            Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
-                        } else {
-                            player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
-                        }
-                    }
-                } else { // if it isnt a toggleable
-                    if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) { // energy check
-                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
-                        CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
+                if (!toggle) { // if were turning it off, put it on cooldown
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
+                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
+                } else { // if turning on, energy check
+                    if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) {
+                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
+                }
+            } else { // if it isnt a toggleable
+                if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) { // energy check
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
+                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
+                } else {
+                    player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                 }
             }
         }
@@ -210,7 +220,6 @@ public class AbilityListener implements Listener {
         }
     }
 
-
     private boolean isContainer(InventoryType type) {
         return type == InventoryType.CHEST ||
                 type == InventoryType.HOPPER ||
@@ -221,5 +230,55 @@ public class AbilityListener implements Listener {
                 type == InventoryType.FURNACE ||
                 type == InventoryType.BLAST_FURNACE ||
                 type == InventoryType.SMOKER;
+    }
+
+    private static List<ItemType> getWeaponsForAbility(ItemStack item) {
+        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        List<ItemType> weapons = new ArrayList<>(List.of(SWORD, DAGGER, AXE, HAMMER, SPEAR, GLOVE, BOW, WAND, STAFF, CATALYST, SHIELD));
+        List<ItemType> weaponsToRemove = new ArrayList<>();
+
+        for (ItemType weapon : weapons) {
+            NamespacedKey weaponKey = new NamespacedKey(nmlAbilities, ItemType.getItemTypeString(weapon));
+
+            if (!pdc.has(weaponKey)) {
+                weaponsToRemove.add(weapon);
+            }
+        }
+
+        weapons.removeAll(weaponsToRemove);
+        return weapons;
+    }
+
+    private static boolean isHoldingWeaponForAbility(Player player, ItemStack abilityItem) {
+        List<ItemType> requiredWeapons = getWeaponsForAbility(abilityItem);
+        ItemStack mainhand = player.getInventory().getItemInMainHand();
+        ItemStack offhand = player.getInventory().getItemInOffHand();
+
+        // if an ability uses any weapon
+        if (abilityItem.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(nmlAbilities, "all_weapons"))) {
+            for (ItemType itemType : requiredWeapons) {
+                if (ItemSystem.isItemType(mainhand, itemType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (requiredWeapons.contains(GLOVE)) {
+            return ItemSystem.isItemType(mainhand, GLOVE) && ItemSystem.isItemType(offhand, GLOVE);
+        } else if (requiredWeapons.contains(BOW)) {
+            return ItemSystem.isItemType(mainhand, BOW) && ItemSystem.isItemType(offhand, QUIVER);
+        } else if (requiredWeapons.contains(SHIELD)) {
+            return ItemSystem.isItemType(mainhand, SHIELD) || ItemSystem.isItemType(offhand, SHIELD);
+        } else {
+            for (ItemType itemType : requiredWeapons) {
+                if (ItemSystem.isItemType(mainhand, itemType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
