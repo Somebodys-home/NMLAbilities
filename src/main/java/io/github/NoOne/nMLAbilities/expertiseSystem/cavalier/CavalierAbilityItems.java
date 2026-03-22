@@ -33,6 +33,7 @@ public class CavalierAbilityItems extends AbilityItemManager {
                 30,
                 List.of("§f§n250%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
-                List.of(SPEAR, HAMMER), skills);
+                List.of(SPEAR, HAMMER), 
+                skills);
     }
 }

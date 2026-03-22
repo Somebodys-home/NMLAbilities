@@ -31,6 +31,7 @@ public class SoldierAbilityItems extends AbilityItemManager {
                 15,
                 List.of("§f§n120%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
-                List.of(SWORD, AXE, SPEAR), skills);
+                List.of(SWORD, AXE, SPEAR), 
+                skills);
     }
 }

@@ -31,6 +31,7 @@ public class AnnulledAbilityItems extends AbilityItemManager {
                 50,
                 List.of("§5§n5x" + "§r§5" + " Dark Damage 🌀"),
                 null,
-                List.of(WAND, STAFF, CATALYST), skills);
+                List.of(WAND, STAFF, CATALYST), 
+                skills);
     }
 }

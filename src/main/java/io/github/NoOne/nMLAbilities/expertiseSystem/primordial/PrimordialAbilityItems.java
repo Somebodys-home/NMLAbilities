@@ -33,7 +33,8 @@ public class PrimordialAbilityItems extends AbilityItemManager {
                 10,
                 List.of("§4§n1.5x§r§4 Physical Damage ⚔"),
                 null,
-                List.of(), skills);
+                List.of(),
+                skills);
     }
 
     public static ItemStack pumpkinBomb(Skills skills) {
@@ -63,8 +64,8 @@ public class PrimordialAbilityItems extends AbilityItemManager {
                 new HashMap<>() {{
                     put("primordial", 10);
                 }},
-                "Dunk on your enemies with a compressed ball of air. Kobe!",
-                List.of(GROUNDED),
+                "Dunk on your foes with a compressed ball of air. Ball game.",
+                null,
                 false,
                 "Area",
                 15,
@@ -73,6 +74,7 @@ public class PrimordialAbilityItems extends AbilityItemManager {
                 15,
                 List.of("§f§n50%§r§f Weapon Damage \uD83D\uDDE1", "§7§n2.5x§r§7 Air Damage ☁"),
                 null,
-                List.of(), skills);
+                List.of(), 
+                skills);
     }
 }

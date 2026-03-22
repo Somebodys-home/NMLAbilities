@@ -21,7 +21,7 @@ public class MarksmanAbilityItems extends AbilityItemManager {
                 new HashMap<>() {{
                     put("marksman", 20);
                 }},
-                "Nock an arrow for every .5 second this ability is toggled on. After untoggling, or nocking 10 arrows, shoot all prepared arrows rapidly", 
+                "Nock an arrow for every 1/2 second this ability is toggled on. After untoggling, or nocking 10 arrows, shoot all prepared arrows rapidly",
                 null,
                 true,
                 "Single",
@@ -31,6 +31,7 @@ public class MarksmanAbilityItems extends AbilityItemManager {
                 25,
                 List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
                 null,
-                List.of(BOW), skills);
+                List.of(BOW), 
+                skills);
     }
 }

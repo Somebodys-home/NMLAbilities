@@ -31,6 +31,7 @@ public class HallowedAbilityItems extends AbilityItemManager {
                 25,
                 List.of("§f§n15%§r§f Weapon Damage \uD83D\uDDE1", "§f§n.35x§r§f Radiant Damage ✦"),
                 null,
-                List.of(WAND, STAFF, CATALYST), skills);
+                List.of(WAND, STAFF, CATALYST), 
+                skills);
     }
 }

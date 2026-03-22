@@ -55,7 +55,7 @@ public class AbilityEffectsListener implements Listener {
                 case "§3§lSecond Wind" -> ShieldHeroAbilityEffects.secondWind(player);
 
                 // Marksman abilities
-                case "§a§lRapid Shot" -> MarksmanAbilityEffects.rapidShot(player, hotbarSlot, event.getAbilityItem());
+                case "§a§lRapid Shot" -> MarksmanAbilityEffects.rapidShot(player, event.getAbilityItem(), hotbarSlot);
 
                 // Sorcerer abilities
                 case "§6§lMagic Missile EX" -> SorcererAbilityEffects.magicMissileEX(player);

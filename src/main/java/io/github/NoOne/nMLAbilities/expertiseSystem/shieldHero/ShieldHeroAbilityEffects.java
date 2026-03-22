@@ -25,8 +25,8 @@ public class ShieldHeroAbilityEffects {
 
     public static void secondWind(Player player) {
         EnergyManager.useEnergy(player, 20);
-        CooldownManager.putOnHardCooldown(player, 2);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 2);
+        CooldownManager.putOnHardCooldown(player, 1.5);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 10, false, false, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 30, 255, false, false, false));
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);

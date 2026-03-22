@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
@@ -204,7 +205,7 @@ public class AbilityListener implements Listener {
     public void fallingFromAbilityUse(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                if (player.hasMetadata("falling")) {
+                if (player.hasMetadata("ability_falling")) {
                     event.setCancelled(true);
                 }
             }
@@ -217,6 +218,13 @@ public class AbilityListener implements Listener {
             if (firework.hasMetadata("ability_firework")) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void noJumping(PlayerJumpEvent event) {
+        if (event.getPlayer().hasMetadata("ability_no_jump")) {
+            event.setCancelled(true);
         }
     }
 
@@ -237,6 +245,10 @@ public class AbilityListener implements Listener {
         List<ItemType> weapons = new ArrayList<>(List.of(SWORD, DAGGER, AXE, HAMMER, SPEAR, GLOVE, BOW, WAND, STAFF, CATALYST, SHIELD));
         List<ItemType> weaponsToRemove = new ArrayList<>();
 
+        if (item.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
+            return weapons;
+        }
+
         for (ItemType weapon : weapons) {
             NamespacedKey weaponKey = new NamespacedKey(nmlAbilities, ItemType.getItemTypeString(weapon));
 
@@ -255,7 +267,7 @@ public class AbilityListener implements Listener {
         ItemStack offhand = player.getInventory().getItemInOffHand();
 
         // if an ability uses any weapon
-        if (abilityItem.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(nmlAbilities, "all_weapons"))) {
+        if (abilityItem.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
             for (ItemType itemType : requiredWeapons) {
                 if (ItemSystem.isItemType(mainhand, itemType)) {
                     return true;

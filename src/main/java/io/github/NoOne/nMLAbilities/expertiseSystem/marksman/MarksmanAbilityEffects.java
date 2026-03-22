@@ -25,7 +25,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class MarksmanAbilityEffects {
+public class MarksmanAbilityEffects { // todo: make making toggleable abilities more streamlined
     private static NMLAbilities nmlAbilities;
     private static ProfileManager profileManager;
     private static HashMap<UUID, HashMap<String, BukkitTask>> ongoingEffects = new HashMap<>();
@@ -35,14 +35,14 @@ public class MarksmanAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void rapidShot(Player player, int hotbarSlot, ItemStack abilityItem) {
+    public static void rapidShot(Player player, ItemStack abilityItem, int hotbarSlot) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .5);
         boolean toggle = AbilityItemManager.getToggleState(abilityItem);
         final int[] preparedArrows = {0};
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 2));
-        CooldownManager.putOnInfiniteHardCooldown(player);
+        CooldownManager.putOnInfiniteHardCooldown(player, hotbarSlot);
         AttackCooldownSystem.pauseAttackCooldown(player);
 
         BukkitRunnable rapidShot = new BukkitRunnable() {
@@ -56,8 +56,6 @@ public class MarksmanAbilityEffects {
 
                 // fire arrows at 10
                 if (preparedArrows[0] == 10) {
-                    AbilityItemManager.toggleAbility(abilityItem, toggle);
-//                    CooldownManager.putOnCooldown(player, AbilityItemManager.getCooldown(abilityItem));
                     ongoingEffects.get(player.getUniqueId()).get("rapidShot").cancel();
                     ongoingEffects.get(player.getUniqueId()).remove("rapidShot");
                     AbilityItemManager.toggleAbility(abilityItem, false);
@@ -101,6 +99,7 @@ public class MarksmanAbilityEffects {
             if (ongoingEffects.containsKey(player.getUniqueId()) && ongoingEffects.get(player.getUniqueId()).containsKey("rapidShot")) {
                 ongoingEffects.get(player.getUniqueId()).get("rapidShot").cancel();
                 ongoingEffects.get(player.getUniqueId()).remove("rapidShot");
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
 
                 new BukkitRunnable() {
                     int arrows = player.getMetadata("rapid_shot_arrows").getFirst().asInt();
@@ -112,7 +111,7 @@ public class MarksmanAbilityEffects {
                         player.sendTitle("§a" + arrows + " \uD83C\uDFF9", "", 2, 20, 5);
                         shootArrow(player, 3.5, .5, damage);
                         player.getWorld().playSound(player, Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
-                        player.removePotionEffect(PotionEffectType.SLOWNESS);
+                        CooldownManager.putOnHardCooldown(player, .5);
 
                         if (arrows == 0) {
                             AttackCooldownSystem.resumeAttackCooldown(player);

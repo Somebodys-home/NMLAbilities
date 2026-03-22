@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AbilityItemManager {
+    // defining keys
     private static NamespacedKey abilityKey;
     private static NamespacedKey expertiseKey;
     private static NamespacedKey cooldownKey;
@@ -24,7 +26,7 @@ public class AbilityItemManager {
     private static NamespacedKey energyKey;
     private static NamespacedKey unusableKey;
 
-    /// prerequisite keys
+    // prerequisite keys
     private static NamespacedKey groundedKey;
 
     public AbilityItemManager(NMLAbilities nmlAbilities) {
@@ -39,30 +41,21 @@ public class AbilityItemManager {
     }
 
     public static ItemStack emptyStyleAbilityItem() {
-        ItemStack style = new ItemStack(Material.LIGHT_BLUE_DYE);
-        ItemMeta meta = style.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-
-        pdc.set(abilityKey, PersistentDataType.INTEGER, 1);
-        meta.setDisplayName(ChatColor.AQUA + "Empty Style Ability");
-        lore.add(ChatColor.GRAY + "An empty ability slot. Dunno why you'd put nothing here.");
-        meta.setLore(lore);
-        style.setItemMeta(meta);
-
-        return style;
+        return ItemCreator.createItem(
+                Material.LIGHT_BLUE_DYE,
+                1,
+                "§bEmpty Style Ability",
+                List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
+        );
     }
-    
+
     public static ItemStack cooldownItem() {
-        ItemStack cooldown = new ItemStack(Material.GRAY_DYE);
-        ItemMeta meta = cooldown.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-
-        pdc.set(abilityKey, PersistentDataType.INTEGER, 1);
-        meta.setDisplayName(ChatColor.GRAY + "This ability is on cooldown!");
-        cooldown.setItemMeta(meta);
-
-        return cooldown;
+        return ItemCreator.createItem(
+                Material.GRAY_DYE,
+                1,
+                "§7This ability is on cooldown!",
+                List.of()
+        );
     }
 
     public static void toggleAbility(ItemStack item, boolean onOff) {
@@ -77,6 +70,7 @@ public class AbilityItemManager {
                     item.setType(Material.LIME_DYE);
                 } else { // turning it off
                     Material original = getOriginalItemMaterial(item);
+
                     if (original != null) {
                         item.setType(original);
                     }

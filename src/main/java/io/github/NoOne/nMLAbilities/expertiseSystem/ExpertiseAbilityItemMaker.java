@@ -21,9 +21,11 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class ExpertiseAbilityItemMaker {
     private static NMLAbilities nmlAbilities;
+    private static NamespacedKey anyWeaponKey;
 
     public ExpertiseAbilityItemMaker(NMLAbilities nmlAbilities) {
         ExpertiseAbilityItemMaker.nmlAbilities = nmlAbilities;
+        anyWeaponKey = new NamespacedKey(nmlAbilities, "any_weapon");
     }
 
     public static ItemStack emptyExpertiseAbilityItem() {
@@ -127,7 +129,7 @@ public class ExpertiseAbilityItemMaker {
             } else {
                 for (ItemType weapon : weapons) {
                     if (weapon == BOW) {
-                        lore.add("§e- " + getItemTypeString(weapon) + " & quiver");
+                        lore.add("§e- " + getItemTypeString(weapon) + " & Quiver");
                     } else if (weapon == GLOVE) {
                         lore.add("§e- " + getItemTypeString(weapon) + "s (both)");
                     } else if (weapon == STAFF) {
@@ -164,7 +166,7 @@ public class ExpertiseAbilityItemMaker {
 
         if (weapons != null) { // usable weapons keys
             if (weapons.isEmpty()) {
-                pdc.set(new NamespacedKey(nmlAbilities, "all_weapons"), PersistentDataType.BOOLEAN, true);
+                pdc.set(anyWeaponKey, PersistentDataType.BOOLEAN, true);
             } else {
                 for (ItemType weapon : weapons) {
                     pdc.set(new NamespacedKey(nmlAbilities, getItemTypeString(weapon)), PersistentDataType.BOOLEAN, true);
@@ -232,7 +234,7 @@ public class ExpertiseAbilityItemMaker {
             case "cavalier" -> Material.MACE;
             case "martialartist" -> Material.RED_GLAZED_TERRACOTTA;
             case "shieldhero" -> Material.SHIELD;
-            case "marksman" -> Material.BOW;
+            case "marksman" -> Material.TARGET;
             case "sorcerer" -> Material.BOOK;
             case "primordial" -> Material.OAK_SAPLING;
             case "hallowed" -> Material.OXEYE_DAISY;
@@ -255,5 +257,9 @@ public class ExpertiseAbilityItemMaker {
             case "annulled" -> "§5";
             default -> "";
         };
+    }
+
+    public static NamespacedKey getAnyWeaponKey() {
+        return anyWeaponKey;
     }
 }

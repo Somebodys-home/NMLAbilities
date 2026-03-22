@@ -31,6 +31,7 @@ public class MartialArtistAbilityItems extends AbilityItemManager {
                 10,
                 List.of("§f§n300%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
-                List.of(GLOVE), skills);
+                List.of(GLOVE), 
+                skills);
     }
 }

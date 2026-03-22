@@ -17,6 +17,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -39,6 +40,7 @@ public class MarauderAbilityEffects {
         CooldownManager.putOnHardCooldown(player, 6);
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 6);
         player.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(1);
+        player.setMetadata("ability_no_jump", new FixedMetadataValue(nmlAbilities, true));
 
         new BukkitRunnable() {
             int tornadoTicks = 100;
@@ -48,9 +50,11 @@ public class MarauderAbilityEffects {
                 tornadoTicks--;
 
                 // tiny dash
-                Vector knockback = player.getLocation().getDirection().multiply(.5);
-                knockback.setY(-2);
-                player.setVelocity(knockback);
+                if (player.isOnGround()) {
+                    Vector tinyDash = player.getLocation().getDirection().multiply(.5);
+                    tinyDash.setY(-2);
+                    player.setVelocity(tinyDash);
+                }
 
                 // particles
                 if (tornadoTicks % 2 == 0) {
@@ -71,6 +75,7 @@ public class MarauderAbilityEffects {
                 if (tornadoTicks == 0) {
                     this.cancel();
                     player.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(.6);
+                    player.removeMetadata("ability_no_jump", nmlAbilities);
                 }
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);

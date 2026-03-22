@@ -31,7 +31,8 @@ public class SorcererAbilityItems extends AbilityItemManager {
                 15,
                 List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per missile)"),
                 null,
-                List.of(WAND, STAFF, CATALYST), skills);
+                List.of(WAND, STAFF, CATALYST), 
+                skills);
     }
 
     public static ItemStack dragonsBreath(Skills skills) {
@@ -50,6 +51,7 @@ public class SorcererAbilityItems extends AbilityItemManager {
                 25,
                 List.of("§c§n1x§r§c Fire Damage 🔥 §7§o(every 1s)"),
                 null,
-                List.of(WAND, STAFF), skills);
+                List.of(WAND, STAFF), 
+                skills);
     }
 }

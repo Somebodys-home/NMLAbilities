@@ -29,7 +29,7 @@ public class MartialArtistAbilityEffects {
     }
 
     public static void tenHitCombo(Player player) {
-        player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
 
         HashSet<UUID> hitEntityUUIDs = new HashSet<>();
         HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
@@ -573,7 +573,7 @@ public class MartialArtistAbilityEffects {
                     return;
                 }
 
-                player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+                player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
                 hitEntityUUIDs.clear();
                 CooldownManager.putOnHardCooldown(player, 1);
 

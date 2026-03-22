@@ -35,7 +35,6 @@ public class HallowedAbilityEffects {
 
         damage.remove("radiantdamage");
         damage.putAll(radiantDamage);
-
         EnergyManager.useEnergy(player, 25);
         CooldownManager.putOnInfiniteHardCooldown(player);
         player.playSound(player, Sound.ITEM_TRIDENT_RIPTIDE_1, 1f, 1f);

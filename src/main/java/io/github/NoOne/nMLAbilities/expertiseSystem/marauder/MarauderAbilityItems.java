@@ -24,7 +24,7 @@ public class MarauderAbilityItems extends AbilityItemManager {
                     put("marauder", 20);
                 }},
                 "Hurl yourself forwards as a whirligig of anger issues, bad intentions, and BLADES!",
-                List.of(GROUNDED),
+                null,
                 false,
                 "Self",
                 3,
@@ -33,6 +33,7 @@ public class MarauderAbilityItems extends AbilityItemManager {
                 30,
                 List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(every .25s)"),
                 null,
-                List.of(SWORD, AXE), skills);
+                List.of(SWORD, AXE), 
+                skills);
     }
 }

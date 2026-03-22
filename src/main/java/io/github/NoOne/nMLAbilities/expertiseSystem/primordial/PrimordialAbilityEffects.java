@@ -36,8 +36,8 @@ public class PrimordialAbilityEffects {
         FallingBlock rock = player.getWorld().spawnFallingBlock(player.getLocation().add(0, 1.5, 0), Bukkit.createBlockData(Material.STONE_BUTTON));
 
         EnergyManager.useEnergy(player, 10);
-        CooldownManager.putOnHardCooldown(player, 1);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1);
+        CooldownManager.putOnHardCooldown(player, .5);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, .5);
 
         rock.setCancelDrop(true);
         rock.setVelocity(player.getLocation().getDirection().multiply(2).add(new Vector(0, .3, 0)));
@@ -61,7 +61,6 @@ public class PrimordialAbilityEffects {
                 }
 
                 if (!hitEntityUUIDs.isEmpty()) {
-
                     for (UUID uuid : hitEntityUUIDs) {
                         Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) Bukkit.getEntity(uuid), player, physicalDamage));
                         hitEntityUUIDs.remove(uuid);
@@ -104,7 +103,7 @@ public class PrimordialAbilityEffects {
         Location swing = baseLocation.clone().add(forward);
         player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, swing, 1);
 
-        EnergyManager.useEnergy(player, 10);
+        EnergyManager.useEnergy(player, 30);
         CooldownManager.putOnHardCooldown(player, 1.25);
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.25);
         pumpkinBomb.setCancelDrop(true);
@@ -225,7 +224,7 @@ public class PrimordialAbilityEffects {
     }
 
     public static void airBall(Player player) {
-        player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
 
         HashSet<UUID> hitEntityUUIDs = new HashSet<>();
         Particle.DustOptions air = new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1.0F);
@@ -240,7 +239,7 @@ public class PrimordialAbilityEffects {
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 2);
         player.playSound(player, Sound.ENTITY_BREEZE_JUMP, 1f, 1f);
 
-        /// jump
+        // jump
         Vector jump = player.getLocation().getDirection().multiply(3);
         jump.setY(1.15);
         player.setVelocity(jump);
@@ -266,9 +265,9 @@ public class PrimordialAbilityEffects {
                     player.playSound(player, Sound.ENTITY_BREEZE_SHOOT, 1f, 1f);
 
                     // recoil
-                    Vector recoil = player.getLocation().getDirection().normalize().multiply(-1.25);
+                    Vector recoil = player.getLocation().getDirection().normalize().multiply(-1);
 
-                    recoil.setY(recoil.getY() * .55);
+                    recoil.setY(recoil.getY() * .75);
                     jump.multiply(.3);
                     jump.setY(0);
                     player.setVelocity(jump.add(recoil));
@@ -333,7 +332,7 @@ public class PrimordialAbilityEffects {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            player.removeMetadata("falling", nmlAbilities);
+                            player.removeMetadata("ability_falling", nmlAbilities);
                         }
                     }.runTaskLater(nmlAbilities, 1L);
 

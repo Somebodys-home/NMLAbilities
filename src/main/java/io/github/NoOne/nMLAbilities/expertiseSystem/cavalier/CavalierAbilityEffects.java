@@ -32,7 +32,7 @@ public class CavalierAbilityEffects {
     }
 
     public static void seismicSlam(Player player) {
-        player.setMetadata("falling", new FixedMetadataValue(nmlAbilities, true));
+        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
 
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 2.5);
@@ -67,7 +67,7 @@ public class CavalierAbilityEffects {
                 @Override
                 public void run() {
                     if (player.isOnGround()) {
-                        player.removeMetadata("falling", nmlAbilities);
+                        player.removeMetadata("ability_falling", nmlAbilities);
 
                         flyingParticles.cancel();
                         player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, player.getLocation().add(0, .5, 0), 3, .25, 0, .25, 0);

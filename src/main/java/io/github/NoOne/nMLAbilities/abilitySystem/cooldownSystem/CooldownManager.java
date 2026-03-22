@@ -3,6 +3,7 @@ package io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -32,16 +33,19 @@ public class CooldownManager {
                     while (it.hasNext()) {
                         CooldownInstance ci = it.next();
 
-                        // Decrement cooldown
+                        // decrement cooldown
                         ci.setCooldown(ci.getCooldown() - 1);
 
-                        // Restore item when cooldown ends
+                        // restore item when cooldown ends
                         if (ci.getCooldown() <= 0) {
-                            player.getInventory().setItem(ci.getHotbarSlot(), ci.getOriginalItem());
+                            ItemStack originalItem = ci.getOriginalItem();
+
+                            player.getInventory().setItem(ci.getHotbarSlot(), originalItem);
                             it.remove();
-                        } else {
-                            // Still on cooldown: show cooldown item
-                            player.getInventory().setItem(ci.getHotbarSlot(), AbilityItemManager.cooldownItem());
+
+                            if (player.hasCooldown(originalItem.getType())) { // remove cooldown on the original ability item
+                                player.setCooldown(originalItem.getType(), 0);
+                            }
                         }
                     }
                 }
@@ -89,22 +93,59 @@ public class CooldownManager {
 
     public static void putOnInfiniteHardCooldown(Player player) {
         PlayerInventory playerInventory = player.getInventory();
+        Material originalStyle = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(0));
+        Material originalExpertise1 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(1));
+        Material originalExpertise2 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(2));
+        Material originalExpertise3 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(3));
 
         player.setCooldown(playerInventory.getItem(0), 9999);
         player.setCooldown(playerInventory.getItem(1), 9999);
         player.setCooldown(playerInventory.getItem(2), 9999);
         player.setCooldown(playerInventory.getItem(3), 9999);
-        player.setCooldown(AbilityItemManager.cooldownItem(), 9999);
+        player.setCooldown(AbilityItemManager.cooldownItem(), 999);
+
+        if (originalStyle != null) player.setCooldown(originalStyle, 9999);
+        if (originalExpertise1 != null) player.setCooldown(originalExpertise1, 9999);
+        if (originalExpertise2 != null) player.setCooldown(originalExpertise2, 9999);
+        if (originalExpertise3 != null) player.setCooldown(originalExpertise3, 9999);
+    }
+
+    public static void putOnInfiniteHardCooldown(Player player, int exception) {
+        PlayerInventory playerInventory = player.getInventory();
+        Material originalStyle = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(0));
+        Material originalExpertise1 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(1));
+        Material originalExpertise2 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(2));
+        Material originalExpertise3 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(3));
+
+        if (exception != 0) player.setCooldown(playerInventory.getItem(0), 9999);
+        if (exception != 1) player.setCooldown(playerInventory.getItem(1), 9999);
+        if (exception != 2) player.setCooldown(playerInventory.getItem(2), 9999);
+        if (exception != 3) player.setCooldown(playerInventory.getItem(3), 9999);
+        player.setCooldown(AbilityItemManager.cooldownItem(), 999);
+
+        if (originalStyle != null && exception != 0) player.setCooldown(originalStyle, 9999);
+        if (originalExpertise1 != null && exception != 1) player.setCooldown(originalExpertise1, 9999);
+        if (originalExpertise2 != null && exception != 2) player.setCooldown(originalExpertise2, 9999);
+        if (originalExpertise3 != null && exception != 3) player.setCooldown(originalExpertise3, 9999);
     }
 
     public static void removeHardCooldown(Player player) {
         PlayerInventory playerInventory = player.getInventory();
+        Material originalStyle = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(0));
+        Material originalExpertise1 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(1));
+        Material originalExpertise2 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(2));
+        Material originalExpertise3 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(3));
 
-        player.setCooldown(playerInventory.getItem(0), 0);
-        player.setCooldown(playerInventory.getItem(1), 0);
-        player.setCooldown(playerInventory.getItem(2), 0);
-        player.setCooldown(playerInventory.getItem(3), 0);
-        player.setCooldown(AbilityItemManager.cooldownItem(), 0);
+        player.setCooldown(playerInventory.getItem(0), 1);
+        player.setCooldown(playerInventory.getItem(1), 1);
+        player.setCooldown(playerInventory.getItem(2), 1);
+        player.setCooldown(playerInventory.getItem(3), 1);
+        player.setCooldown(AbilityItemManager.cooldownItem(), 1);
+
+        if (originalStyle != null) player.setCooldown(originalStyle, 1);
+        if (originalExpertise1 != null) player.setCooldown(originalExpertise1, 1);
+        if (originalExpertise2 != null) player.setCooldown(originalExpertise2, 1);
+        if (originalExpertise3 != null) player.setCooldown(originalExpertise3, 1);
     }
 
     public static void resetCooldown(Player player, int hotbarSlot) {

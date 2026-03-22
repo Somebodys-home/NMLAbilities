@@ -31,6 +31,7 @@ public class ShieldHeroAbilityItems extends AbilityItemManager {
                 10,
                 null,
                 List.of("§fRestore your §nGuard§r§f ⛨"),
-                List.of(SHIELD), skills);
+                List.of(SHIELD), 
+                skills);
     }
 }
