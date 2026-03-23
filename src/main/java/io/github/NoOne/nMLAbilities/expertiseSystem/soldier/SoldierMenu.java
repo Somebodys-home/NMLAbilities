@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseConfirmMenu;
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMenu;
 import io.github.NoOne.menuSystem.Menu;
@@ -27,7 +27,7 @@ public class SoldierMenu extends Menu {
     public SoldierMenu(NMLAbilities nmlAbilities, PlayerMenuUtility playerMenuUtility) {
         super(playerMenuUtility);
         this.nmlAbilities = nmlAbilities;
-        selectedAbilities = nmlAbilities.getSelectedManager().getAbilityProfile(playerMenuUtility.getOwner().getUniqueId());
+        selectedAbilities = nmlAbilities.getSelectedManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
         skills = nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills();
     }
 
@@ -60,7 +60,7 @@ public class SoldierMenu extends Menu {
                 return;
             }
 
-            new ExpertiseConfirmMenu(nmlAbilities, playerMenuUtility, selected, this).open();
+            new ExpertiseConfirmMenu(playerMenuUtility, selected, this).open();
         }
     }
 

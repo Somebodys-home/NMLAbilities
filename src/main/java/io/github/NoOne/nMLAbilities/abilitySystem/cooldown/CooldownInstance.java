@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.cooldown;
 
 import org.bukkit.inventory.ItemStack;
 

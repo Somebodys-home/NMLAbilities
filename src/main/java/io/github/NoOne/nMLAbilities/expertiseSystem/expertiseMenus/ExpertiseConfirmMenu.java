@@ -1,38 +1,35 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEvent;
 import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
+import io.github.NoOne.nMLItems.ItemCreator;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class ExpertiseConfirmMenu extends Menu {
     private Player player;
     private final ItemStack expertise1;
     private final ItemStack expertise2;
     private final ItemStack expertise3;
-    private final ItemStack selected;
-    private final Menu previous;
-    private SelectedAbilities selectedAbilities;
-    private SelectedManager selectedManager;
+    private final ItemStack newAbility;
+    private final Menu previousMenu;
 
-    public ExpertiseConfirmMenu(NMLAbilities nmlAbilities, PlayerMenuUtility playerMenuUtility, ItemStack selected, Menu previous) {
+    public ExpertiseConfirmMenu(PlayerMenuUtility playerMenuUtility, ItemStack newAbility, Menu previousMenu) {
         super(playerMenuUtility);
         player = playerMenuUtility.getOwner();
         this.expertise1 = player.getInventory().getItem(1);
         this.expertise2 = player.getInventory().getItem(2);
         this.expertise3 = player.getInventory().getItem(3);
-        this.selected = selected;
-        this.previous = previous;
-        selectedManager = nmlAbilities.getSelectedManager();
-        selectedAbilities = selectedManager.getAbilityProfile(player.getUniqueId());
+        this.newAbility = newAbility;
+        this.previousMenu = previousMenu;
     }
 
     @Override
@@ -56,9 +53,8 @@ public class ExpertiseConfirmMenu extends Menu {
                     return;
                 }
 
-                player.getInventory().setItem(1, selected);
-                selectedAbilities.setSelectedAbilitiesFromInventory(player.getInventory());
-                selectedManager.saveProfileToConfig(player);
+                player.getInventory().setItem(1, newAbility);
+                Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise1", newAbility));
             }
             case 13 -> {
                 if (expertise2.isSimilar(AbilityItemManager.cooldownItem())) {
@@ -66,9 +62,8 @@ public class ExpertiseConfirmMenu extends Menu {
                     return;
                 }
 
-                player.getInventory().setItem(2, selected);
-                selectedAbilities.setSelectedAbilitiesFromInventory(player.getInventory());
-                selectedManager.saveProfileToConfig(player);
+                player.getInventory().setItem(2, newAbility);
+                Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise2", newAbility));
             }
             case 15 -> {
                 if (expertise3.isSimilar(AbilityItemManager.cooldownItem())) {
@@ -76,14 +71,13 @@ public class ExpertiseConfirmMenu extends Menu {
                     return;
                 }
 
-                player.getInventory().setItem(3, selected);
-                selectedAbilities.setSelectedAbilitiesFromInventory(player.getInventory());
-                selectedManager.saveProfileToConfig(player);
+                player.getInventory().setItem(3, newAbility);
+                Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise3", newAbility));
             }
-            case 22 -> previous.open();
+            case 22 -> previousMenu.open();
         }
 
-        previous.open();
+        previousMenu.open();
     }
 
     @Override
@@ -93,19 +87,15 @@ public class ExpertiseConfirmMenu extends Menu {
 
     @Override
     public void setMenuItems() {
-        inventory.setItem(4, selected);
+        inventory.setItem(4, newAbility);
         inventory.setItem(11, expertise1);
         inventory.setItem(13, expertise2);
         inventory.setItem(15, expertise3);
-
-        // Backout button
-        ItemStack nvm = new ItemStack(Material.RED_DYE);
-        ItemMeta meta = nvm.getItemMeta();
-        assert meta != null;
-
-        meta.setDisplayName("§4§l<= Go back");
-        nvm.setItemMeta(meta);
-
-        inventory.setItem(22, nvm);
+        inventory.setItem(22, ItemCreator.createItem( // Backout button
+                Material.BARRIER,
+                1,
+                "§c§l<- §r§cGo Back",
+                List.of()
+        ));
     }
 }

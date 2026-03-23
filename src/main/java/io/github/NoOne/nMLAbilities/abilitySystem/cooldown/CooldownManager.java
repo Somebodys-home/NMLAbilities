@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.cooldown;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
@@ -57,7 +57,9 @@ public class CooldownManager {
         for (Map.Entry<UUID, HashSet<CooldownInstance>> playersCooldowns : ongoingCooldowns.entrySet()) {
             Player player = Bukkit.getPlayer(playersCooldowns.getKey());
 
-            if (player != null) resetAllCooldowns(player);
+            if (player != null) {
+                resetAllCooldowns(player);
+            }
         }
 
         ongoingCooldowns.clear();

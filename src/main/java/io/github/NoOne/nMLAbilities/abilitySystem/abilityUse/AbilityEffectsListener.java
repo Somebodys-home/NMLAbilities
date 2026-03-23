@@ -1,8 +1,7 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.listeners;
+package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.UseAbilityEvent;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
@@ -21,17 +20,17 @@ import org.bukkit.event.Listener;
 import java.util.Arrays;
 
 public class AbilityEffectsListener implements Listener {
-    private SelectedManager selectedManager;
+    private SelectedAbilitiesManager selectedAbilitiesManager;
 
     public AbilityEffectsListener(NMLAbilities nmlAbilities) {
-        selectedManager = nmlAbilities.getSelectedManager();
+        selectedAbilitiesManager = nmlAbilities.getSelectedManager();
     }
 
     @EventHandler
     public void onUseAbility(UseAbilityEvent event) {
         Player player = event.getPlayer();
         int hotbarSlot = event.getHotbarSlot();
-        String[] selectedAbilities = selectedManager.getAbilityProfile(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
+        String[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
         String abilityName = event.getAbilityItem().getItemMeta().getDisplayName();
 
         if (Arrays.asList(selectedAbilities).contains(abilityName)) {

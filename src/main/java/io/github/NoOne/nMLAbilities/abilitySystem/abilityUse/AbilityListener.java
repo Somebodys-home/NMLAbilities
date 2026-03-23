@@ -1,12 +1,11 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.listeners;
+package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.UseAbilityEvent;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
@@ -82,18 +81,18 @@ public class AbilityListener implements Listener {
                 AbilityItemManager.toggleAbility(abilityItem, toggle);
 
                 if (!toggle) { // if were turning it off, put it on cooldown
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
                 } else { // if turning on, energy check
                     if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) {
-                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
+                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
                 }
             } else { // if it isnt a toggleable
                 if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) { // energy check
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot, offhand));
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
                 } else {
                     player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");

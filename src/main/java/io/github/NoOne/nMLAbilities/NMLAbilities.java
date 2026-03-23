@@ -1,12 +1,12 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.abilitySystem.listeners.AbilityEffectsListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.listeners.AbilityListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedConfig;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem.SelectedManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
@@ -33,8 +33,8 @@ public final class NMLAbilities extends JavaPlugin {
     private ProfileManager profileManager;
     private SkillSetManager skillSetManager;
     private GuardingSystem guardingSystem;
-    private SelectedManager selectedManager;
-    private SelectedConfig selectedConfig;
+    private SelectedAbilitiesManager selectedAbilitiesManager;
+    private SelectedAbilitiesConfig selectedAbilitiesConfig;
     private CooldownManager cooldownManager;
 
     @Override
@@ -45,11 +45,11 @@ public final class NMLAbilities extends JavaPlugin {
         skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
 
-        selectedConfig = new SelectedConfig(this, "abilities");
-        selectedConfig.loadConfig();
+        selectedAbilitiesConfig = new SelectedAbilitiesConfig(this, "abilities");
+        selectedAbilitiesConfig.loadConfig();
 
-        selectedManager = new SelectedManager(this);
-        selectedManager.loadProfilesFromConfig();
+        selectedAbilitiesManager = new SelectedAbilitiesManager(this);
+        selectedAbilitiesManager.loadSelectedAbilitiesFromConfig();
 
         cooldownManager = new CooldownManager(this);
         cooldownManager.start();
@@ -70,7 +70,7 @@ public final class NMLAbilities extends JavaPlugin {
 
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
-        getServer().getPluginManager().registerEvents(new SelectedListener(this), this);
+        getServer().getPluginManager().registerEvents(new SelectedAbilitiesListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityEffectsListener(this), this);
     }
@@ -78,24 +78,24 @@ public final class NMLAbilities extends JavaPlugin {
     @Override
     public void onDisable() {
         cooldownManager.stop();
-        selectedManager.saveProfilesToConfig();
-        selectedConfig.saveConfig();
+        selectedAbilitiesManager.saveAllSelectedAbilitiesToConfig();
+        selectedAbilitiesConfig.saveConfig();
     }
 
     public static NMLAbilities getInstance() {
         return instance;
     }
 
-    public SelectedManager getSelectedManager() {
-        return selectedManager;
+    public SelectedAbilitiesManager getSelectedManager() {
+        return selectedAbilitiesManager;
     }
 
     public SkillSetManager getSkillSetManager() {
         return skillSetManager;
     }
 
-    public SelectedConfig getSelectedConfig() {
-        return selectedConfig;
+    public SelectedAbilitiesConfig getSelectedConfig() {
+        return selectedAbilitiesConfig;
     }
 
     public GuardingSystem getGuardingSystem() {

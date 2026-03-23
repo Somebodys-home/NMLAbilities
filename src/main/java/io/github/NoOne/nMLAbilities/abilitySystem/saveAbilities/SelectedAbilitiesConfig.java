@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -7,13 +7,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class SelectedConfig {
+public class SelectedAbilitiesConfig {
     private NMLAbilities nmlAbilities;
     private File file;
     private String fileName;
     private FileConfiguration config = new YamlConfiguration();
 
-    public SelectedConfig(NMLAbilities nmlAbilities, String filename) {
+    public SelectedAbilitiesConfig(NMLAbilities nmlAbilities, String filename) {
         this.nmlAbilities = nmlAbilities;
         this.fileName = filename;
         file = new File(nmlAbilities.getDataFolder(), filename + ".yml");

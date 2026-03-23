@@ -1,6 +1,7 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilitiesSystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
-import org.bukkit.inventory.PlayerInventory;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 
 public class SelectedAbilities {
     private String style;
@@ -20,17 +21,10 @@ public class SelectedAbilities {
     }
 
     public void clearSelectedAbilities() {
-        style = "§bEmpty Style Ability";
-        expertise1 = "§dEmpty Expertise Ability";
-        expertise2 = "§dEmpty Expertise Ability";
-        expertise3 = "§dEmpty Expertise Ability";
-    }
-
-    public void setSelectedAbilitiesFromInventory(PlayerInventory playerInventory) {
-        style = playerInventory.getItem(0).getItemMeta().getDisplayName();
-        expertise1 = playerInventory.getItem(1).getItemMeta().getDisplayName();
-        expertise2 = playerInventory.getItem(2).getItemMeta().getDisplayName();
-        expertise3 = playerInventory.getItem(3).getItemMeta().getDisplayName();
+        style = AbilityItemManager.emptyStyleAbilityItem().getItemMeta().getDisplayName();
+        expertise1 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
+        expertise2 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
+        expertise3 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
     }
 
     public String getStyle() {
