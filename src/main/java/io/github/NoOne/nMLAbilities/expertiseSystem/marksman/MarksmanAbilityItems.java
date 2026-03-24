@@ -17,19 +17,19 @@ public class MarksmanAbilityItems extends AbilityItemManager {
 
     public static ItemStack rapidShot(Skills skills) {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "Rapid Shot",
+                "Arrow Hailstorm",
                 new HashMap<>() {{
                     put("marksman", 20);
                 }},
-                "Nock an arrow for every 1/2 second this ability is toggled on. After untoggling, or nocking 10 arrows, shoot all prepared arrows rapidly",
+                "EXTREME WEATHER WARNING: A storm of hail-sized arrows has been forecasted in your area. Find shelter immediately.",
                 null,
-                true,
-                "Single",
-                70,
-                0,
-                10,
-                25,
-                List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
+                false,
+                "Area",
+                20,
+                7,
+                3,
+                30,
+                List.of("§f§n25%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
                 null,
                 List.of(BOW), 
                 skills);

@@ -3,11 +3,9 @@ package io.github.NoOne.nMLAbilities.abilitySystem;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
@@ -58,25 +56,18 @@ public class AbilityItemManager {
         );
     }
 
-    public static void toggleAbility(ItemStack item, boolean onOff) {
-        if (item != null && item.hasItemMeta()) {
-            ItemMeta meta = item.getItemMeta();
-            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+    public static void toggleAbility(ItemStack ability) {
+        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
 
-            if (pdc.has(toggleKey)) {
-                pdc.set(toggleKey, PersistentDataType.BOOLEAN, onOff);
+        if (pdc.has(toggleKey)) {
+            boolean inverseState = !pdc.get(toggleKey, PersistentDataType.BOOLEAN);
 
-                if (onOff) { // turning it on
-                    item.setType(Material.LIME_DYE);
-                } else { // turning it off
-                    Material original = getOriginalItemMaterial(item);
+            pdc.set(toggleKey, PersistentDataType.BOOLEAN, inverseState);
 
-                    if (original != null) {
-                        item.setType(original);
-                    }
-                }
-
-                item.setItemMeta(meta);
+            if (inverseState) { // turning it on
+                ability.setType(Material.LIME_DYE);
+            } else { // turning it off
+                ability.setType(getOriginalItemMaterial(ability));
             }
         }
     }

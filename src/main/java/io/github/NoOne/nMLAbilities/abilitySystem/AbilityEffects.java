@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+
 public class AbilityEffects { 
     public static void particleSphere(Particle particle, Location center, double radius, int particleCircles) {
         for (double i = 0; i <= Math.PI; i += Math.PI / particleCircles) { // vertical circles
@@ -75,5 +77,18 @@ public class AbilityEffects {
 
             center.getWorld().spawnParticle(particle, particleLocation,0, velocity.getX(), velocity.getY(), velocity.getZ());
         }
+    }
+
+    public static ArrayList<Location> getParticleCircleLocations(Location center, double radius, int particleCount) {
+        ArrayList<Location> locations = new ArrayList<>();
+
+        for (int i = 0; i < particleCount; i++) {
+            double angle = 2 * Math.PI * i / particleCount;
+            double x = Math.cos(angle) * radius;
+            double z = Math.sin(angle) * radius;
+            locations.add(center.clone().add(x, 0, z));
+        }
+
+        return locations;
     }
 }

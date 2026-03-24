@@ -9,11 +9,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class SelectedAbilitiesListener implements Listener {
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SelectedAbilitiesConfig selectedAbilitiesConfig;
 
     public SelectedAbilitiesListener(NMLAbilities nmlAbilities) {
         selectedAbilitiesManager = nmlAbilities.getSelectedManager();
-        selectedAbilitiesConfig = nmlAbilities.getSelectedConfig();
     }
 
     @EventHandler
@@ -36,9 +34,9 @@ public class SelectedAbilitiesListener implements Listener {
             selectedAbilities.clearSelectedAbilities();
         } else {
             switch (event.getChangedAbility()) {
-                case "expertise1" -> selectedAbilities.setExpertise1(newAbility.getItemMeta().getDisplayName());
-                case "expertise2" -> selectedAbilities.setExpertise2(newAbility.getItemMeta().getDisplayName());
-                case "expertise3" -> selectedAbilities.setExpertise3(newAbility.getItemMeta().getDisplayName());
+                case "expertise1" -> selectedAbilities.setExpertise1(newAbility.getItemMeta().getDisplayName().substring(4));
+                case "expertise2" -> selectedAbilities.setExpertise2(newAbility.getItemMeta().getDisplayName().substring(4));
+                case "expertise3" -> selectedAbilities.setExpertise3(newAbility.getItemMeta().getDisplayName().substring(4));
             }
         }
 

@@ -21,10 +21,10 @@ public class SelectedAbilities {
     }
 
     public void clearSelectedAbilities() {
-        style = AbilityItemManager.emptyStyleAbilityItem().getItemMeta().getDisplayName();
-        expertise1 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
-        expertise2 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
-        expertise3 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName();
+        style = AbilityItemManager.emptyStyleAbilityItem().getItemMeta().getDisplayName().substring(2);
+        expertise1 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
+        expertise2 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
+        expertise3 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
     }
 
     public String getStyle() {

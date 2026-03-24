@@ -33,7 +33,7 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AbilityListener implements Listener {
     private static NMLAbilities nmlAbilities;
-    private ProfileManager profileManager;
+    private final ProfileManager profileManager;
     private final ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
     private final ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
 
@@ -48,52 +48,51 @@ public class AbilityListener implements Listener {
         UUID uuid = player.getUniqueId();
         double currentEnergy = profileManager.getPlayerProfile(uuid).getStats().getCurrentEnergy();
         int newSlot = event.getNewSlot();
-        ItemStack abilityItem = player.getInventory().getItem(newSlot);
+        ItemStack ability = player.getInventory().getItem(newSlot);
         ItemStack weapon = player.getInventory().getItem(event.getPreviousSlot());
-        ItemStack offhand = player.getInventory().getItemInOffHand();
 
-        if (AbilityItemManager.isAnAbility(abilityItem)) { // if it's an ability item
+        if (AbilityItemManager.isAnAbility(ability)) { // if it's an ability item
             event.setCancelled(true);
 
             // blank ability / hard cooldown check
-            if (player.hasCooldown(abilityItem) ||
-                abilityItem.getType() == ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getType() ||
-                abilityItem.getType() == AbilityItemManager.emptyStyleAbilityItem().getType() ||
-                abilityItem.getType() == AbilityItemManager.cooldownItem().getType()) {
+            if (player.hasCooldown(ability) ||
+                ability.getType() == ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getType() ||
+                ability.getType() == AbilityItemManager.emptyStyleAbilityItem().getType() ||
+                ability.getType() == AbilityItemManager.cooldownItem().getType()) {
                 return;
             }
 
             // prerequisite check
-            if (AbilityItemManager.hasPrerequisites(abilityItem) && !AbilityItemManager.meetsPrerequisites(player, abilityItem)) {
+            if (AbilityItemManager.hasPrerequisites(ability) && !AbilityItemManager.meetsPrerequisites(player, ability)) {
                 player.sendMessage("§c⚠ §nPrerequisites not met!§r§c ⚠");
                 return;
             }
 
             // weapon check
-            if (!isHoldingWeaponForAbility(player, abilityItem)) {
+            if (!isHoldingWeaponForAbility(player, ability)) {
                 player.sendMessage("§c⚠ §nRequirements not met!§r§c ⚠");
                 return;
             }
 
-            if (AbilityItemManager.isToggleable(abilityItem)) { // if it's a toggleable ability
-                boolean toggle = !AbilityItemManager.getToggleState(abilityItem); // boolean of its inverse state
+            if (AbilityItemManager.isToggleable(ability)) { // if it's a toggleable ability
+                boolean inverseToggle = !AbilityItemManager.getToggleState(ability); // toggle state item will be switched to
 
-                AbilityItemManager.toggleAbility(abilityItem, toggle);
-
-                if (!toggle) { // if were turning it off, put it on cooldown
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
-                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
+                if (!inverseToggle) { // if it will be turned off, put it on cooldown
+                    AbilityItemManager.toggleAbility(ability);
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
+                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 } else { // if turning on, energy check
-                    if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) {
-                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
+                    if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) {
+                        AbilityItemManager.toggleAbility(ability);
+                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
                 }
             } else { // if it isnt a toggleable
-                if (AbilityItemManager.getRequiredEnergy(abilityItem) <= currentEnergy) { // energy check
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, abilityItem, newSlot));
-                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(abilityItem));
+                if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) { // energy check
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
+                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 } else {
                     player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                 }

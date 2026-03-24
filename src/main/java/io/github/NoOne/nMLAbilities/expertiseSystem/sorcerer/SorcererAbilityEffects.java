@@ -83,8 +83,8 @@ public class SorcererAbilityEffects {
                         entity -> entity instanceof LivingEntity && !entity.equals(player)
                 );
 
-                if (rayTraceResult != null && rayTraceResult.getHitEntity() instanceof LivingEntity livingEntity) { // successfully traced a target
-                    end = livingEntity.getLocation().add(0, 0.5, 0);
+                if (rayTraceResult != null) { // successfully traced a target
+                    end = rayTraceResult.getHitEntity().getLocation().add(0, 0.5, 0);
                 } else {
                     Location startLocation = player.getLocation().add(0, 1, 0);
                     Vector forward = startLocation.getDirection().normalize().multiply(16); // max range

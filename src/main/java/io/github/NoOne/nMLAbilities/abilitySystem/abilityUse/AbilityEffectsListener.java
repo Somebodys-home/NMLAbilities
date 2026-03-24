@@ -16,6 +16,7 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffe
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -29,47 +30,47 @@ public class AbilityEffectsListener implements Listener {
     @EventHandler
     public void onUseAbility(UseAbilityEvent event) {
         Player player = event.getPlayer();
-        int hotbarSlot = event.getHotbarSlot();
         String[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
-        String abilityName = event.getAbilityItem().getItemMeta().getDisplayName();
+        ItemStack ability = event.getAbility();
+        String abilityName = ability.getItemMeta().getDisplayName().substring(4);
 
         if (Arrays.asList(selectedAbilities).contains(abilityName)) {
             switch (abilityName) {
                 // Soldier abilities
-                case "§c§lSlash" -> SoldierAbilityEffects.slash(player);
+                case "Slash" -> SoldierAbilityEffects.slash(player);
 
                 // Assassin abilities
-                case "§8§lSlash & Dash" -> AssassinAbilityEffects.slashAndDash(player);
+                case "Slash & Dash" -> AssassinAbilityEffects.slashAndDash(player);
 
                 // Marauder abilities
-                case "§4§lBlade Tornado" -> MarauderAbilityEffects.bladeTornado(player);
+                case "Blade Tornado" -> MarauderAbilityEffects.bladeTornado(player);
 
                 // Cavalier abilities
-                case "§9§lSeismic Slam" -> CavalierAbilityEffects.seismicSlam(player);
+                case "Seismic Slam" -> CavalierAbilityEffects.seismicSlam(player);
 
                 // Martial Artist abilities
-                case "§4§l10-Hit Combo" -> MartialArtistAbilityEffects.tenHitCombo(player);
+                case "10-Hit Combo" -> MartialArtistAbilityEffects.tenHitCombo(player);
 
                 // Shield Hero abilities
-                case "§3§lSecond Wind" -> ShieldHeroAbilityEffects.secondWind(player);
+                case "Second Wind" -> ShieldHeroAbilityEffects.secondWind(player);
 
                 // Marksman abilities
-                case "§a§lRapid Shot" -> MarksmanAbilityEffects.rapidShot(player, event.getAbilityItem(), hotbarSlot);
+                case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailStorm(player);
 
                 // Sorcerer abilities
-                case "§6§lMagic Missile EX" -> SorcererAbilityEffects.magicMissileEX(player);
-                case "§6§lDragon's Breath" -> SorcererAbilityEffects.dragonsBreath(player);
+                case "Magic Missile EX" -> SorcererAbilityEffects.magicMissileEX(player);
+                case "Dragon's Breath" -> SorcererAbilityEffects.dragonsBreath(player);
 
                 // Primordial abilities
-                case "§2§lChuck Rock" -> PrimordialAbilityEffects.chuckRock(player);
-                case "§2§lPumpkin Bomb" -> PrimordialAbilityEffects.pumpkinBomb(player);
-                case "§2§lAir Ball" -> PrimordialAbilityEffects.airBall(player);
+                case "Chuck Rock" -> PrimordialAbilityEffects.chuckRock(player);
+                case "Pumpkin Bomb" -> PrimordialAbilityEffects.pumpkinBomb(player);
+                case "Air Ball" -> PrimordialAbilityEffects.airBall(player);
 
                 // Hallowed abilities
-                case "§f§lHalo" -> HallowedAbilityEffects.halo(player);
+                case "Halo" -> HallowedAbilityEffects.halo(player);
 
                 // Annulled abilities
-                case "§5§lBlack Hole" -> AnnulledAbilityEffects.blackHole(player);
+                case "Black Hole" -> AnnulledAbilityEffects.blackHole(player);
             }
         }
     }
