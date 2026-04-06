@@ -19,17 +19,17 @@ public class MarksmanAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",
                 new HashMap<>() {{
-                    put("marksman", 20);
+                    put("marksman", 30);
                 }},
                 "EXTREME WEATHER WARNING: A storm of hail-sized arrows has been forecasted in your area. Find shelter immediately.",
                 null,
                 false,
                 "Area",
-                20,
-                7,
-                3,
+                22,
+                5,
+                25,
                 30,
-                List.of("§f§n25%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
+                List.of("§f§n35%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
                 null,
                 List.of(BOW), 
                 skills);

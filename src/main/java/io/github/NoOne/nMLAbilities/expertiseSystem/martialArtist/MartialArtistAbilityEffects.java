@@ -61,8 +61,7 @@ public class MartialArtistAbilityEffects {
 
                 for (UUID uuid : hitEntityUUIDs) {
                     if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                        livingEntity.setNoDamageTicks(0);
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                     }
                 }
 
@@ -112,8 +111,7 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                             }
                         }
 
@@ -165,8 +163,7 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                             }
                         }
 
@@ -221,8 +218,7 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 livingEntity.setVelocity(jump); // knockback
                             }
                         }
@@ -278,8 +274,7 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 livingEntity.setVelocity(slam); // knockback
                             }
                         }
@@ -335,10 +330,9 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
-
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.2);
+
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -402,10 +396,9 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
-
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
+
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -470,10 +463,9 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
-
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
+
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -538,10 +530,9 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
-
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
+
                                 livingEntity.setVelocity(knockback);
                             }
                         }
@@ -621,6 +612,7 @@ public class MartialArtistAbilityEffects {
 
                                 particleticks--;
                                 i++;
+
                                 if (particleticks == 0) cancel();
                             }
                         }.runTaskTimer(nmlAbilities, 0L, 1L);
@@ -633,8 +625,7 @@ public class MartialArtistAbilityEffects {
 
                         for (UUID uuid : hitEntityUUIDs) {
                             if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
-                                livingEntity.setNoDamageTicks(0);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
                                 livingEntity.setVelocity(jump.multiply(2).setY(2)); // knockback
                             }
                         }
@@ -672,7 +663,7 @@ public class MartialArtistAbilityEffects {
                 Location hitbox = baseLocation.clone().add(dashDirection);
 
                 for (Entity entity : dasher.getWorld().getNearbyEntities(hitbox, 1.5, 2, 1.5)) {
-                    if (entity != dasher && entity instanceof LivingEntity livingEntity) {
+                    if (entity != dasher && entity instanceof LivingEntity) {
                         hitEntityUUIDs.add(entity.getUniqueId());
                         dasher.setVelocity(new Vector(0, 0, 0));
                         triggered = true;

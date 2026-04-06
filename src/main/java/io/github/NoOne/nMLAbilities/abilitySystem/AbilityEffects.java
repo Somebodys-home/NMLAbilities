@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -76,6 +77,24 @@ public class AbilityEffects {
             Vector velocity = particleLocation.toVector().subtract(center.toVector()).normalize().multiply(speed);
 
             center.getWorld().spawnParticle(particle, particleLocation,0, velocity.getX(), velocity.getY(), velocity.getZ());
+        }
+    }
+
+    public static void particleLine(Particle particle, Location start, Location end, int particleCount) {
+        World world = start.getWorld();
+        Vector startVector = start.toVector();
+        Vector endVector = end.toVector();
+        Vector line = endVector.clone().subtract(startVector.clone());
+        double lineLength = line.length();
+        Vector currentPath = startVector.clone();
+
+        line.normalize();
+
+        Vector stepVector = line.clone().multiply(lineLength / particleCount);
+
+        for (double i = 0; i < particleCount; i ++) {
+            currentPath.add(stepVector);
+            world.spawnParticle(particle, currentPath.toLocation(world), 1);
         }
     }
 
