@@ -6,6 +6,7 @@ import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
@@ -56,22 +57,6 @@ public class AbilityItemManager {
         );
     }
 
-    public static void toggleAbility(ItemStack ability) {
-        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
-
-        if (pdc.has(toggleKey)) {
-            boolean inverseState = !pdc.get(toggleKey, PersistentDataType.BOOLEAN);
-
-            pdc.set(toggleKey, PersistentDataType.BOOLEAN, inverseState);
-
-            if (inverseState) { // turning it on
-                ability.setType(Material.LIME_DYE);
-            } else { // turning it off
-                ability.setType(getOriginalItemMaterial(ability));
-            }
-        }
-    }
-
     public static boolean meetsSkillRequirement(Skills skills, String skill, int levelRequirement) {
         int playerSkillLevel = 0;
 
@@ -90,12 +75,6 @@ public class AbilityItemManager {
         }
 
         return playerSkillLevel >= levelRequirement;
-    }
-
-    public static boolean hasPrerequisites(ItemStack item) {
-        Set<NamespacedKey> keys = item.getItemMeta().getPersistentDataContainer().getKeys();
-
-        return keys.contains(groundedKey);
     }
 
     public static boolean meetsPrerequisites(Player player, ItemStack item) {
@@ -118,22 +97,21 @@ public class AbilityItemManager {
         return met;
     }
 
-    public static boolean isAnAbility(ItemStack item) {
-        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(abilityKey);
+    public static void setToggleState(ItemStack ability, boolean toggle) {
+        ItemMeta meta = ability.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
-        return false;
-    }
+        if (pdc.has(toggleKey)) {
+            pdc.set(toggleKey, PersistentDataType.BOOLEAN, toggle);
 
-    public static boolean isToggleable(ItemStack item) {
-        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(toggleKey);
+            if (toggle) { // turning it on
+                ability.setType(Material.LIME_DYE);
+            } else { // turning it off
+                ability.setType(getOriginalItemMaterial(ability));
+            }
 
-        return false;
-    }
-
-    public static boolean getToggleState(ItemStack item) {
-        if (isToggleable(item)) return item.getItemMeta().getPersistentDataContainer().get(toggleKey, PersistentDataType.BOOLEAN);
-
-        return false;
+            ability.setItemMeta(meta);
+        }
     }
 
     public static int getCooldown(ItemStack item) {
@@ -173,6 +151,30 @@ public class AbilityItemManager {
         }
 
         return null;
+    }
+
+    public static boolean isAnAbility(ItemStack item) {
+        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(abilityKey);
+
+        return false;
+    }
+
+    public static boolean isToggleable(ItemStack item) {
+        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(toggleKey);
+
+        return false;
+    }
+
+    public static boolean getToggleState(ItemStack item) {
+        if (isToggleable(item)) return Boolean.TRUE.equals(item.getItemMeta().getPersistentDataContainer().get(toggleKey, PersistentDataType.BOOLEAN));
+
+        return false;
+    }
+
+    public static boolean hasPrerequisites(ItemStack item) {
+        Set<NamespacedKey> keys = item.getItemMeta().getPersistentDataContainer().getKeys();
+
+        return keys.contains(groundedKey);
     }
 
     public static NamespacedKey getAbilityKey() {

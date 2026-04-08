@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityEffectsListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
@@ -15,6 +16,7 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityEffe
 import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist.MartialArtistAbilityEffects;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffects;
@@ -26,6 +28,10 @@ import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class NMLAbilities extends JavaPlugin {
@@ -72,11 +78,20 @@ public final class NMLAbilities extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new SelectedAbilitiesListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
-        getServer().getPluginManager().registerEvents(new AbilityEffectsListener(this), this);
+        getServer().getPluginManager().registerEvents(new ExpertiseAbilityEffectsListener(this), this);
     }
 
     @Override
     public void onDisable() {
+        for (Player player : getServer().getOnlinePlayers()) {
+            PlayerInventory playerInventory = player.getInventory();
+
+            AbilityItemManager.setToggleState(playerInventory.getItem(1), false);
+            AbilityItemManager.setToggleState(playerInventory.getItem(2), false);
+            AbilityItemManager.setToggleState(playerInventory.getItem(3), false);
+            OngoingAbilityEffectsTracker.removeAllAbilityEffects(player, profileManager.getPlayerProfile(player.getUniqueId()).getStats());
+        }
+
         cooldownManager.stop();
         selectedAbilitiesManager.saveAllSelectedAbilitiesToConfig();
         selectedAbilitiesConfig.saveConfig();

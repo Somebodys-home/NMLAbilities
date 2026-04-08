@@ -257,7 +257,7 @@ public class PrimordialAbilityEffects {
                 Vector forward = playerLocation.getDirection().normalize().multiply(2.25);
                 Location center = playerLocation.clone().add(forward);
 
-                AbilityEffects.dustSphere(air, center, .75, particleCircles);
+                AbilityEffects.particleSphere(air, center, .75, particleCircles);
 
                 /// air ball
                 if (timer == 20) {
@@ -282,7 +282,7 @@ public class PrimordialAbilityEffects {
 
                              center.add(velocity);
 
-                            AbilityEffects.dustSphere(air, center, .75, particleCircles);
+                            AbilityEffects.particleSphere(air, center, .75, particleCircles);
 
                             // triggering air ball
                             Collection<Entity> triggeringEntities = player.getWorld().getNearbyEntities(center, 1, 1, 1);
@@ -295,7 +295,7 @@ public class PrimordialAbilityEffects {
                                 player.getWorld().playSound(center, Sound.ENTITY_BREEZE_WIND_BURST, 2f, 1f);
                                 player.getWorld().playSound(center, Sound.ENTITY_GENERIC_EXPLODE, .5f, 1f);
                                 AbilityEffects.expandingParticleSphere(Particle.SNOWFLAKE, center, 6, 45, .3);
-                                AbilityEffects.dustSphere(air, center, 6, 45);
+                                AbilityEffects.particleSphere(air, center, 6, 45);
 
                                 // damage
                                 for (Entity entity : player.getWorld().getNearbyEntities(center, 6, 6, 6)) {

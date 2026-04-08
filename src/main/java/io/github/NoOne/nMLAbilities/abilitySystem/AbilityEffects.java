@@ -5,8 +5,6 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-
 public class AbilityEffects { 
     public static void particleSphere(Particle particle, Location center, double radius, int particleCircles) {
         for (double i = 0; i <= Math.PI; i += Math.PI / particleCircles) { // vertical circles
@@ -18,13 +16,13 @@ public class AbilityEffects {
                 double z = Math.sin(a) * r;
                 Location particleLocation = center.clone().add(x, y, z);
 
-                center.getWorld().spawnParticle(particle, particleLocation, 1, 0, 0, 0);
+                center.getWorld().spawnParticle(particle, particleLocation, 1, 0, 0, 0, 0);
                 particleLocation.subtract(x, y, z); // reset location
             }
         }
     }
 
-    public static void dustSphere(Particle.DustOptions dustOptions, Location center, double radius, int particleCircles) {
+    public static void particleSphere(Particle.DustOptions dustOptions, Location center, double radius, int particleCircles) {
         for (double i = 0; i <= Math.PI; i += Math.PI / particleCircles) { // vertical circles
             double r = Math.sin(i) * radius;
             double y = Math.cos(i) * radius;
@@ -82,32 +80,14 @@ public class AbilityEffects {
 
     public static void particleLine(Particle particle, Location start, Location end, int particleCount) {
         World world = start.getWorld();
-        Vector startVector = start.toVector();
-        Vector endVector = end.toVector();
-        Vector line = endVector.clone().subtract(startVector.clone());
-        double lineLength = line.length();
-        Vector currentPath = startVector.clone();
-
-        line.normalize();
-
-        Vector stepVector = line.clone().multiply(lineLength / particleCount);
-
-        for (double i = 0; i < particleCount; i ++) {
-            currentPath.add(stepVector);
-            world.spawnParticle(particle, currentPath.toLocation(world), 1);
-        }
-    }
-
-    public static ArrayList<Location> getParticleCircleLocations(Location center, double radius, int particleCount) {
-        ArrayList<Location> locations = new ArrayList<>();
+        Vector startVec = start.toVector();
+        Vector direction = end.toVector().subtract(startVec);
 
         for (int i = 0; i < particleCount; i++) {
-            double angle = 2 * Math.PI * i / particleCount;
-            double x = Math.cos(angle) * radius;
-            double z = Math.sin(angle) * radius;
-            locations.add(center.clone().add(x, 0, z));
-        }
+            double t = (double) i / (particleCount - 1); // 0 → 1 inclusive
 
-        return locations;
+            Vector point = startVec.clone().add(direction.clone().multiply(t));
+            world.spawnParticle(particle, point.toLocation(world), 1, 0, 0, 0, 0);
+        }
     }
 }

@@ -5,6 +5,8 @@ import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffect;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
@@ -29,6 +31,29 @@ public class MarksmanAbilityEffects {
     public MarksmanAbilityEffects(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
         profileManager = nmlAbilities.getProfileManager();
+    }
+
+    public static void steadyAim(Player player, boolean toggle) {
+        OngoingAbilityEffect steadyAimEffect = new OngoingAbilityEffect(
+                "steady aim",
+                new HashMap<>(){{
+                    put("critchance", 30.0);
+                    put("speed", -50.0);
+                }},
+                steadyAimAbilityEffect(player),
+                0,
+                1
+        );
+
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, .5);
+        CooldownManager.putOnHardCooldown(player, .5);
+
+        if (toggle) {
+            EnergyManager.useEnergy(player, 15);
+            OngoingAbilityEffectsTracker.addAbilityEffect(nmlAbilities, player, steadyAimEffect);
+        } else {
+            OngoingAbilityEffectsTracker.removeAbilityEffect(player, "steady aim");
+        }
     }
 
     public static void arrowHailStorm(Player player) {
@@ -57,7 +82,7 @@ public class MarksmanAbilityEffects {
         player.playSound(player, Sound.ITEM_CROSSBOW_SHOOT, 2f, 1f);
 
         /// reticule
-        Location reticuleCenterLocation; // where the center of the reticule will be
+        Location reticuleCenterLocation;
         Location eyeLocation = player.getEyeLocation();
         Vector eyeDirection = eyeLocation.getDirection();
         RayTraceResult reticuleRayTrace = world.rayTrace(
@@ -70,6 +95,7 @@ public class MarksmanAbilityEffects {
                 entity -> entity instanceof LivingEntity && entity != player,
                 null
         );
+
         if (reticuleRayTrace == null) {
             Vector forward = eyeDirection.clone().normalize().multiply(maxTargetingRange);
             reticuleCenterLocation = eyeLocation.clone().add(forward);
@@ -115,11 +141,7 @@ public class MarksmanAbilityEffects {
                     double distance = Math.sqrt(ThreadLocalRandom.current().nextDouble()) * radius;
                     double xOffset = distance * Math.cos(angle);
                     double zOffset = distance * Math.sin(angle);
-                    Location startingLocation = finalReticuleCenterLocation.clone().add(
-                            xOffset,
-                            30,
-                            zOffset
-                    );
+                    Location startingLocation = finalReticuleCenterLocation.clone().add(xOffset, 30, zOffset);
                     Arrow arrow = world.spawnArrow(startingLocation, new Vector(0, -1, 0), 3f, 3f);
 
                     turnIntoAbilityArrow(arrow, player, damage);
@@ -155,7 +177,6 @@ public class MarksmanAbilityEffects {
         }.runTaskTimer(nmlAbilities, 0L, 1L);
     }
 
-    
     private static void turnIntoAbilityArrow(Arrow arrow, Player shooter, HashMap<DamageType, Double> damageMap) {
         arrow.setCritical(false);
         arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
@@ -180,7 +201,49 @@ public class MarksmanAbilityEffects {
             }
         }.runTaskTimer(nmlAbilities, 0L, 2L);
     }
-    
+
+    public static BukkitRunnable steadyAimAbilityEffect(Player player) {
+        return new BukkitRunnable() {
+            double angle = 0;
+            Location prevLocation = player.getLocation();
+
+            @Override
+            public void run() {
+                Location playerLocation = player.getLocation().add(0, .1, 0);
+
+                if (!player.isSprinting()) { // show effect when standing still
+                    double x = Math.cos(Math.toRadians(angle));
+                    double perpX = Math.cos(Math.toRadians(angle + 90));
+                    double z = Math.sin(Math.toRadians(angle));
+                    double perpZ = Math.sin(Math.toRadians(angle + 90));
+
+                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18);
+                    AbilityEffects.particleLine(
+                            Particle.ELECTRIC_SPARK,
+                            playerLocation.clone().add(x, 0, z),
+                            playerLocation.clone().add(-x, 0, -z),
+                            9
+                    );
+                    AbilityEffects.particleLine(
+                            Particle.ELECTRIC_SPARK,
+                            playerLocation.clone().add(perpX, 0, perpZ),
+                            playerLocation.clone().add(-perpX, 0, -perpZ),
+                            9
+                    );
+                    angle += 1.5;
+
+                    if (angle >= 360) {
+                        angle = 0;
+                    }
+                } else { // show lesser effect when moving
+                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
+                }
+
+                prevLocation = playerLocation;
+            }
+        };
+    }
+
     private static void setArrowTrail(Arrow arrow, Particle particle) {
         new BukkitRunnable() {
             @Override

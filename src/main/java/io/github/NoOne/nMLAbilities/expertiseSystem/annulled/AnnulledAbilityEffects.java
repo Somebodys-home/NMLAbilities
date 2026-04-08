@@ -50,7 +50,7 @@ public class AnnulledAbilityEffects {
                 center.add(velocity);
 
                 /// tiny black hole
-                AbilityEffects.dustSphere(blackHole, center, .5, 7);
+                AbilityEffects.particleSphere(blackHole, center, .5, 7);
 
                 /// triggering big black hole
                 Collection<Entity> triggeringEntities = player.getWorld().getNearbyEntities(center, .5, .5, .5);

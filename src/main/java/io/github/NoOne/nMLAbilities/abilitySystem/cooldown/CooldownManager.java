@@ -74,12 +74,8 @@ public class CooldownManager {
         if (ci != null) {
             ci.setCooldown(ci.getCooldown() + seconds); // extend existing seconds
         } else {
-            ongoingCooldowns
-                    .computeIfAbsent(uuid, k -> new HashSet<>())
-                    .add(new CooldownInstance(hotbarSlot, seconds, originalItem));
-
-            // immediately swap the item out
-            player.getInventory().setItem(hotbarSlot, AbilityItemManager.cooldownItem());
+            ongoingCooldowns.computeIfAbsent(uuid, k -> new HashSet<>()).add(new CooldownInstance(hotbarSlot, seconds, originalItem));
+            player.getInventory().setItem(hotbarSlot, AbilityItemManager.cooldownItem()); // immediately swap the item out
         }
     }
 

@@ -70,7 +70,8 @@ public class MarksmanMenu extends Menu {
 
     @Override
     public void setMenuItems() {
-        inventory.setItem(10, MarksmanAbilityItems.rapidShot(skills));
+        inventory.setItem(10, MarksmanAbilityItems.steadyAim(skills));
+        inventory.setItem(11, MarksmanAbilityItems.rapidShot(skills));
         inventory.setItem(35, ItemCreator.createItem(Material.BARRIER, 1, "§c§l<- Go Back", List.of()));
     }
 }

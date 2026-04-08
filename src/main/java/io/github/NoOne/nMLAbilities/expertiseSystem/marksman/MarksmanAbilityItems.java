@@ -15,6 +15,26 @@ public class MarksmanAbilityItems extends AbilityItemManager {
         super(NMLAbilities.getInstance());
     }
 
+    public static ItemStack steadyAim(Skills skills) {
+        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
+                "Steady Aim",
+                new HashMap<>() {{
+                    put("marksman", 1);
+                }},
+                "Slow your movements to increase your accuracy, making critical shots land easier.",
+                null,
+                true,
+                "Self",
+                0,
+                0,
+                10,
+                15,
+                null,
+                List.of("§7-50% §nSpeed§r§7 ✦", "§9+30% §nCrit Damage§r§9 ☠"),
+                List.of(BOW),
+                skills);
+    }
+
     public static ItemStack rapidShot(Skills skills) {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",

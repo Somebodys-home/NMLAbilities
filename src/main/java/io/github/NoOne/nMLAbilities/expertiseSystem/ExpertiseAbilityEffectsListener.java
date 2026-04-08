@@ -1,6 +1,8 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
+package io.github.NoOne.nMLAbilities.expertiseSystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
@@ -20,10 +22,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
-public class AbilityEffectsListener implements Listener {
+public class ExpertiseAbilityEffectsListener implements Listener {
     private SelectedAbilitiesManager selectedAbilitiesManager;
 
-    public AbilityEffectsListener(NMLAbilities nmlAbilities) {
+    public ExpertiseAbilityEffectsListener(NMLAbilities nmlAbilities) {
         selectedAbilitiesManager = nmlAbilities.getSelectedManager();
     }
 
@@ -33,6 +35,7 @@ public class AbilityEffectsListener implements Listener {
         String[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
         ItemStack ability = event.getAbility();
         String abilityName = ability.getItemMeta().getDisplayName().substring(4);
+        boolean toggleState = AbilityItemManager.getToggleState(ability);
 
         if (Arrays.asList(selectedAbilities).contains(abilityName)) {
             switch (abilityName) {
@@ -56,6 +59,7 @@ public class AbilityEffectsListener implements Listener {
 
                 // Marksman abilities
                 case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailStorm(player);
+                case "Steady Aim" -> MarksmanAbilityEffects.steadyAim(player, toggleState);
 
                 // Sorcerer abilities
                 case "Magic Missile EX" -> SorcererAbilityEffects.magicMissileEX(player);
