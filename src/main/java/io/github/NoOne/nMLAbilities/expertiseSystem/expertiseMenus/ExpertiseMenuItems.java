@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExpertiseMenuItems {
-    private final Skills skills;
+    private Skills skills;
 
     public ExpertiseMenuItems(Skills skills) {
         this.skills = skills;
@@ -31,10 +31,8 @@ public class ExpertiseMenuItems {
                         "§bCLICK TO SELECT!"
                 )
         );
-        ItemMeta itemMeta = soldier.getItemMeta();
+        soldier.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        soldier.setItemMeta(itemMeta);
         return soldier;
     }
 
@@ -71,10 +69,8 @@ public class ExpertiseMenuItems {
                         "§bCLICK TO SELECT!"
                 )
         );
-        ItemMeta itemMeta = marauder.getItemMeta();
+        marauder.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        marauder.setItemMeta(itemMeta);
         return marauder;
     }
 

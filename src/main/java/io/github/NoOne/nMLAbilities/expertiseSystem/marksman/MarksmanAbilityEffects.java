@@ -205,19 +205,18 @@ public class MarksmanAbilityEffects {
     public static BukkitRunnable steadyAimAbilityEffect(Player player) {
         return new BukkitRunnable() {
             double angle = 0;
-            Location prevLocation = player.getLocation();
 
             @Override
             public void run() {
                 Location playerLocation = player.getLocation().add(0, .1, 0);
 
-                if (!player.isSprinting()) { // show effect when standing still
+                if (!player.isSprinting()) {
                     double x = Math.cos(Math.toRadians(angle));
                     double perpX = Math.cos(Math.toRadians(angle + 90));
                     double z = Math.sin(Math.toRadians(angle));
                     double perpZ = Math.sin(Math.toRadians(angle + 90));
 
-                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18);
+                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18); /// dw about this
                     AbilityEffects.particleLine(
                             Particle.ELECTRIC_SPARK,
                             playerLocation.clone().add(x, 0, z),
@@ -238,8 +237,6 @@ public class MarksmanAbilityEffects {
                 } else { // show lesser effect when moving
                     AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
                 }
-
-                prevLocation = playerLocation;
             }
         };
     }

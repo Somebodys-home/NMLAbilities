@@ -14,7 +14,7 @@ import java.util.*;
 
 public class CooldownManager {
     private NMLAbilities nmlAbilities;
-    private static final HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
+    private static HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
     private BukkitTask serverCooldownTask;
 
     public CooldownManager(NMLAbilities nmlAbilities) {

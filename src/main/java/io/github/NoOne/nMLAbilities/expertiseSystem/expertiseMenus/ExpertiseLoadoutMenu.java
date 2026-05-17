@@ -21,13 +21,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class ExpertiseLoadoutMenu extends Menu {
-    private final NMLAbilities nmlAbilities;
-    private final SelectedAbilities selectedAbilities;
-    private final SelectedAbilitiesManager selectedAbilitiesManager;
-    private final Player player;
-    private final ItemStack expertise1;
-    private final ItemStack expertise2;
-    private final ItemStack expertise3;
+    private NMLAbilities nmlAbilities;
+    private SelectedAbilities selectedAbilities;
+    private SelectedAbilitiesManager selectedAbilitiesManager;
+    private Player player;
+    private ItemStack expertise1;
+    private ItemStack expertise2;
+    private ItemStack expertise3;
     private ItemStack leftClickItem1;
     private ItemStack leftClickItem2;
     private int leftClickHotbarSlot1;

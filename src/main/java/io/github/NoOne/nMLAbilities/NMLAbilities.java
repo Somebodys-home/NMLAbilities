@@ -22,6 +22,8 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbility
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
 import io.github.NoOne.menuSystem.MenuListener;
+import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLItems.NMLItems;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
@@ -34,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class NMLAbilities extends JavaPlugin {
+public class NMLAbilities extends JavaPlugin {
     private static NMLAbilities instance;
     private ProfileManager profileManager;
     private SkillSetManager skillSetManager;
@@ -42,6 +44,7 @@ public final class NMLAbilities extends JavaPlugin {
     private SelectedAbilitiesManager selectedAbilitiesManager;
     private SelectedAbilitiesConfig selectedAbilitiesConfig;
     private CooldownManager cooldownManager;
+    private ItemSystem itemSystem;
 
     @Override
     public void onEnable() {
@@ -50,6 +53,7 @@ public final class NMLAbilities extends JavaPlugin {
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
         skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
+        itemSystem = JavaPlugin.getPlugin(NMLItems.class).getItemSystem();
 
         selectedAbilitiesConfig = new SelectedAbilitiesConfig(this, "abilities");
         selectedAbilitiesConfig.loadConfig();
@@ -119,5 +123,9 @@ public final class NMLAbilities extends JavaPlugin {
 
     public ProfileManager getProfileManager() {
         return profileManager;
+    }
+
+    public ItemSystem getItemSystem() {
+        return itemSystem;
     }
 }

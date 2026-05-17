@@ -33,13 +33,15 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AbilityListener implements Listener {
     private static NMLAbilities nmlAbilities;
-    private final ProfileManager profileManager;
-    private final ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
-    private final ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
+    private ItemSystem itemSystem;
+    private ProfileManager profileManager;
+    private ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
+    private ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
 
     public AbilityListener(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
         this.profileManager = nmlAbilities.getProfileManager();
+        itemSystem = nmlAbilities.getItemSystem();
     }
 
     @EventHandler
@@ -238,7 +240,7 @@ public class AbilityListener implements Listener {
                 type == InventoryType.SMOKER;
     }
 
-    private static List<ItemType> getWeaponsForAbility(ItemStack item) {
+    private List<ItemType> getWeaponsForAbility(ItemStack item) {
         PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
         List<ItemType> weapons = new ArrayList<>(List.of(SWORD, DAGGER, AXE, HAMMER, SPEAR, GLOVE, BOW, WAND, STAFF, CATALYST, SHIELD));
         List<ItemType> weaponsToRemove = new ArrayList<>();
@@ -259,7 +261,7 @@ public class AbilityListener implements Listener {
         return weapons;
     }
 
-    private static boolean isHoldingWeaponForAbility(Player player, ItemStack abilityItem) {
+    private boolean isHoldingWeaponForAbility(Player player, ItemStack abilityItem) {
         List<ItemType> requiredWeapons = getWeaponsForAbility(abilityItem);
         ItemStack mainhand = player.getInventory().getItemInMainHand();
         ItemStack offhand = player.getInventory().getItemInOffHand();
@@ -267,7 +269,7 @@ public class AbilityListener implements Listener {
         // if an ability uses any weapon
         if (abilityItem.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
             for (ItemType itemType : requiredWeapons) {
-                if (ItemSystem.isItemType(mainhand, itemType)) {
+                if (itemSystem.isItemType(mainhand, itemType)) {
                     return true;
                 }
             }
@@ -276,14 +278,14 @@ public class AbilityListener implements Listener {
         }
 
         if (requiredWeapons.contains(GLOVE)) {
-            return ItemSystem.isItemType(mainhand, GLOVE) && ItemSystem.isItemType(offhand, GLOVE);
+            return itemSystem.isItemType(mainhand, GLOVE) && itemSystem.isItemType(offhand, GLOVE);
         } else if (requiredWeapons.contains(BOW)) {
-            return ItemSystem.isItemType(mainhand, BOW) && ItemSystem.isItemType(offhand, QUIVER);
+            return itemSystem.isItemType(mainhand, BOW) && itemSystem.isItemType(offhand, QUIVER);
         } else if (requiredWeapons.contains(SHIELD)) {
-            return ItemSystem.isItemType(mainhand, SHIELD) || ItemSystem.isItemType(offhand, SHIELD);
+            return itemSystem.isItemType(mainhand, SHIELD) || itemSystem.isItemType(offhand, SHIELD);
         } else {
             for (ItemType itemType : requiredWeapons) {
-                if (ItemSystem.isItemType(mainhand, itemType)) {
+                if (itemSystem.isItemType(mainhand, itemType)) {
                     return true;
                 }
             }

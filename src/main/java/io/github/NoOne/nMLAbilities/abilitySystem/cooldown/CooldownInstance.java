@@ -3,9 +3,9 @@ package io.github.NoOne.nMLAbilities.abilitySystem.cooldown;
 import org.bukkit.inventory.ItemStack;
 
 public class CooldownInstance {
-    private final int hotbarSlot;
+    private int hotbarSlot;
     private double cooldown;
-    private final ItemStack originalItem; // store what was there before cooldown
+    private ItemStack originalItem; // store what was there before cooldown
 
     public CooldownInstance(int hotbarSlot, double cooldown, ItemStack originalItem) {
         this.hotbarSlot = hotbarSlot;

@@ -14,6 +14,7 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierMenu;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererMenu;
 import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
+import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,22 +24,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ExpertiseMenu extends Menu {
     private NMLAbilities nmlAbilities;
-    private Player player;
-    private Skills skills;
     private ExpertiseMenuItems expertiseMenuItems;
-    private final ItemStack changeLoadout;
+    private ItemStack changeLoadout;
 
     public ExpertiseMenu(NMLAbilities nmlAbilities, PlayerMenuUtility playerMenuUtility) {
         super(playerMenuUtility);
         this.nmlAbilities = nmlAbilities;
-        player = playerMenuUtility.getOwner();
-        skills = nmlAbilities.getSkillSetManager().getSkillSet(player.getUniqueId()).getSkills();
-        expertiseMenuItems = new ExpertiseMenuItems(skills);
-
-        changeLoadout = new ItemStack(Material.STRUCTURE_BLOCK);
-        ItemMeta meta = changeLoadout.getItemMeta();
-        meta.setDisplayName("§7§lChange Ability Loadout");
-        changeLoadout.setItemMeta(meta);
+        expertiseMenuItems = new ExpertiseMenuItems(nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills());
+        changeLoadout = ItemCreator.createItem(
+                Material.STRUCTURE_BLOCK,
+                1,
+                "§7§lChange Ability Loadout",
+                null
+        );
     }
 
     @Override

@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class UseAbilityEvent extends Event implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
-    private final Player player;
-    private final ItemStack weapon;
-    private final ItemStack ability;
-    private final int hotbarSlot;
+    private static HandlerList handlers = new HandlerList();
+    private Player player;
+    private ItemStack weapon;
+    private ItemStack ability;
+    private int hotbarSlot;
     private boolean cancelled;
 
     public UseAbilityEvent(@NotNull Player player, ItemStack weapon, ItemStack ability, int hotbarSlot) {

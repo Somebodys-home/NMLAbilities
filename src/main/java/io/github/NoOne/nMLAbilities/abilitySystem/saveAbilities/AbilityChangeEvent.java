@@ -7,11 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class AbilityChangeEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
-    private final Player player;
-    private final String changedAbility;
-    private final ItemStack newAbility;
-    private final boolean resettingAbilities;
+    private static HandlerList handlers = new HandlerList();
+    private Player player;
+    private String changedAbility;
+    private ItemStack newAbility;
+    private boolean resettingAbilities;
 
     public AbilityChangeEvent(@NotNull Player player, String changedAbility, ItemStack newAbility) {
         this.player = player;

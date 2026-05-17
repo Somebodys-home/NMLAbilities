@@ -34,7 +34,7 @@ public class MartialArtistAbilityEffects {
         HashSet<UUID> hitEntityUUIDs = new HashSet<>();
         HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
                 profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .25);
-        final boolean[] comboBroken = {false};
+        boolean[] comboBroken = {false};
 
         EnergyManager.useEnergy(player, 10);
         CooldownManager.putOnHardCooldown(player, .7);

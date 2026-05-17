@@ -16,11 +16,11 @@ import java.util.List;
 
 public class ExpertiseConfirmMenu extends Menu {
     private Player player;
-    private final ItemStack expertise1;
-    private final ItemStack expertise2;
-    private final ItemStack expertise3;
-    private final ItemStack newAbility;
-    private final Menu previousMenu;
+    private ItemStack expertise1;
+    private ItemStack expertise2;
+    private ItemStack expertise3;
+    private ItemStack newAbility;
+    private Menu previousMenu;
 
     public ExpertiseConfirmMenu(PlayerMenuUtility playerMenuUtility, ItemStack newAbility, Menu previousMenu) {
         super(playerMenuUtility);
