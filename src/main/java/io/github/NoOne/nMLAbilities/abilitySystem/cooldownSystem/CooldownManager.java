@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.cooldown;
+package io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
@@ -33,17 +33,17 @@ public class CooldownManager {
                     while (it.hasNext()) {
                         CooldownInstance ci = it.next();
 
-                        // decrement cooldown
+                        // decrement cooldownSystem
                         ci.setCooldown(ci.getCooldown() - 1);
 
-                        // restore item when cooldown ends
+                        // restore item when cooldownSystem ends
                         if (ci.getCooldown() <= 0) {
                             ItemStack originalItem = ci.getOriginalItem();
 
                             player.getInventory().setItem(ci.getHotbarSlot(), originalItem);
                             it.remove();
 
-                            if (player.hasCooldown(originalItem.getType())) { // remove cooldown on the original ability item
+                            if (player.hasCooldown(originalItem.getType())) { // remove cooldownSystem on the original ability item
                                 player.setCooldown(originalItem.getType(), 0);
                             }
                         }
@@ -128,16 +128,20 @@ public class CooldownManager {
     }
 
     public static void removeHardCooldown(Player player) {
-        PlayerInventory playerInventory = player.getInventory();
-        Material originalStyle = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(0));
-        Material originalExpertise1 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(1));
-        Material originalExpertise2 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(2));
-        Material originalExpertise3 = AbilityItemManager.getOriginalItemMaterial(playerInventory.getItem(3));
+        ItemStack style = player.getInventory().getItem(0);
+        ItemStack expertise1 = player.getInventory().getItem(1);
+        ItemStack expertise2 = player.getInventory().getItem(2);
+        ItemStack expertise3 = player.getInventory().getItem(3);
+        Material originalStyle = AbilityItemManager.getOriginalItemMaterial(style);
+        Material originalExpertise1 = AbilityItemManager.getOriginalItemMaterial(expertise1);
+        Material originalExpertise2 = AbilityItemManager.getOriginalItemMaterial(expertise2);
+        Material originalExpertise3 = AbilityItemManager.getOriginalItemMaterial(expertise3);
 
-        player.setCooldown(playerInventory.getItem(0), 1);
-        player.setCooldown(playerInventory.getItem(1), 1);
-        player.setCooldown(playerInventory.getItem(2), 1);
-        player.setCooldown(playerInventory.getItem(3), 1);
+        if (style != null) player.setCooldown(style, 1);
+        if (expertise1 != null) player.setCooldown(expertise1, 1);
+        if (expertise2 != null) player.setCooldown(expertise2, 1);
+        if (expertise3 != null) player.setCooldown(expertise3, 1);
+
         player.setCooldown(AbilityItemManager.cooldownItem(), 1);
 
         if (originalStyle != null) player.setCooldown(originalStyle, 1);

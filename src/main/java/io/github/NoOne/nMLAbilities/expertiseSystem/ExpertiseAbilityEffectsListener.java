@@ -34,7 +34,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
         Player player = event.getPlayer();
         String[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
         ItemStack ability = event.getAbility();
-        String abilityName = ability.getItemMeta().getDisplayName().substring(4);
+        String abilityName = AbilityItemManager.getRawAbilityName(ability);
         boolean toggleState = AbilityItemManager.getToggleState(ability);
 
         if (Arrays.asList(selectedAbilities).contains(abilityName)) {

@@ -2,6 +2,9 @@ package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class SelectedAbilities {
     private String style;
@@ -21,10 +24,42 @@ public class SelectedAbilities {
     }
 
     public void clearSelectedAbilities() {
-        style = AbilityItemManager.emptyStyleAbilityItem().getItemMeta().getDisplayName().substring(2);
-        expertise1 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
-        expertise2 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
-        expertise3 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getItemMeta().getDisplayName().substring(2);
+        style = AbilityItemManager.getRawAbilityName(AbilityItemManager.emptyStyleAbilityItem());
+        expertise1 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        expertise2 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        expertise3 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+    }
+
+    public void syncSelectedAbilitiesToInventory(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+        ItemStack style = playerInventory.getItem(0);
+        ItemStack expertise1 = playerInventory.getItem(1);
+        ItemStack expertise2 = playerInventory.getItem(2);
+        ItemStack expertise3 = playerInventory.getItem(3);
+
+        if (AbilityItemManager.isAnAbility(style)) {
+            this.style = AbilityItemManager.getRawAbilityName(style);
+        } else {
+            this.style = AbilityItemManager.getRawAbilityName(style);
+        }
+
+        if (AbilityItemManager.isAnAbility(expertise1)) {
+            this.expertise1 = AbilityItemManager.getRawAbilityName(expertise1);
+        } else {
+            this.expertise1 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        }
+
+        if (AbilityItemManager.isAnAbility(expertise2)) {
+            this.expertise2 = AbilityItemManager.getRawAbilityName(expertise2);
+        } else {
+            this.expertise2 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        }
+
+        if (AbilityItemManager.isAnAbility(expertise3)) {
+            this.expertise3 = AbilityItemManager.getRawAbilityName(expertise3);
+        } else {
+            this.expertise3 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        }
     }
 
     public String getStyle() {

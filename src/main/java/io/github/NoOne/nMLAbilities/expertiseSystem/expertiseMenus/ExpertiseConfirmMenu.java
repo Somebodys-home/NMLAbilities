@@ -49,7 +49,7 @@ public class ExpertiseConfirmMenu extends Menu {
         switch (event.getSlot()) {
             case 11 -> {
                 if (expertise1.isSimilar(AbilityItemManager.cooldownItem())) {
-                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldown.§r§c ⚠");
+                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldownSystem.§r§c ⚠");
                     return;
                 }
 
@@ -58,7 +58,7 @@ public class ExpertiseConfirmMenu extends Menu {
             }
             case 13 -> {
                 if (expertise2.isSimilar(AbilityItemManager.cooldownItem())) {
-                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldown.§r§c ⚠");
+                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldownSystem.§r§c ⚠");
                     return;
                 }
 
@@ -67,7 +67,7 @@ public class ExpertiseConfirmMenu extends Menu {
             }
             case 15 -> {
                 if (expertise3.isSimilar(AbilityItemManager.cooldownItem())) {
-                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldown.§r§c ⚠");
+                    player.sendMessage("§c⚠ §nWait for this ability to go off cooldownSystem.§r§c ⚠");
                     return;
                 }
 

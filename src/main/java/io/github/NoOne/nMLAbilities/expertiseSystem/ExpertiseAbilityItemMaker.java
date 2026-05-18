@@ -156,7 +156,7 @@ public class ExpertiseAbilityItemMaker {
         /// setting keys
         pdc.set(AbilityItemManager.getAbilityKey(), PersistentDataType.INTEGER, 1); // ability key
         pdc.set(AbilityItemManager.getExpertiseKey(), PersistentDataType.INTEGER, 1); // expertise ability key
-        pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown); // cooldown key
+        pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown); // cooldownSystem key
         pdc.set(AbilityItemManager.getEnergyKey(), PersistentDataType.INTEGER, cost); // energy cost key
 
         if (toggleable) { // toggleable ability keys

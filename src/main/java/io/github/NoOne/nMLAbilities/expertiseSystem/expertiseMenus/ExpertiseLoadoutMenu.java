@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;

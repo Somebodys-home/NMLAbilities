@@ -1,10 +1,9 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
@@ -30,9 +29,7 @@ import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -5,7 +5,7 @@ import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldown.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
@@ -24,6 +24,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 
@@ -56,7 +57,7 @@ public class AbilityListener implements Listener {
         if (AbilityItemManager.isAnAbility(ability)) { // if it's an ability item
             event.setCancelled(true);
 
-            // blank ability / hard cooldown check
+            // blank ability / hard cooldownSystem check
             if (player.hasCooldown(ability) ||
                 ability.getType() == ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getType() ||
                 ability.getType() == AbilityItemManager.emptyStyleAbilityItem().getType() ||
@@ -86,7 +87,7 @@ public class AbilityListener implements Listener {
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
-                } else { // if it will be turned off, put on cooldown
+                } else { // if it will be turned off, put on cooldownSystem
                     AbilityItemManager.setToggleState(ability, false);
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
@@ -103,15 +104,14 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler
-    public void blankAbilitiesOnFirstJoin(PlayerJoinEvent event) {
+    public void blankAbilitiesOnJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        PlayerInventory playerInventory = player.getInventory();
 
-        if (!player.hasPlayedBefore()) {
-            player.getInventory().setItem(0, styleAbilityItem);
-            player.getInventory().setItem(1, expertiseAbilityItem);
-            player.getInventory().setItem(2, expertiseAbilityItem);
-            player.getInventory().setItem(3, expertiseAbilityItem);
-        }
+        if (playerInventory.getItem(0) == null) player.getInventory().setItem(0, styleAbilityItem);
+        if (playerInventory.getItem(1) == null) player.getInventory().setItem(1, expertiseAbilityItem);
+        if (playerInventory.getItem(2) == null) player.getInventory().setItem(2, expertiseAbilityItem);
+        if (playerInventory.getItem(3) == null) player.getInventory().setItem(3, expertiseAbilityItem);
     }
 
     @EventHandler

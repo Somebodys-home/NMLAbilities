@@ -31,7 +31,7 @@ public class AbilityItemManager {
     public AbilityItemManager(NMLAbilities nmlAbilities) {
         abilityKey = new NamespacedKey(nmlAbilities, "ability");
         expertiseKey = new NamespacedKey(nmlAbilities, "expertise");
-        cooldownKey = new NamespacedKey(nmlAbilities, "cooldown");
+        cooldownKey = new NamespacedKey(nmlAbilities, "cooldownSystem");
         toggleKey = new NamespacedKey(nmlAbilities, "toggle");
         originalItemKey = new NamespacedKey(nmlAbilities, "originalItem");
         energyKey = new NamespacedKey(nmlAbilities, "energy");
@@ -40,21 +40,33 @@ public class AbilityItemManager {
     }
 
     public static ItemStack emptyStyleAbilityItem() {
-        return ItemCreator.createItem(
+        ItemStack emptyStyle =  ItemCreator.createItem(
                 Material.LIGHT_BLUE_DYE,
                 1,
                 "§bEmpty Style Ability",
                 List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
         );
+        ItemMeta itemMeta = emptyStyle.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        pdc.set(abilityKey, PersistentDataType.INTEGER, 0);
+        emptyStyle.setItemMeta(itemMeta);
+        return emptyStyle;
     }
 
     public static ItemStack cooldownItem() {
-        return ItemCreator.createItem(
+        ItemStack cooldown  =  ItemCreator.createItem(
                 Material.GRAY_DYE,
                 1,
                 "§7This ability is on cooldown!",
                 List.of()
         );
+        ItemMeta itemMeta = cooldown.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        pdc.set(abilityKey, PersistentDataType.INTEGER, 0);
+        cooldown.setItemMeta(itemMeta);
+        return cooldown;
     }
 
     public static boolean meetsSkillRequirement(Skills skills, String skill, int levelRequirement) {
@@ -98,6 +110,8 @@ public class AbilityItemManager {
     }
 
     public static void setToggleState(ItemStack ability, boolean toggle) {
+        if (ability == null) return;
+
         ItemMeta meta = ability.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
@@ -139,18 +153,23 @@ public class AbilityItemManager {
     }
 
     public static Material getOriginalItemMaterial(ItemStack item) {
-        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        if (item != null) {
+            PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
 
-        if (pdc.has(originalItemKey)) {
-            String materialName = pdc.get(originalItemKey, PersistentDataType.STRING);
-            if (materialName != null) {
-                Material material = Material.matchMaterial(materialName);
+            if (pdc.has(originalItemKey)) {
+                String materialName = pdc.get(originalItemKey, PersistentDataType.STRING);
 
-                return material;
+                if (materialName != null) {
+                    return Material.matchMaterial(materialName);
+                }
             }
         }
 
         return null;
+    }
+
+    public static String getRawAbilityName(ItemStack item) {
+        return item.getItemMeta().getDisplayName().replaceAll("§.", "");
     }
 
     public static boolean isAnAbility(ItemStack item) {

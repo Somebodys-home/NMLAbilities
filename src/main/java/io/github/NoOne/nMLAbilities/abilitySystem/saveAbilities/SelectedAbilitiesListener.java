@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,9 +35,9 @@ public class SelectedAbilitiesListener implements Listener {
             selectedAbilities.clearSelectedAbilities();
         } else {
             switch (event.getChangedAbility()) {
-                case "expertise1" -> selectedAbilities.setExpertise1(newAbility.getItemMeta().getDisplayName().substring(4));
-                case "expertise2" -> selectedAbilities.setExpertise2(newAbility.getItemMeta().getDisplayName().substring(4));
-                case "expertise3" -> selectedAbilities.setExpertise3(newAbility.getItemMeta().getDisplayName().substring(4));
+                case "expertise1" -> selectedAbilities.setExpertise1(AbilityItemManager.getRawAbilityName(newAbility));
+                case "expertise2" -> selectedAbilities.setExpertise2(AbilityItemManager.getRawAbilityName(newAbility));
+                case "expertise3" -> selectedAbilities.setExpertise3(AbilityItemManager.getRawAbilityName(newAbility));
             }
         }
 
