@@ -10,9 +10,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class SelectedAbilitiesListener implements Listener {
     private SelectedAbilitiesManager selectedAbilitiesManager;
+    private SelectedAbilitiesConfig selectedAbilitiesConfig;
 
     public SelectedAbilitiesListener(NMLAbilities nmlAbilities) {
         selectedAbilitiesManager = nmlAbilities.getSelectedManager();
+        this.selectedAbilitiesConfig = nmlAbilities.getSelectedConfig();
     }
 
     @EventHandler
@@ -22,6 +24,8 @@ public class SelectedAbilitiesListener implements Listener {
 
         if (selectedAbilities == null) {
             selectedAbilitiesManager.createDefaultSelectedAbilities(player);
+        } else {
+            selectedAbilities.syncSelectedAbilitiesToInventory(player);
         }
     }
 
@@ -42,5 +46,6 @@ public class SelectedAbilitiesListener implements Listener {
         }
 
         selectedAbilitiesManager.saveSelectedAbilitiesToConfig(player);
+        selectedAbilitiesConfig.saveConfig();
     }
 }
