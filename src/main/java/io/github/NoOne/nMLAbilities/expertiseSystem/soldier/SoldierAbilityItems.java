@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class SoldierAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash",
                 new HashMap<>() {{
-                    put("soldier", 1);
+                    put(Expertise.SOLDIER, 1);
                 }},
                 "Yep.", 
                 null,

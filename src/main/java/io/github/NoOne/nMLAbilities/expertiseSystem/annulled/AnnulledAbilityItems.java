@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class AnnulledAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Black Hole",
                 new HashMap<>() {{
-                    put("annulled", 50);
+                    put(Expertise.ANNULLED, 50);
                 }},
                 "...it's a black hole. It pulls in and spaghettifies things; I don't need to spell this out for you.",
                 null,

@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class SorcererAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Magic Missile EX",
                 new HashMap<>() {{
-                    put("sorcerer", 1);
+                    put(Expertise.SORCERER, 1);
                 }},
                 "Shoot your basic magic missile attack 5 times",
                 null,
@@ -39,7 +40,7 @@ public class SorcererAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dragon's Breath",
                 new HashMap<>() {{
-                    put("sorcerer", 25);
+                    put(Expertise.SORCERER, 25);
                 }},
                 "RRRRRAAAAAAGGGHHHHH out a cone of fire from your mouth",
                 null,

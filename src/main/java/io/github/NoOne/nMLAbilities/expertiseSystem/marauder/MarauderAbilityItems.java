@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ public class MarauderAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Blade Tornado",
                 new HashMap<>() {{
-                    put("marauder", 20);
+                    put(Expertise.MARAUDER, 20);
                 }},
                 "Hurl yourself forwards as a whirligig of anger issues, bad intentions, and BLADES!",
                 null,

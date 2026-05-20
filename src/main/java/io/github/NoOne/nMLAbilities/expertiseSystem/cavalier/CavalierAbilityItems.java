@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ public class CavalierAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Seismic Slam",
                 new HashMap<>() {{
-                    put("cavalier", 10);
+                    put(Expertise.CAVALIER, 10);
                 }},
                 "Jump into the air, then crash into the ground, launching anyone nearby away from you", 
                 List.of(GROUNDED),

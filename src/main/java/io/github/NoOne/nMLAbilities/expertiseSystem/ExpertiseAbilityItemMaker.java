@@ -46,26 +46,21 @@ public class ExpertiseAbilityItemMaker {
         return expertise;
     }
 
-    public static ItemStack makeExpertiseAbilityItem(String name, Map<String, Integer> skillRequirements, String description, List<AbilityPrerequisite> prerequisites,
+    public static ItemStack makeExpertiseAbilityItem(String name, Map<Expertise, Integer> expertiseRequirements, String description, List<AbilityPrerequisite> prerequisites,
                                                      boolean toggleable, String targeting, int range, int duration, int cooldown, int cost,
                                                      List<String> damage, List<String> effects, List<ItemType> weapons, Skills playerSkills) {
 
-        String firstExpertiseRequirement = skillRequirements.entrySet().iterator().next().getKey();
+        Expertise firstExpertiseRequirement = expertiseRequirements.entrySet().iterator().next().getKey();
         Material abilityMaterial = getExpertiseAbilityMaterial(firstExpertiseRequirement);
         String color = getExpertiseColor(firstExpertiseRequirement);
         List<String> lore = new ArrayList<>();
 
-        /// lore
         // skill requirements
-        for (Map.Entry<String, Integer> requirementEntry : skillRequirements.entrySet()) {
-            String string = requirementEntry.getKey();
+        for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
+            String string = Expertise.getString(entry.getKey());
+            String requirementString = "§8Lv. " + entry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
 
-            if (Objects.equals(string, "shieldhero")) string = "Shield Hero";
-            if (Objects.equals(string, "martialartist")) string = "Martial Artist";
-
-            String requirementString = "§8Lv. " + requirementEntry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
-
-            if (AbilityItemManager.meetsSkillRequirement(playerSkills, string, requirementEntry.getValue())) {
+            if (AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue())) {
                 requirementString += " §a✔";
             } else {
                 requirementString += " §c✖";
@@ -76,7 +71,7 @@ public class ExpertiseAbilityItemMaker {
 
         lore.add("");
 
-        // lore
+        // description
         for (String line : linebreak(description, 33)) {
             lore.add("§7" + line);
         }
@@ -159,12 +154,14 @@ public class ExpertiseAbilityItemMaker {
         pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown); // cooldownSystem key
         pdc.set(AbilityItemManager.getEnergyKey(), PersistentDataType.INTEGER, cost); // energy cost key
 
-        if (toggleable) { // toggleable ability keys
+        // toggleable ability keys
+        if (toggleable) {
             pdc.set(AbilityItemManager.getToggleKey(), PersistentDataType.BOOLEAN, false);
             pdc.set(AbilityItemManager.getOriginalItemKey(), PersistentDataType.STRING, expertiseItem.getType().toString());
         }
 
-        if (weapons != null) { // usable weapons keys
+        // usable weapons keys
+        if (weapons != null) {
             if (weapons.isEmpty()) {
                 pdc.set(anyWeaponKey, PersistentDataType.BOOLEAN, true);
             } else {
@@ -174,19 +171,17 @@ public class ExpertiseAbilityItemMaker {
             }
         }
 
-        for (Map.Entry<String, Integer> entry : skillRequirements.entrySet()) { // skill requirements keys
-            String string = entry.getKey();
-
-            if (Objects.equals(string, "shieldhero")) string = "Shield Hero";
-            if (Objects.equals(string, "martialartist")) string = "Martial Artist";
-            if (!AbilityItemManager.meetsSkillRequirement(playerSkills, string, entry.getValue()) && !pdc.has(AbilityItemManager.getUnusableKey())) {
+        // expertise requirements keys
+        for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
+            if (!AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue()) && !pdc.has(AbilityItemManager.getUnusableKey())) {
                 pdc.set(AbilityItemManager.getUnusableKey(), PersistentDataType.BOOLEAN, true);
             }
 
-            pdc.set(new NamespacedKey(nmlAbilities, entry.getKey()), PersistentDataType.INTEGER, entry.getValue());
+            pdc.set(new NamespacedKey(nmlAbilities, Expertise.getString(entry.getKey())), PersistentDataType.INTEGER, entry.getValue());
         }
 
-        if (prerequisites != null) { // ability prerequisite keys
+        // ability prerequisite keys
+        if (prerequisites != null) {
             for (AbilityPrerequisite abilityPrerequisite : prerequisites) {
                 switch (abilityPrerequisite) {
                     case GROUNDED -> pdc.set(AbilityItemManager.getGroundedKey(), PersistentDataType.BOOLEAN, true);
@@ -226,35 +221,34 @@ public class ExpertiseAbilityItemMaker {
         return breaks;
     }
 
-    private static Material getExpertiseAbilityMaterial(String expertise) {
+    private static Material getExpertiseAbilityMaterial(Expertise expertise) {
         return switch (expertise) {
-            case "soldier" -> Material.DIAMOND_SWORD;
-            case "assassin" -> Material.BLACK_WOOL;
-            case "marauder" -> Material.GOLDEN_AXE;
-            case "cavalier" -> Material.MACE;
-            case "martialartist" -> Material.RED_GLAZED_TERRACOTTA;
-            case "shieldhero" -> Material.SHIELD;
-            case "marksman" -> Material.TARGET;
-            case "sorcerer" -> Material.BOOK;
-            case "primordial" -> Material.OAK_SAPLING;
-            case "hallowed" -> Material.OXEYE_DAISY;
-            case "annulled" -> Material.CRYING_OBSIDIAN;
-            default -> null;
+            case SOLDIER -> Material.DIAMOND_SWORD;
+            case ASSASSIN -> Material.BLACK_WOOL;
+            case MARAUDER -> Material.GOLDEN_AXE;
+            case CAVALIER -> Material.MACE;
+            case MARTIAL_ARTIST -> Material.RED_GLAZED_TERRACOTTA;
+            case SHIELD_HERO -> Material.SHIELD;
+            case MARKSMAN -> Material.TARGET;
+            case SORCERER -> Material.BOOK;
+            case PRIMORDIAL -> Material.OAK_SAPLING;
+            case HALLOWED -> Material.OXEYE_DAISY;
+            case ANNULLED -> Material.CRYING_OBSIDIAN;
         };
     }
 
-    private static String getExpertiseColor(String expertise) {
+    private static String getExpertiseColor(Expertise expertise) {
         return switch (expertise) {
-            case "soldier" -> "§c";
-            case "assassin" -> "§8";
-            case "marauder", "martialartist" -> "§4";
-            case "cavalier" -> "§9";
-            case "shieldhero" -> "§3";
-            case "marksman" -> "§a";
-            case "sorcerer" -> "§6";
-            case "primordial" -> "§2";
-            case "hallowed" -> "§f";
-            case "annulled" -> "§5";
+            case SOLDIER -> "§c";
+            case ASSASSIN -> "§8";
+            case MARAUDER, MARTIAL_ARTIST -> "§4";
+            case CAVALIER -> "§9";
+            case SHIELD_HERO -> "§3";
+            case MARKSMAN -> "§a";
+            case SORCERER -> "§6";
+            case PRIMORDIAL -> "§2";
+            case HALLOWED -> "§f";
+            case ANNULLED -> "§5";
             default -> "";
         };
     }

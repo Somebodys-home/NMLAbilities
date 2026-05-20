@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AbilityItemManager {
-    // defining keys
+    private static NMLAbilities nmlAbilities;
     private static NamespacedKey abilityKey;
     private static NamespacedKey expertiseKey;
     private static NamespacedKey cooldownKey;
@@ -29,6 +30,7 @@ public class AbilityItemManager {
     private static NamespacedKey groundedKey;
 
     public AbilityItemManager(NMLAbilities nmlAbilities) {
+        this.nmlAbilities = nmlAbilities;
         abilityKey = new NamespacedKey(nmlAbilities, "ability");
         expertiseKey = new NamespacedKey(nmlAbilities, "expertise");
         cooldownKey = new NamespacedKey(nmlAbilities, "cooldownSystem");
@@ -69,21 +71,21 @@ public class AbilityItemManager {
         return cooldown;
     }
 
-    public static boolean meetsSkillRequirement(Skills skills, String skill, int levelRequirement) {
+    public static boolean meetsExpertiseRequirement(Skills skills, Expertise expertise, int levelRequirement) {
         int playerSkillLevel = 0;
 
-        switch (skill.toLowerCase().replaceAll(" ", "")) {
-            case "soldier" -> playerSkillLevel = skills.getSoldierLevel();
-            case "assassin" -> playerSkillLevel = skills.getAssassinLevel();
-            case "marauder" -> playerSkillLevel = skills.getMarauderLevel();
-            case "cavalier" -> playerSkillLevel = skills.getCavalierLevel();
-            case "martialartist" -> playerSkillLevel = skills.getMartialArtistLevel();
-            case "shieldhero" -> playerSkillLevel = skills.getShieldHeroLevel();
-            case "marksman" -> playerSkillLevel = skills.getMarksmanLevel();
-            case "sorcerer" -> playerSkillLevel = skills.getSorcererLevel();
-            case "primordial" -> playerSkillLevel = skills.getPrimordialLevel();
-            case "hallowed" -> playerSkillLevel = skills.getHallowedLevel();
-            case "annulled" -> playerSkillLevel = skills.getAnnulledLevel();
+        switch (expertise) {
+            case SOLDIER -> playerSkillLevel = skills.getSoldierLevel();
+            case ASSASSIN -> playerSkillLevel = skills.getAssassinLevel();
+            case MARAUDER -> playerSkillLevel = skills.getMarauderLevel();
+            case CAVALIER -> playerSkillLevel = skills.getCavalierLevel();
+            case MARTIAL_ARTIST -> playerSkillLevel = skills.getMartialArtistLevel();
+            case SHIELD_HERO -> playerSkillLevel = skills.getShieldHeroLevel();
+            case MARKSMAN -> playerSkillLevel = skills.getMarksmanLevel();
+            case SORCERER -> playerSkillLevel = skills.getSorcererLevel();
+            case PRIMORDIAL -> playerSkillLevel = skills.getPrimordialLevel();
+            case HALLOWED -> playerSkillLevel = skills.getHallowedLevel();
+            case ANNULLED -> playerSkillLevel = skills.getAnnulledLevel();
         }
 
         return playerSkillLevel >= levelRequirement;
@@ -166,6 +168,19 @@ public class AbilityItemManager {
         }
 
         return null;
+    }
+
+    public static ArrayList<Expertise> getExpertisesForAbility(ItemStack item) {
+        ArrayList<Expertise> expertises = new ArrayList<>();
+        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
+
+        for (Expertise expertise : Expertise.values()) {
+            if (persistentDataContainer.has(new NamespacedKey(nmlAbilities, Expertise.getString(expertise)))) {
+                expertises.add(expertise);
+            }
+        }
+
+        return expertises;
     }
 
     public static String getRawAbilityName(ItemStack item) {

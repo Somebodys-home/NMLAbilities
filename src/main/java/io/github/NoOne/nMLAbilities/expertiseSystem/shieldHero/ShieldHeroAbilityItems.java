@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class ShieldHeroAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Second Wind",
                 new HashMap<>() {{
-                    put("shieldhero", 1);
+                    put(Expertise.SHIELD_HERO, 1);
                 }},
                 "Take a moment to steel your resolve to fully regain your guard", 
                 null,

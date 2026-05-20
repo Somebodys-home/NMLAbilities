@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class MartialArtistAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "10-Hit Combo",
                 new HashMap<>() {{
-                    put("martialartist", 30);
+                    put(Expertise.MARTIAL_ARTIST, 30);
                 }},
                 "Perform a devastating 10 hit combo, ending with an uppercut, so long as you can land every hit. (Energy cost is per hit)", 
                 null,

@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ public class AssassinAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash & Dash",
                 new HashMap<>() {{
-                    put("assassin", 1);
+                    put(Expertise.ASSASSIN, 1);
                 }},
                 "Dash forwards, dealing damage to anyone in your way", 
                 List.of(GROUNDED),

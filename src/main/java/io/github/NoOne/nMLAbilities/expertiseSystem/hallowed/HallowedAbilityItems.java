@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class HallowedAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Halo",
                 new HashMap<>() {{
-                    put("hallowed", 15);
+                    put(Expertise.HALLOWED, 15);
                 }},
                 "Throw a ring of radiant energy that rebounds back to you, damaging anyone touching it", 
                 null,

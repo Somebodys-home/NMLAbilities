@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ public class PrimordialAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Chuck Rock",
                 new HashMap<>() {{
-                    put("primordial", 1);
+                    put(Expertise.PRIMORDIAL, 1);
                 }},
                 "Pick up and chuck a rock. It's not magical or anything, you just find a rock and throw it.", 
                 List.of(GROUNDED),
@@ -41,8 +42,8 @@ public class PrimordialAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Pumpkin Bomb",
                 new HashMap<>() {{
-                    put("primordial", 15);
-                    put("annulled", 5);
+                    put(Expertise.PRIMORDIAL, 15);
+                    put(Expertise.ANNULLED, 5);
                 }},
                 "Summon and throw a pumpkin that explodes on contact. Spooky!", 
                 null,
@@ -62,7 +63,7 @@ public class PrimordialAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Air Ball",
                 new HashMap<>() {{
-                    put("primordial", 10);
+                    put(Expertise.PRIMORDIAL, 10);
                 }},
                 "Dunk on your foes with a compressed ball of air. Ball game.",
                 null,

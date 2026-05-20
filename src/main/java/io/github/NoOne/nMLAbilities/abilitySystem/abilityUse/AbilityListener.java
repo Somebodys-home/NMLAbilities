@@ -65,6 +65,12 @@ public class AbilityListener implements Listener {
                 return;
             }
 
+            // guard check
+            if (player.isBlocking()) {
+                player.sendMessage("§c⚠ §nAbilities can't be used while guarding!§r§c ⚠");
+                return;
+            }
+
             // prerequisite check
             if (AbilityItemManager.hasPrerequisites(ability) && !AbilityItemManager.meetsPrerequisites(player, ability)) {
                 player.sendMessage("§c⚠ §nPrerequisites not met!§r§c ⚠");

@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class MarksmanAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Steady Aim",
                 new HashMap<>() {{
-                    put("marksman", 1);
+                    put(Expertise.MARKSMAN, 1);
                 }},
                 "Slow your movements to increase your accuracy, making critical shots land easier.",
                 null,
@@ -39,7 +40,7 @@ public class MarksmanAbilityItems extends AbilityItemManager {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",
                 new HashMap<>() {{
-                    put("marksman", 30);
+                    put(Expertise.MARKSMAN, 30);
                 }},
                 "EXTREME WEATHER WARNING: A storm of hail-sized arrows has been forecasted in your area. Find shelter immediately.",
                 null,
