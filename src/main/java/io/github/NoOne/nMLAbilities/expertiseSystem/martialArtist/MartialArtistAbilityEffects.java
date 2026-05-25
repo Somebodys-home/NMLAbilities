@@ -4,16 +4,17 @@ import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -28,661 +29,141 @@ public class MartialArtistAbilityEffects {
         profileManager = nmlAbilities.getProfileManager();
     }
 
-    public static void tenHitCombo(Player player) {
-        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
+    public static void dropKick(Player player) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> physicalDamage = DamageHelper.convertPlayerStat2Damage(stats, "physicaldamage");
+        Vector dropkickDirection = player.getLocation().getDirection().setY(0).normalize();
+        double speed = Maneuvers.getSpeed(player) / 10;
+        Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.5);
+        HashSet<UUID> alreadyHitEntities = new HashSet<>();
 
-        HashSet<UUID> hitEntityUUIDs = new HashSet<>();
-        HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
-                profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .25);
-        boolean[] comboBroken = {false};
+        if (!player.isOnGround()) { // so the dropkick is about the same both in the air and the ground
+            dropKick.multiply(.66).setY(.3);
+        }
 
-        EnergyManager.useEnergy(player, 10);
-        CooldownManager.putOnHardCooldown(player, .7);
-        AttackCooldownSystem.pauseAttackCooldown(player);
+        EnergyManager.useEnergy(player, 15);
+        CooldownManager.putOnHardCooldown(player, 1.5);
+        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
+        player.setVelocity(dropKick);
+        player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
-        // punch 1
-        dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-            @Override
-            public void run() {
-                Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                Location punch = baseLocation.clone().add(forward);
-
-                player.swingMainHand();
-                player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                CooldownManager.putOnHardCooldown(player, .5);
-
-                for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                    if (entity != player) {
-                        hitEntityUUIDs.add(entity.getUniqueId());
-                    }
-                }
-
-                for (UUID uuid : hitEntityUUIDs) {
-                    if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                    }
-                }
-
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (hitEntityUUIDs.isEmpty()) {
-                            AttackCooldownSystem.resumeAttackCooldown(player);
-                            CooldownManager.removeHardCooldown(player);
-                            comboBroken[0] = true;
-                        }
-                    }
-                }.runTaskLater(nmlAbilities, 1L);
-            }
-        });
-
-        // punch 2
+        // dropkick loop
         new BukkitRunnable() {
+            int groundGracePeriod = 5;
+            boolean inHitStop = false;
+            boolean hitstopGracePeriod = false; // to chain hitstops
+            double incomingSpeed = Maneuvers.getSpeed(player) / 10;
+            double damageMultiplier = Math.clamp(incomingSpeed, 1, 3);
+            HashMap<DamageType, Double> finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
+
             @Override
             public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
+                Location baseLocation = player.getLocation().add(0, 1, 0);
+                Location hitbox = baseLocation.clone().add(dropkickDirection);
+                Collection<Entity> hitEntities = player.getWorld().getNearbyEntities(hitbox, 1, 2, 1);
+                Location behind = baseLocation.clone().subtract(baseLocation.getDirection().setY(0).normalize().multiply(0.5));
+                Vector rebound = new Vector(0, .4, 0);
+
+                groundGracePeriod--;
+                player.getWorld().spawnParticle(Particle.SNOWFLAKE, behind, 10, .15, .15, .15, 0);
+
+                // hit entities filtering
+                hitEntities.removeIf(entity -> !(entity instanceof LivingEntity) || entity.isDead() || alreadyHitEntities.contains(entity.getUniqueId()) ||
+                                    entity.hasMetadata("hologram"));
+                hitEntities.remove(player);
+
+                // stop if the player hits the ground
+                if (groundGracePeriod <= 0 && player.isOnGround()) {
                     cancel();
                     return;
                 }
 
-                hitEntityUUIDs.clear();
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
+                // update speed / damage
+                if (!hitstopGracePeriod) {
+                    incomingSpeed = Maneuvers.getSpeed(player) / 10;
+                    damageMultiplier = Math.clamp(incomingSpeed, 1, 3);
+                    finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
+                }
 
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
+                // you've hit something
+                if (!hitEntities.isEmpty() && !inHitStop) {
+                    if (damageMultiplier < 2.5) { // low velocity effect
+                        player.setVelocity(rebound);
+                        player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 2f, 1f);
 
-                        player.swingOffHand();
-                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
+                        // hit effect
+                        AbilityEffects.verticalParticleCircleFacingEntity(
+                                new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1.0F),
+                                player,
+                                1,
+                                30,
+                                1.5
+                        );
 
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
+                        // damage and knockback
+                        for (Entity hitEntity : hitEntities) {
+                            Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier).setY(.25);
+
+                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
+                            hitEntity.setVelocity(knockback);
                         }
 
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                            }
-                        }
+                        cancel();
+                    } else { // high velocity effect
+                        Vector restoredVelocity = player.getVelocity();
+                        inHitStop = true;
+                        hitstopGracePeriod = true;
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
+                        for (Entity hitEntity : hitEntities) {
+                            Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier).setY(.25);
+                            Location hitEntityLocation = hitEntity.getLocation().add(knockback.clone().normalize());// capture BEFORE creating the inner runnable
+
+                            alreadyHitEntities.add(hitEntity.getUniqueId());
+                            player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 1f, 2f);
+                            hitEntity.teleport(hitEntityLocation);
+                            AttackCooldownSystem.setOrPauseAttackCooldown(player, .66);
+
+                            // hitstop
+                            new BukkitRunnable() {
+                                Location prevLocation = player.getLocation();
+                                int timer = 14;
+
+                                @Override
+                                public void run() {
+                                    player.teleport(prevLocation);
+                                    hitEntity.teleport(hitEntityLocation);
+                                    AbilityEffects.verticalParticleCircleBetweenEntities(
+                                            new Particle.DustOptions(Color.fromRGB(230, 185, 9), 1.0F),
+                                            player,
+                                            hitEntity,
+                                            1.25,
+                                            30
+                                    );
+
+                                    timer--;
+
+                                    if (timer == 0) {
+                                        player.setVelocity(restoredVelocity);
+                                        hitEntity.setVelocity(knockback);
+                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
+                                        player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, .5f);
+                                        inHitStop = false;
+
+                                        new BukkitRunnable() {
+                                            @Override
+                                            public void run() {
+                                                hitstopGracePeriod = false;
+                                            }
+                                        }.runTaskLater(nmlAbilities, 2);
+
+                                        cancel();
+                                    }
                                 }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 10L);
-
-        // punch 3
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
-
-                        player.swingMainHand();
-                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
+                            }.runTaskTimer(nmlAbilities, 0, 1);
                         }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 20L);
-
-        // kick 4
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Vector jump = new Vector(0, 1, 0);
-                        player.setVelocity(jump);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-
-                        Location baseLocation = player.getLocation().add(0, 4, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location kick = baseLocation.clone().add(forward);
-
-                        player.getWorld().spawnParticle(Particle.CRIT, kick, 150, 0.15, 1, 0.15);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(kick, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                livingEntity.setVelocity(jump); // knockback
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 30L);
-
-        // kick 5
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Vector slam = new Vector(0, -1, 0);
-                        player.setVelocity(slam);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-
-                        Location baseLocation = player.getLocation().add(0, 4, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location kick = baseLocation.clone().add(forward);
-
-                        player.getWorld().spawnParticle(Particle.CRIT, kick, 150, 0.15, 4, 0.15);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 2, 4, 2)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                livingEntity.setVelocity(slam); // knockback
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 40L);
-
-        // kick 6
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location kick = baseLocation.clone().add(forward);
-
-                        Vector tinyDashDirection = player.getLocation().getDirection().normalize();
-                        Vector tinyDash = tinyDashDirection.clone().multiply(.5).setY(0);
-
-                        player.setVelocity(tinyDash);
-                        player.getWorld().spawnParticle(Particle.CRIT, kick, 100, 0.15, 0.15, 0.15);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(kick, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.2);
-
-                                livingEntity.setVelocity(knockback);
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 50L);
-
-        // punch 7
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
-
-                        player.swingMainHand();
-                        player.setVelocity(tinyJump);
-                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (int i = 0; i < 8; i++) {
-                            double angle = 2 * Math.PI * i / 8;
-                            double x = Math.cos(angle);
-                            double z = Math.sin(angle);
-
-                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
-                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
-                        }
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
-
-                                livingEntity.setVelocity(knockback);
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 60L);
-
-        // punch 8
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
-
-                        player.swingOffHand();
-                        player.setVelocity(tinyJump);
-                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (int i = 0; i < 8; i++) {
-                            double angle = 2 * Math.PI * i / 8;
-                            double x = Math.cos(angle);
-                            double z = Math.sin(angle);
-
-                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
-                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
-                        }
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
-
-                                livingEntity.setVelocity(knockback);
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 75L);
-
-        // punch 9
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                hitEntityUUIDs.clear();
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Location baseLocation = player.getLocation().add(0, 1.5, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
-                        Vector tinyJump = player.getLocation().getDirection().multiply(.5).setY(.25);
-
-                        player.swingMainHand();
-                        player.setVelocity(tinyJump);
-                        player.getWorld().spawnParticle(Particle.CRIT, punch, 100, 0.25, 0.25, 0.25);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        CooldownManager.putOnHardCooldown(player, .5);
-
-                        for (int i = 0; i < 8; i++) {
-                            double angle = 2 * Math.PI * i / 8;
-                            double x = Math.cos(angle);
-                            double z = Math.sin(angle);
-
-                            Location particleLocation = player.getLocation().clone().add(x, 1, z);
-                            player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1, 0, 0, 0, 0);
-                        }
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                Vector knockback = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().setY(.1);
-
-                                livingEntity.setVelocity(knockback);
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if (hitEntityUUIDs.isEmpty()) {
-                                    AttackCooldownSystem.resumeAttackCooldown(player);
-                                    comboBroken[0] = true;
-                                }
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 90L);
-
-        // uppercut 10
-        new BukkitRunnable() {
-            HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
-                    profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .75);
-
-            @Override
-            public void run() {
-                if (comboBroken[0]) {
-                    AttackCooldownSystem.resumeAttackCooldown(player);
-                    cancel();
-                    return;
-                }
-
-                player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
-                hitEntityUUIDs.clear();
-                CooldownManager.putOnHardCooldown(player, 1);
-
-                dashUntilCollision(player, 2, 5, new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        EnergyManager.useEnergy(player, 10);
-
-                        Vector jump = player.getLocation().getDirection().multiply(1.5).setY(1.5);
-                        Location baseLocation = player.getLocation().add(0, 4, 0);
-                        Vector forward = player.getLocation().getDirection().normalize().multiply(2);
-                        Location punch = baseLocation.clone().add(forward);
-
-                        player.setVelocity(jump);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
-                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.PLAYERS, 3f, 1f);
-
-                        // uppercut particles
-                        new BukkitRunnable() {
-                            int particleticks = 20;
-                            int i = 0;
-                            double angleStep = Math.PI / 20;
-
-                            @Override
-                            public void run() {
-                                Location baseLocation = player.getLocation().clone().add(0, 1, 0);
-                                Location trail = baseLocation.clone().add(player.getLocation().getDirection().normalize().multiply(-1));
-
-                                for (double j = 0; j < 20; j++) {
-                                    double radius = 1.5;
-                                    double angle = (2 * (i * angleStep) + (j * 0.05)) - 180;
-                                    double reverseAngle = angle - 180;
-                                    double x = Math.cos(angle) * radius;
-                                    double z = Math.sin(angle) * radius;
-                                    double reverseX = Math.cos(reverseAngle) * radius;
-                                    double reverseZ = Math.sin(reverseAngle) * radius;
-                                    Location soulFireLocation = player.getLocation().clone().add(x, 2, z);
-                                    Location fireLocation = player.getLocation().clone().add(reverseX,  2, reverseZ);
-
-                                    player.getWorld().spawnParticle(Particle.SNOWFLAKE, trail, 10, .05, .05, .05, 0);
-                                    player.getWorld().spawnParticle(Particle.FLAME, fireLocation, 30, 0, 0, 0, 0);
-                                    player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, soulFireLocation, 30, 0, 0, 0, 0);
-                                }
-
-                                particleticks--;
-                                i++;
-
-                                if (particleticks == 0) cancel();
-                            }
-                        }.runTaskTimer(nmlAbilities, 0L, 1L);
-
-                        for (Entity entity : player.getWorld().getNearbyEntities(punch, 1.5, 2, 1.5)) {
-                            if (entity != player) {
-                                hitEntityUUIDs.add(entity.getUniqueId());
-                            }
-                        }
-
-                        for (UUID uuid : hitEntityUUIDs) {
-                            if (Bukkit.getEntity(uuid) instanceof LivingEntity livingEntity) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats, 0));
-                                livingEntity.setVelocity(jump.multiply(2).setY(2)); // knockback
-                            }
-                        }
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                hitEntityUUIDs.clear();
-                                AttackCooldownSystem.resumeAttackCooldown(player);
-                                comboBroken[0] = true;
-                            }
-                        }.runTaskLater(nmlAbilities, 1L);
-                    }
-                });
-            }
-        }.runTaskLater(nmlAbilities, 105L);
-    }
-
-    private static void dashUntilCollision(Player dasher, double velocity, int fallbackTicks, BukkitRunnable onFinish) {
-        Vector dashDirection = dasher.getLocation().getDirection().normalize();
-        Vector dash = dashDirection.clone().multiply(velocity).setY(0);
-        HashSet<UUID> hitEntityUUIDs = new HashSet<>();
-
-        dasher.setVelocity(dash);
-        dasher.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(1);
-        CooldownManager.putOnHardCooldown(dasher, .7);
-        
-        new BukkitRunnable() {
-            int ticks = 0;
-            boolean triggered = false;
-
-            @Override
-            public void run() {
-                Location baseLocation = dasher.getLocation().add(0, 1, 0);
-                Location hitbox = baseLocation.clone().add(dashDirection);
-
-                for (Entity entity : dasher.getWorld().getNearbyEntities(hitbox, 1.5, 2, 1.5)) {
-                    if (entity != dasher && entity instanceof LivingEntity) {
-                        hitEntityUUIDs.add(entity.getUniqueId());
-                        dasher.setVelocity(new Vector(0, 0, 0));
-                        triggered = true;
                     }
                 }
-
-                if (!triggered && ticks >= fallbackTicks) {
-                    dasher.setVelocity(new Vector(0, 0, 0));
-                    triggered = true;
-                }
-
-                if (triggered) {
-                    cancel();
-                    onFinish.runTaskLater(nmlAbilities, 1L);
-                    dasher.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(.6);
-                }
-
-                ticks++;
             }
-        }.runTaskTimer(nmlAbilities, 0L, 1L);
+        }.runTaskTimer(nmlAbilities, 0, 1);
     }
 }

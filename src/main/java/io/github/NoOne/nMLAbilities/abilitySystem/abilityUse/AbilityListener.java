@@ -57,11 +57,12 @@ public class AbilityListener implements Listener {
         if (AbilityItemManager.isAnAbility(ability)) { // if it's an ability item
             event.setCancelled(true);
 
-            // blank ability / hard cooldownSystem check
+            // blank ability & cooldown check
             if (player.hasCooldown(ability) ||
                 ability.getType() == ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem().getType() ||
                 ability.getType() == AbilityItemManager.emptyStyleAbilityItem().getType() ||
                 ability.getType() == AbilityItemManager.cooldownItem().getType()) {
+
                 return;
             }
 

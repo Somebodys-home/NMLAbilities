@@ -3,6 +3,8 @@ package io.github.NoOne.nMLAbilities.abilitySystem;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class AbilityEffects { 
@@ -75,6 +77,40 @@ public class AbilityEffects {
             Vector velocity = particleLocation.toVector().subtract(center.toVector()).normalize().multiply(speed);
 
             center.getWorld().spawnParticle(particle, particleLocation,0, velocity.getX(), velocity.getY(), velocity.getZ());
+        }
+    }
+
+    public static void verticalParticleCircleFacingEntity(Particle.DustOptions dustOptions, Entity entity, double radius, int particleCount, double distanceFromEntity) {
+        Location center = entity.getLocation().add(0, 1.5, 0).add(entity.getLocation().getDirection().multiply(distanceFromEntity)); // blocks in front
+        Vector dirX = entity.getLocation().getDirection().normalize(); // Face forward vector
+        Vector dirY = new Vector(0, 1, 0); // Up vector
+        Vector dirZ = dirX.clone().crossProduct(dirY).normalize(); // Right vector
+
+        for (int i = 0; i < particleCount; i++) {
+            double angle = (2 * Math.PI / particleCount) * i;
+            double xOffset = Math.cos(angle) * radius;
+            double yOffset = Math.sin(angle) * radius;
+            Location loc = center.clone().add(dirZ.clone().multiply(xOffset)).add(dirY.clone().multiply(yOffset));
+
+            entity.getWorld().spawnParticle(Particle.DUST, loc, 1, 0, 0, 0, 0, dustOptions);
+        }
+    }
+
+    public static void verticalParticleCircleBetweenEntities(Particle.DustOptions dustOptions, Entity entity1, Entity entity2, double radius, int particleCount) {
+        Location e1Loc = entity1.getLocation().add(0, 1, 0);
+        Location e2Loc = entity2.getLocation().add(0, 1, 0);
+        Location center = e1Loc.clone().add(e2Loc.toVector().subtract(e1Loc.toVector()).multiply(0.5));
+        Vector dirX = e2Loc.toVector().subtract(e1Loc.toVector()).normalize();
+        Vector dirY = new Vector(0, 1, 0);
+        Vector dirZ = dirX.clone().crossProduct(dirY).normalize();
+
+        for (int i = 0; i < particleCount; i++) {
+            double angle = (2 * Math.PI / particleCount) * i;
+            double xOffset = Math.cos(angle) * radius;
+            double yOffset = Math.sin(angle) * radius;
+            Location loc = center.clone().add(dirZ.clone().multiply(xOffset)).add(dirY.clone().multiply(yOffset));
+
+            entity1.getWorld().spawnParticle(Particle.DUST, loc, 1, 0, 0, 0, 0, dustOptions);
         }
     }
 

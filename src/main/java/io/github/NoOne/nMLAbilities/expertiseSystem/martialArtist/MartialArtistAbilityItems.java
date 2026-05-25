@@ -18,20 +18,20 @@ public class MartialArtistAbilityItems extends AbilityItemManager {
 
     public static ItemStack tenHitCombo(Skills skills) {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "10-Hit Combo",
+                "Dropkick",
                 new HashMap<>() {{
-                    put(Expertise.MARTIAL_ARTIST, 30);
+                    put(Expertise.MARTIAL_ARTIST, 10);
                 }},
-                "Perform a devastating 10 hit combo, ending with an uppercut, so long as you can land every hit. (Energy cost is per hit)", 
+                "\"Officer I dropkicked that child in self defense.\"",
                 null,
                 false,
                 "Single",
-                5,
+                -1,
                 0,
-                15,
                 10,
-                List.of("§f§n300%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
-                null,
+                15,
+                List.of("§4§n100-300%" + "§r§4" + " Physical Damage ⚔"),
+                List.of("§fDamage & range based on §nvelocity"),
                 List.of(GLOVE), 
                 skills);
     }

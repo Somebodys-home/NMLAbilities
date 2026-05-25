@@ -52,7 +52,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
                 case "Seismic Slam" -> CavalierAbilityEffects.seismicSlam(player);
 
                 // Martial Artist abilities
-                case "10-Hit Combo" -> MartialArtistAbilityEffects.tenHitCombo(player);
+                case "Dropkick" -> MartialArtistAbilityEffects.dropKick(player);
 
                 // Shield Hero abilities
                 case "Second Wind" -> ShieldHeroAbilityEffects.secondWind(player);

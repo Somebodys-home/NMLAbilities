@@ -7,6 +7,7 @@ depend:
   - NMLEnergySystem
   - NMLShields
   - NMLWeapons
+  - NMLAcrobatics
 commands:
   expertise:
     description: Opens the menu to choose your expertise

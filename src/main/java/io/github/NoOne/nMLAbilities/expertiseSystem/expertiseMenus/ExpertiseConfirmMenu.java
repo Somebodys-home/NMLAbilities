@@ -55,6 +55,7 @@ public class ExpertiseConfirmMenu extends Menu {
 
                 player.getInventory().setItem(1, newAbility);
                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise1", newAbility));
+                previousMenu.open();
             }
             case 13 -> {
                 if (expertise2.isSimilar(AbilityItemManager.cooldownItem())) {
@@ -64,6 +65,7 @@ public class ExpertiseConfirmMenu extends Menu {
 
                 player.getInventory().setItem(2, newAbility);
                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise2", newAbility));
+                previousMenu.open();
             }
             case 15 -> {
                 if (expertise3.isSimilar(AbilityItemManager.cooldownItem())) {
@@ -73,11 +75,10 @@ public class ExpertiseConfirmMenu extends Menu {
 
                 player.getInventory().setItem(3, newAbility);
                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise3", newAbility));
+                previousMenu.open();
             }
             case 22 -> previousMenu.open();
         }
-
-        previousMenu.open();
     }
 
     @Override
@@ -94,7 +95,7 @@ public class ExpertiseConfirmMenu extends Menu {
         inventory.setItem(22, ItemCreator.createItem( // Backout button
                 Material.BARRIER,
                 1,
-                "§c§l<- §r§cGo Back",
+                "§c§l<- §r§c§lGo Back",
                 List.of()
         ));
     }

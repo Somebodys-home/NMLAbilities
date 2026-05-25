@@ -52,6 +52,8 @@ public class CavalierAbilityEffects {
             @Override
             public void run() {
                 player.getWorld().spawnParticle(Particle.SNOWFLAKE, player.getLocation(), 75, .15, 1, .15, 0);
+
+                if (player.isOnGround()) cancel();
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
 

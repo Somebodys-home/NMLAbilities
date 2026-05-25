@@ -1,5 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem;
 
+import io.github.NoOne.nMLAbilities.NMLAbilities;
+import org.bukkit.NamespacedKey;
+
 public enum Expertise {
     SOLDIER,
     ASSASSIN,
@@ -28,5 +31,9 @@ public enum Expertise {
             case ANNULLED: return "Annulled";
             default: return "";
         }
+    }
+
+    public static NamespacedKey makeExpertiseKey(NMLAbilities nmlAbilities, Expertise expertise) {
+        return new NamespacedKey(nmlAbilities, getString(expertise).replace(" ", "").toLowerCase());
     }
 }

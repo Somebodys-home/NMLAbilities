@@ -98,7 +98,12 @@ public class ExpertiseAbilityItemMaker {
             lore.add("§fTarget: §9" + targeting);
         }
 
-        if (range != 0) lore.add("§fRange: §a" + range + "m");
+        if (range == -1) {
+            lore.add("§fRange: §aDepends");
+        } else if (range != 0) {
+            lore.add("§fRange: §a" + range + "m");
+        }
+
         if (duration != 0) lore.add("§fDuration: §3" + duration + "s");
 
         lore.add("§fCooldown: §b" + cooldown + "s");
@@ -177,7 +182,7 @@ public class ExpertiseAbilityItemMaker {
                 pdc.set(AbilityItemManager.getUnusableKey(), PersistentDataType.BOOLEAN, true);
             }
 
-            pdc.set(new NamespacedKey(nmlAbilities, Expertise.getString(entry.getKey())), PersistentDataType.INTEGER, entry.getValue());
+            pdc.set(Expertise.makeExpertiseKey(nmlAbilities, entry.getKey()), PersistentDataType.INTEGER, entry.getValue());
         }
 
         // ability prerequisite keys
@@ -249,7 +254,6 @@ public class ExpertiseAbilityItemMaker {
             case PRIMORDIAL -> "§2";
             case HALLOWED -> "§f";
             case ANNULLED -> "§5";
-            default -> "";
         };
     }
 
