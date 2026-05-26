@@ -34,11 +34,11 @@ public class MartialArtistAbilityEffects {
         HashMap<DamageType, Double> physicalDamage = DamageHelper.convertPlayerStat2Damage(stats, "physicaldamage");
         Vector dropkickDirection = player.getLocation().getDirection().setY(0).normalize();
         double speed = Maneuvers.getSpeed(player) / 10;
-        Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.5);
+        Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.4);
         HashSet<UUID> alreadyHitEntities = new HashSet<>();
 
         if (!player.isOnGround()) { // so the dropkick is about the same both in the air and the ground
-            dropKick.multiply(.66).setY(.3);
+            dropKick = player.getVelocity().add(dropkickDirection.multiply(.75).setY(.3)).setY(.3);
         }
 
         EnergyManager.useEnergy(player, 15);
@@ -53,7 +53,7 @@ public class MartialArtistAbilityEffects {
             boolean inHitStop = false;
             boolean hitstopGracePeriod = false; // to chain hitstops
             double incomingSpeed = Maneuvers.getSpeed(player) / 10;
-            double damageMultiplier = Math.clamp(incomingSpeed, 1, 3);
+            double damageMultiplier = Math.clamp(incomingSpeed * .75, 1, 3);
             HashMap<DamageType, Double> finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
 
             @Override
@@ -81,7 +81,7 @@ public class MartialArtistAbilityEffects {
                 // update speed / damage
                 if (!hitstopGracePeriod) {
                     incomingSpeed = Maneuvers.getSpeed(player) / 10;
-                    damageMultiplier = Math.clamp(incomingSpeed, 1, 3);
+                    damageMultiplier = Math.clamp(incomingSpeed * .85, 1, 3);
                     finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
                 }
 
@@ -111,8 +111,19 @@ public class MartialArtistAbilityEffects {
                         cancel();
                     } else { // high velocity effect
                         Vector restoredVelocity = player.getVelocity();
+
                         inHitStop = true;
                         hitstopGracePeriod = true;
+
+                        // saving entities outside hitbox to be paused during hitstop
+                        Collection<Entity> collection = player.getWorld().getNearbyEntities(hitbox, 4, 4, 4);
+                        HashMap<Entity, Location> stoppedEntities = new HashMap<>();
+
+                        collection.removeIf(hitEntities::contains);
+
+                        for (Entity hitEntity : collection) {
+                            stoppedEntities.put(hitEntity, hitEntity.getLocation());
+                        }
 
                         for (Entity hitEntity : hitEntities) {
                             Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier).setY(.25);
@@ -125,13 +136,17 @@ public class MartialArtistAbilityEffects {
 
                             // hitstop
                             new BukkitRunnable() {
-                                Location prevLocation = player.getLocation();
                                 int timer = 14;
 
                                 @Override
                                 public void run() {
-                                    player.teleport(prevLocation);
+                                    timer--;
                                     hitEntity.teleport(hitEntityLocation);
+
+                                    for (Map.Entry<Entity, Location> entry : stoppedEntities.entrySet()) {
+                                        entry.getKey().teleport(entry.getValue());
+                                    }
+
                                     AbilityEffects.verticalParticleCircleBetweenEntities(
                                             new Particle.DustOptions(Color.fromRGB(230, 185, 9), 1.0F),
                                             player,
@@ -139,8 +154,6 @@ public class MartialArtistAbilityEffects {
                                             1.25,
                                             30
                                     );
-
-                                    timer--;
 
                                     if (timer == 0) {
                                         player.setVelocity(restoredVelocity);
@@ -154,7 +167,7 @@ public class MartialArtistAbilityEffects {
                                             public void run() {
                                                 hitstopGracePeriod = false;
                                             }
-                                        }.runTaskLater(nmlAbilities, 2);
+                                        }.runTaskLater(nmlAbilities, 10);
 
                                         cancel();
                                     }
