@@ -32,8 +32,6 @@ public class CavalierAbilityEffects {
     }
 
     public static void seismicSlam(Player player) {
-        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
-
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 2.5);
 
@@ -41,6 +39,7 @@ public class CavalierAbilityEffects {
         CooldownManager.putOnHardCooldown(player, 1.5);
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 2f);
+        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
 
         // jump
         Vector jump = player.getLocation().getDirection().multiply(.5);
@@ -52,8 +51,6 @@ public class CavalierAbilityEffects {
             @Override
             public void run() {
                 player.getWorld().spawnParticle(Particle.SNOWFLAKE, player.getLocation(), 75, .15, 1, .15, 0);
-
-                if (player.isOnGround()) cancel();
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
 

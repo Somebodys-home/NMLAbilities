@@ -51,10 +51,8 @@ public class MartialArtistAbilityEffects {
         new BukkitRunnable() {
             int groundGracePeriod = 5;
             boolean inHitStop = false;
-            boolean hitstopGracePeriod = false; // to chain hitstops
+            int hitstopGracePeriodTimer = 0; // the time that you have to chain hitstops
             double incomingSpeed = Maneuvers.getSpeed(player) / 10;
-            double damageMultiplier = Math.clamp(incomingSpeed * .75, 1, 3);
-            HashMap<DamageType, Double> finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
 
             @Override
             public void run() {
@@ -62,9 +60,9 @@ public class MartialArtistAbilityEffects {
                 Location hitbox = baseLocation.clone().add(dropkickDirection);
                 Collection<Entity> hitEntities = player.getWorld().getNearbyEntities(hitbox, 1, 2, 1);
                 Location behind = baseLocation.clone().subtract(baseLocation.getDirection().setY(0).normalize().multiply(0.5));
-                Vector rebound = new Vector(0, .4, 0);
 
                 groundGracePeriod--;
+                hitstopGracePeriodTimer--;
                 player.getWorld().spawnParticle(Particle.SNOWFLAKE, behind, 10, .15, .15, .15, 0);
 
                 // hit entities filtering
@@ -78,17 +76,18 @@ public class MartialArtistAbilityEffects {
                     return;
                 }
 
-                // update speed / damage
-                if (!hitstopGracePeriod) {
+                // update speed when not in hitstop or its grace period
+                if (hitstopGracePeriodTimer <= 0 && !inHitStop) {
                     incomingSpeed = Maneuvers.getSpeed(player) / 10;
-                    damageMultiplier = Math.clamp(incomingSpeed * .85, 1, 3);
-                    finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
                 }
 
-                // you've hit something
+                /// you've hit something
                 if (!hitEntities.isEmpty() && !inHitStop) {
+                    double damageMultiplier = Math.clamp(incomingSpeed * .85, 1, 3);
+                    HashMap<DamageType, Double> finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
+
                     if (damageMultiplier < 2.5) { // low velocity effect
-                        player.setVelocity(rebound);
+                        player.setVelocity(new Vector(0, .4, 0));
                         player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 2f, 1f);
 
                         // hit effect
@@ -110,70 +109,80 @@ public class MartialArtistAbilityEffects {
 
                         cancel();
                     } else { // high velocity effect
-                        Vector restoredVelocity = player.getVelocity();
-
+                        player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 1f, 2f);
+                        AttackCooldownSystem.setOrPauseAttackCooldown(player, .66);
                         inHitStop = true;
-                        hitstopGracePeriod = true;
 
-                        // saving entities outside hitbox to be paused during hitstop
-                        Collection<Entity> collection = player.getWorld().getNearbyEntities(hitbox, 4, 4, 4);
-                        HashMap<Entity, Location> stoppedEntities = new HashMap<>();
+                        // saving entities outside the hitbox to be paused during hitstop and what velocity they had beforehand
+                        Collection<Entity> collection = player.getWorld().getNearbyEntities(hitbox, 5, 5, 5);
+                        HashMap<Entity, Location> nearbyEntities = new HashMap<>();
+                        HashMap<Entity, Vector> prevVelocities = new HashMap<>();
 
                         collection.removeIf(hitEntities::contains);
 
                         for (Entity hitEntity : collection) {
-                            stoppedEntities.put(hitEntity, hitEntity.getLocation());
+                            nearbyEntities.put(hitEntity, hitEntity.getLocation());
+                            prevVelocities.put(hitEntity, hitEntity.getVelocity().clone());
                         }
 
+                        // saving the knockback that every hit entity will take and where they'll be frozen to during hitstop
+                        HashMap<Entity, Vector> knockbacks = new HashMap<>();
+                        HashMap<Entity, Location> freezeLocations = new HashMap<>();
+
                         for (Entity hitEntity : hitEntities) {
-                            Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier).setY(.25);
-                            Location hitEntityLocation = hitEntity.getLocation().add(knockback.clone().normalize());// capture BEFORE creating the inner runnable
+                            Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier)
+                                    .setY(.25);
+                            Location freezeLocation = hitEntity.getLocation().add(knockback.clone().normalize()); // as if they took 1 block of kb
 
-                            alreadyHitEntities.add(hitEntity.getUniqueId());
-                            player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 1f, 2f);
-                            hitEntity.teleport(hitEntityLocation);
-                            AttackCooldownSystem.setOrPauseAttackCooldown(player, .66);
+                            knockbacks.put(hitEntity, knockback);
+                            freezeLocations.put(hitEntity, freezeLocation);
+                        }
 
-                            // hitstop
-                            new BukkitRunnable() {
-                                int timer = 14;
+                        /// hitstop effect
+                        new BukkitRunnable() {
+                            int timer = 14;
 
-                                @Override
-                                public void run() {
-                                    timer--;
-                                    hitEntity.teleport(hitEntityLocation);
+                            @Override
+                            public void run() {
+                                timer--;
+                                player.setVelocity(new Vector());
 
-                                    for (Map.Entry<Entity, Location> entry : stoppedEntities.entrySet()) {
-                                        entry.getKey().teleport(entry.getValue());
-                                    }
-
-                                    AbilityEffects.verticalParticleCircleBetweenEntities(
+                                for (Entity hitEntity : hitEntities) { // for every hit entity
+                                    hitEntity.teleport(freezeLocations.get(hitEntity)); // freeze them in place
+                                    AbilityEffects.verticalParticleCircleBetweenEntities( // make the hit effect
                                             new Particle.DustOptions(Color.fromRGB(230, 185, 9), 1.0F),
                                             player,
                                             hitEntity,
                                             1.25,
                                             30
                                     );
-
-                                    if (timer == 0) {
-                                        player.setVelocity(restoredVelocity);
-                                        hitEntity.setVelocity(knockback);
-                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
-                                        player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, .5f);
-                                        inHitStop = false;
-
-                                        new BukkitRunnable() {
-                                            @Override
-                                            public void run() {
-                                                hitstopGracePeriod = false;
-                                            }
-                                        }.runTaskLater(nmlAbilities, 10);
-
-                                        cancel();
-                                    }
                                 }
-                            }.runTaskTimer(nmlAbilities, 0, 1);
-                        }
+
+                                // freeze the player and every entity nearby the direct hit
+                                for (Map.Entry<Entity, Location> entry : nearbyEntities.entrySet()) {
+                                    entry.getKey().teleport(entry.getValue());
+                                }
+
+                                // when hitstop ends
+                                if (timer == 0) {
+                                    for (Entity hitEntity : hitEntities) { // apply knockback and damage for every hit enemy
+                                        hitEntity.setVelocity(knockbacks.get(hitEntity));
+                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
+                                        alreadyHitEntities.add(hitEntity.getUniqueId()); // and make sure they can't be hit again
+                                    }
+
+                                    for (Entity nearbyEntity : prevVelocities.keySet()) { // and knockback for every nearby guy that isn't the player
+                                        nearbyEntity.setVelocity(prevVelocities.get(nearbyEntity));
+                                    }
+
+                                    player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, .5f);
+                                    inHitStop = false;
+                                    hitstopGracePeriodTimer = 5; // ticks in when the hitstop can be chained
+
+                                    cancel();
+                                }
+                            }
+                        }.runTaskTimer(nmlAbilities, 0, 1);
                     }
                 }
             }

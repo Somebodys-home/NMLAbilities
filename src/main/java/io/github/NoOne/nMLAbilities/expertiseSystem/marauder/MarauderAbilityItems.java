@@ -27,7 +27,7 @@ public class MarauderAbilityItems extends AbilityItemManager {
                 "Hurl yourself forwards as a whirligig of anger issues, bad intentions, and BLADES!",
                 null,
                 false,
-                "Self",
+                "Area",
                 3,
                 5,
                 20,

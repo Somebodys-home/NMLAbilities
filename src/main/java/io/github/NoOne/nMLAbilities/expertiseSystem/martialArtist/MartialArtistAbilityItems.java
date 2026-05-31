@@ -28,9 +28,9 @@ public class MartialArtistAbilityItems extends AbilityItemManager {
                 "Single",
                 -1,
                 0,
-                10,
+                1, // 10
                 15,
-                List.of("§4§n100-300%" + "§r§4" + " Physical Damage ⚔"),
+                List.of("§4§n1-3x" + "§r§4" + " Physical Damage ⚔"),
                 List.of("§fDamage & range based on §nvelocity"),
                 List.of(GLOVE), 
                 skills
