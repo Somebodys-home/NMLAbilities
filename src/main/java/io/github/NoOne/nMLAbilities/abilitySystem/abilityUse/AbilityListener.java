@@ -209,26 +209,6 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler
-    public void fallingFromAbilityUse(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                if (player.hasMetadata("ability_falling")) {
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onFireworkDamage(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Firework firework) {
-            if (firework.hasMetadata("ability_firework")) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
     public void noJumping(PlayerJumpEvent event) {
         if (event.getPlayer().hasMetadata("ability_no_jump")) {
             event.setCancelled(true);

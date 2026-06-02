@@ -195,7 +195,7 @@ public class PrimordialAbilityEffects {
                                         .build());
                                 fireworkMeta.setPower(0);
                                 firework.setFireworkMeta(fireworkMeta);
-                                firework.setMetadata("ability_firework", new FixedMetadataValue(nmlAbilities, true));
+                                firework.setMetadata("no_damage", new FixedMetadataValue(nmlAbilities, true));
                                 firework.detonate();
                             }
 
