@@ -224,7 +224,7 @@ public class PrimordialAbilityEffects {
     }
 
     public static void airBall(Player player) {
-        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
+        player.setMetadata("no_fall_damage", new FixedMetadataValue(nmlAbilities, true));
 
         HashSet<UUID> hitEntityUUIDs = new HashSet<>();
         Particle.DustOptions air = new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1.0F);
@@ -332,7 +332,7 @@ public class PrimordialAbilityEffects {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            player.removeMetadata("ability_falling", nmlAbilities);
+                            player.removeMetadata("no_fall_damage", nmlAbilities);
                         }
                     }.runTaskLater(nmlAbilities, 1L);
 

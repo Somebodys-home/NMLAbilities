@@ -39,7 +39,7 @@ public class CavalierAbilityEffects {
         CooldownManager.putOnHardCooldown(player, 1.5);
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 2f);
-        player.setMetadata("ability_falling", new FixedMetadataValue(nmlAbilities, true));
+        player.setMetadata("no_fall_damage", new FixedMetadataValue(nmlAbilities, true));
 
         // jump
         Vector jump = player.getLocation().getDirection().multiply(.5);
@@ -66,7 +66,7 @@ public class CavalierAbilityEffects {
                 @Override
                 public void run() {
                     if (player.isOnGround()) {
-                        player.removeMetadata("ability_falling", nmlAbilities);
+                        player.removeMetadata("no_fall_damage", nmlAbilities);
 
                         flyingParticles.cancel();
                         player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, player.getLocation().add(0, .5, 0), 3, .25, 0, .25, 0);
