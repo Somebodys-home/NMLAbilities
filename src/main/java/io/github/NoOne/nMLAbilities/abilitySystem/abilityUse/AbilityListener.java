@@ -237,7 +237,7 @@ public class AbilityListener implements Listener {
         }
 
         for (ItemType weapon : weapons) {
-            NamespacedKey weaponKey = new NamespacedKey(nmlAbilities, ItemType.getItemTypeString(weapon));
+            NamespacedKey weaponKey = new NamespacedKey(nmlAbilities, ItemType.toString(weapon));
 
             if (!pdc.has(weaponKey)) {
                 weaponsToRemove.add(weapon);

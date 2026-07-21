@@ -129,13 +129,13 @@ public class ExpertiseAbilityItemMaker {
             } else {
                 for (ItemType weapon : weapons) {
                     if (weapon == BOW) {
-                        lore.add("§e- " + getItemTypeString(weapon) + " & Quiver");
+                        lore.add("§e- " + ItemType.toString(weapon) + " & Quiver");
                     } else if (weapon == GLOVE) {
-                        lore.add("§e- " + getItemTypeString(weapon) + "s (both)");
+                        lore.add("§e- " + ItemType.toString(weapon) + "s (both)");
                     } else if (weapon == STAFF) {
                         lore.add("§e- Staves");
                     } else {
-                        lore.add("§e- " + getItemTypeString(weapon) + "s");
+                        lore.add("§e- " + ItemType.toString(weapon) + "s");
                     }
                 }
             }
@@ -171,7 +171,7 @@ public class ExpertiseAbilityItemMaker {
                 pdc.set(anyWeaponKey, PersistentDataType.BOOLEAN, true);
             } else {
                 for (ItemType weapon : weapons) {
-                    pdc.set(new NamespacedKey(nmlAbilities, getItemTypeString(weapon)), PersistentDataType.BOOLEAN, true);
+                    pdc.set(new NamespacedKey(nmlAbilities, ItemType.toString(weapon)), PersistentDataType.BOOLEAN, true);
                 }
             }
         }
