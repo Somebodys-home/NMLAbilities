@@ -13,15 +13,16 @@ import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -34,7 +35,6 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AbilityListener implements Listener {
     private static NMLAbilities nmlAbilities;
-    private ItemSystem itemSystem;
     private ProfileManager profileManager;
     private ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
     private ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
@@ -42,7 +42,6 @@ public class AbilityListener implements Listener {
     public AbilityListener(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
         this.profileManager = nmlAbilities.getProfileManager();
-        itemSystem = nmlAbilities.getItemSystem();
     }
 
     @EventHandler
@@ -256,7 +255,7 @@ public class AbilityListener implements Listener {
         // if an ability uses any weapon
         if (abilityItem.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
             for (ItemType itemType : requiredWeapons) {
-                if (itemSystem.isItemType(mainhand, itemType)) {
+                if (ItemSystem.isItemType(mainhand, itemType)) {
                     return true;
                 }
             }
@@ -265,14 +264,14 @@ public class AbilityListener implements Listener {
         }
 
         if (requiredWeapons.contains(GLOVE)) {
-            return itemSystem.isItemType(mainhand, GLOVE) && itemSystem.isItemType(offhand, GLOVE);
+            return ItemSystem.isItemType(mainhand, GLOVE) && ItemSystem.isItemType(offhand, GLOVE);
         } else if (requiredWeapons.contains(BOW)) {
-            return itemSystem.isItemType(mainhand, BOW) && itemSystem.isItemType(offhand, QUIVER);
+            return ItemSystem.isItemType(mainhand, BOW) && ItemSystem.isItemType(offhand, QUIVER);
         } else if (requiredWeapons.contains(SHIELD)) {
-            return itemSystem.isItemType(mainhand, SHIELD) || itemSystem.isItemType(offhand, SHIELD);
+            return ItemSystem.isItemType(mainhand, SHIELD) || ItemSystem.isItemType(offhand, SHIELD);
         } else {
             for (ItemType itemType : requiredWeapons) {
-                if (itemSystem.isItemType(mainhand, itemType)) {
+                if (ItemSystem.isItemType(mainhand, itemType)) {
                     return true;
                 }
             }

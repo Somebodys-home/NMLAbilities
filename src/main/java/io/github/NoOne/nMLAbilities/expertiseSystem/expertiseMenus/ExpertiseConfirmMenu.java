@@ -1,30 +1,24 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus;
 
+import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEvent;
-import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLItems.ItemCreator;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class ExpertiseConfirmMenu extends Menu {
-    private Player player;
     private ItemStack expertise1;
     private ItemStack expertise2;
     private ItemStack expertise3;
     private ItemStack newAbility;
     private Menu previousMenu;
 
-    public ExpertiseConfirmMenu(PlayerMenuUtility playerMenuUtility, ItemStack newAbility, Menu previousMenu) {
-        super(playerMenuUtility);
-        player = playerMenuUtility.getOwner();
+    public ExpertiseConfirmMenu(Player player, ItemStack newAbility, Menu previousMenu) {
+        super(player);
+
         this.expertise1 = player.getInventory().getItem(1);
         this.expertise2 = player.getInventory().getItem(2);
         this.expertise3 = player.getInventory().getItem(3);
@@ -34,7 +28,7 @@ public class ExpertiseConfirmMenu extends Menu {
 
     @Override
     public String getMenuName() {
-        return ChatColor.translateAlternateColorCodes('&', "&6&lYou sure?");
+        return "§6§lYou sure?";
     }
 
     @Override
@@ -92,11 +86,6 @@ public class ExpertiseConfirmMenu extends Menu {
         inventory.setItem(11, expertise1);
         inventory.setItem(13, expertise2);
         inventory.setItem(15, expertise3);
-        inventory.setItem(22, ItemCreator.createItem( // Backout button
-                Material.BARRIER,
-                1,
-                "§c§l<- §r§c§lGo Back",
-                List.of()
-        ));
+        inventory.setItem(22, ItemCreator.createBackoutButton());
     }
 }

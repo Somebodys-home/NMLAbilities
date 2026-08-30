@@ -89,7 +89,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>MenuSystem</artifactId>
-            <version>778b7799bf</version>
+            <version>2874d1bb00</version>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>0ee1207e78</version>
+            <version>5be862b0af</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

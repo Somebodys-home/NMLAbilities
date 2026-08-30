@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus;
 
+import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -7,8 +8,6 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEve
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLItems.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +17,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.List;
 
 public class ExpertiseLoadoutMenu extends Menu {
     private NMLAbilities nmlAbilities;
@@ -34,8 +33,8 @@ public class ExpertiseLoadoutMenu extends Menu {
     private int leftClickHotbarSlot2;
     private int leftClicks = 0;
 
-    public ExpertiseLoadoutMenu(NMLAbilities nmlAbilities, PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public ExpertiseLoadoutMenu(NMLAbilities nmlAbilities, Player player) {
+        super(player);
         player = playerMenuUtility.getOwner();
         this.nmlAbilities = nmlAbilities;
         this.expertise1 = player.getInventory().getItem(1);
@@ -105,7 +104,7 @@ public class ExpertiseLoadoutMenu extends Menu {
                             Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise" + leftClickHotbarSlot2, leftClickItem1));
                             Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise" + leftClickHotbarSlot1, leftClickItem2));
 
-                            new ExpertiseLoadoutMenu(nmlAbilities, playerMenuUtility).open();
+                            new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                         }
                     }
                     case RIGHT -> { // clearing ability
@@ -116,7 +115,7 @@ public class ExpertiseLoadoutMenu extends Menu {
                                 CooldownManager.removeHardCooldown(player);
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise1", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
-                                new ExpertiseLoadoutMenu(nmlAbilities, playerMenuUtility).open();
+                                new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                             }
                             case 13 -> {
                                 player.getInventory().setItem(2, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
@@ -124,7 +123,7 @@ public class ExpertiseLoadoutMenu extends Menu {
                                 CooldownManager.removeHardCooldown(player);
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise2", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
-                                new ExpertiseLoadoutMenu(nmlAbilities, playerMenuUtility).open();
+                                new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                             }
                             case 15 -> {
                                 player.getInventory().setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
@@ -132,7 +131,7 @@ public class ExpertiseLoadoutMenu extends Menu {
                                 CooldownManager.removeHardCooldown(player);
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise3", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
-                                new ExpertiseLoadoutMenu(nmlAbilities, playerMenuUtility).open();
+                                new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                             }
                         }
                     }
@@ -148,10 +147,10 @@ public class ExpertiseLoadoutMenu extends Menu {
                     player.getInventory().setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                     Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player));
 
-                    new ExpertiseLoadoutMenu(nmlAbilities, playerMenuUtility).open();
+                    new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                 }
             }
-            case 35 -> new ExpertiseMenu(nmlAbilities, playerMenuUtility).open(); // closing menu
+            case 35 -> new ExpertiseMenu(nmlAbilities, player).open(); // closing menu
         }
     }
 
@@ -174,11 +173,6 @@ public class ExpertiseLoadoutMenu extends Menu {
                         "§e- Shift right click this item to clear all expertise abilities"
                 )
         ));
-        inventory.setItem(35, ItemCreator.createItem( // Backout button
-                Material.BARRIER,
-                1,
-                "§c§l<- §r§cGo Back",
-                List.of()
-        ));
+        inventory.setItem(35, ItemCreator.createBackoutButton());
     }
 }

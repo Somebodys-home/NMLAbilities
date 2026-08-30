@@ -1,16 +1,17 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
+import io.github.NoOne.menuSystem.MenuListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityEffects;
@@ -20,9 +21,6 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbility
 import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
-import io.github.NoOne.menuSystem.MenuListener;
-import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLItems.NMLItems;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
@@ -41,7 +39,6 @@ public class NMLAbilities extends JavaPlugin {
     private SelectedAbilitiesManager selectedAbilitiesManager;
     private SelectedAbilitiesConfig selectedAbilitiesConfig;
     private CooldownManager cooldownManager;
-    private ItemSystem itemSystem;
 
     @Override
     public void onEnable() {
@@ -50,7 +47,6 @@ public class NMLAbilities extends JavaPlugin {
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
         skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
-        itemSystem = JavaPlugin.getPlugin(NMLItems.class).getItemSystem();
 
         selectedAbilitiesConfig = new SelectedAbilitiesConfig(this, "abilities");
         selectedAbilitiesConfig.loadConfig();
@@ -120,9 +116,5 @@ public class NMLAbilities extends JavaPlugin {
 
     public ProfileManager getProfileManager() {
         return profileManager;
-    }
-
-    public ItemSystem getItemSystem() {
-        return itemSystem;
     }
 }

@@ -1,16 +1,16 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
+import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseConfirmMenu;
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMenu;
-import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,11 +23,12 @@ public class AnnulledMenu extends Menu {
     private SelectedAbilities selectedAbilities;
     private Skills skills;
 
-    public AnnulledMenu(NMLAbilities nmlAbilities, PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public AnnulledMenu(NMLAbilities nmlAbilities, Player player) {
+        super(player);
+
         this.nmlAbilities = nmlAbilities;
-        selectedAbilities = nmlAbilities.getSelectedManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
-        skills = nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills();
+        selectedAbilities = nmlAbilities.getSelectedManager().getSelectedAbilities(player.getUniqueId());
+        skills = nmlAbilities.getSkillSetManager().getSkillSet(player.getUniqueId()).getSkills();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class AnnulledMenu extends Menu {
         assert selected != null;
 
         if (event.getSlot() == 35) {
-            new ExpertiseMenu(nmlAbilities, playerMenuUtility).open();
+            new ExpertiseMenu(nmlAbilities, player).open();
         } else {
             if (Arrays.stream(selectedAbilities.getSelectedAbilitiesArray()).anyMatch(element -> element.equals(Objects.requireNonNull(selected.getItemMeta()).getDisplayName()))) {
                 playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou already have this ability selected!§r§c ⚠");
@@ -59,7 +60,7 @@ public class AnnulledMenu extends Menu {
                 return;
             }
 
-            new ExpertiseConfirmMenu(playerMenuUtility, selected, this).open();
+            new ExpertiseConfirmMenu(player, selected, this).open();
         }
     }
 
