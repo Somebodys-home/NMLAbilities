@@ -20,7 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
 
 public class CavalierAbilityEffects {
     private static NMLAbilities nmlAbilities;
@@ -66,7 +66,12 @@ public class CavalierAbilityEffects {
                 @Override
                 public void run() {
                     if (player.isOnGround()) {
-                        player.removeMetadata("no_fall_damage", nmlAbilities);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                player.removeMetadata("no_fall_damage", nmlAbilities);
+                            }
+                        }.runTaskLater(nmlAbilities, 5);
 
                         flyingParticles.cancel();
                         player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, player.getLocation().add(0, .5, 0), 3, .25, 0, .25, 0);

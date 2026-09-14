@@ -38,6 +38,30 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
         );
     }
 
+    public static ItemStack airBall() {
+        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
+                "Air Ball",
+                new HashMap<>() {{
+                    put(Expertise.PRIMORDIAL, 10);
+                }},
+                "Dunk on your foes with a compressed ball of air. Ball game.",
+                null,
+                false,
+                "Area",
+                15,
+                0,
+                10,
+                15,
+                List.of(
+                        "§f§n50%§r§f Weapon Damage \uD83D\uDDE1",
+                        "§7§n2.5x§r§7 Air Damage ☁"
+                ),
+                null,
+                List.of(),
+                skills
+        );
+    }
+
     public static ItemStack pumpkinBomb() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Pumpkin Bomb",
@@ -64,32 +88,8 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
         );
     }
 
-    public static ItemStack airBall() {
-        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "Air Ball",
-                new HashMap<>() {{
-                    put(Expertise.PRIMORDIAL, 10);
-                }},
-                "Dunk on your foes with a compressed ball of air. Ball game.",
-                null,
-                false,
-                "Area",
-                15,
-                0,
-                10,
-                15,
-                List.of(
-                        "§f§n50%§r§f Weapon Damage \uD83D\uDDE1",
-                        "§7§n2.5x§r§7 Air Damage ☁"
-                ),
-                null,
-                List.of(), 
-                skills
-        );
-    }
-
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(chuckRock(), pumpkinBomb(), airBall());
+        return List.of(chuckRock(), airBall(), pumpkinBomb());
     }
 }

@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.Objects;
 
-// the blueprint for the other ability selection menus
+// the parent for the other ability selection menus
 public class ExpertiseAbilityMenu extends Menu {
     private ItemStack clickedItem;
     private ExpertiseAbilityItems expertiseAbilityItems;

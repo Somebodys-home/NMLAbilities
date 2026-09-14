@@ -14,7 +14,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
@@ -178,8 +180,9 @@ public class ExpertiseAbilityItemMaker {
 
         // expertise requirements keys
         for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
-            if (!AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue()) && !pdc.has(AbilityItemManager.getUnusableKey())) {
+            if (!AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue())) {
                 pdc.set(AbilityItemManager.getUnusableKey(), PersistentDataType.BOOLEAN, true);
+                expertiseItem.setType(Material.BARRIER); // also set the type here if you can't use the ability cuz idk where else to put it
             }
 
             pdc.set(Expertise.makeExpertiseKey(nmlAbilities, entry.getKey()), PersistentDataType.INTEGER, entry.getValue());
