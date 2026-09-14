@@ -31,7 +31,7 @@ public class AssassinAbilityItems extends ExpertiseAbilityItems {
                 0,
                 5,
                 20,
-                List.of("§f§n150%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
+                List.of(makeWeaponDamageString(150)),
                 null,
                 List.of(DAGGER), 
                 skills

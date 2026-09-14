@@ -32,7 +32,7 @@ public class CavalierAbilityItems extends ExpertiseAbilityItems {
                 0,
                 20,
                 30,
-                List.of("§f§n250%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
+                List.of(makeWeaponDamageString(250)),
                 null,
                 List.of(SPEAR, HAMMER), 
                 skills

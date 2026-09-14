@@ -31,7 +31,7 @@ public class MarauderAbilityItems extends ExpertiseAbilityItems {
                 5,
                 20,
                 30,
-                List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(every .25s)"),
+                List.of(makeWeaponDamageString(50) + makeEverySecondString(.25)),
                 null,
                 List.of(SWORD, AXE), 
                 skills

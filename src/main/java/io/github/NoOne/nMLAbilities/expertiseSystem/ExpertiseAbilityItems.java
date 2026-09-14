@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem;
 
+import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,5 +18,35 @@ public class ExpertiseAbilityItems {
 
     public List<ItemStack> getAllExpertiseAbilityItems() {
         return List.of();
+    }
+
+    protected static String makeWeaponDamageString(int value) {
+        return "§f§n" + value + "%" + "§r§f Weapon Damage \uD83D\uDDE1";
+    }
+
+    protected static String makeElementalDamageString(DamageType damageType, double value) {
+        if (value == (int) value) {
+            return DamageType.toChatColor(damageType) + "§n" + (int) value + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
+                    DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
+        } else {
+            return DamageType.toChatColor(damageType) + "§n" + value + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
+                    DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
+        }
+    }
+
+    protected static String makeEverySecondString(double time) {
+        String timeString = String.valueOf(time);
+
+        if (time == (int) time) {
+            timeString = String.valueOf((int) time);
+        } else {
+            timeString = timeString.replace(".0", "");
+        }
+
+        return " §8§o(every " + timeString + "s)";
+    }
+
+    protected static String makePerString(String string) {
+        return " §8§o(per " + string + ")";
     }
 }

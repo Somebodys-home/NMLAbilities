@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
+import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
@@ -31,7 +32,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
                 0,
                 5,
                 10,
-                List.of("§4§n1.5x§r§4 Physical Damage ⚔"),
+                List.of(makeElementalDamageString(DamageType.PHYSICAL, 1.5)),
                 null,
                 List.of(),
                 skills
@@ -53,8 +54,8 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
                 10,
                 15,
                 List.of(
-                        "§f§n50%§r§f Weapon Damage \uD83D\uDDE1",
-                        "§7§n2.5x§r§7 Air Damage ☁"
+                        makeWeaponDamageString(50),
+                        makeElementalDamageString(DamageType.AIR, 2.5)
                 ),
                 null,
                 List.of(),
@@ -78,9 +79,9 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
                 15,
                 30,
                 List.of(
-                        "§f§n100%§r§f Weapon Damage \uD83D\uDDE1",
-                        "§c§n1.5x§r§c Fire Damage 🔥",
-                        "§2§n1.5x§r§2 Earth Damage 🪨"
+                        makeWeaponDamageString(100),
+                        makeElementalDamageString(DamageType.FIRE, 1.5),
+                        makeElementalDamageString(DamageType.EARTH, 1.5)
                 ),
                 null,
                 List.of(WAND, STAFF, CATALYST),

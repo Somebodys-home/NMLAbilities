@@ -30,7 +30,7 @@ public class SoldierAbilityItems extends ExpertiseAbilityItems {
                 0,
                 2,
                 15,
-                List.of("§f§n120%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
+                List.of(makeWeaponDamageString(120)),
                 null,
                 List.of(SWORD, AXE, SPEAR), 
                 skills

@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
+import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
@@ -30,7 +31,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItems {
                 0,
                 8,
                 15,
-                List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per missile)"),
+                List.of(makeWeaponDamageString(50) + makePerString("missile")),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills
@@ -51,7 +52,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItems {
                 5,
                 20,
                 25,
-                List.of("§c§n1x§r§c Fire Damage 🔥 §7§o(every 1s)"),
+                List.of(makeElementalDamageString(DamageType.FIRE, 1) + makeEverySecondString(1)),
                 null,
                 List.of(WAND, STAFF), 
                 skills

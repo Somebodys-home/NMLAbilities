@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
+import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
@@ -30,7 +31,10 @@ public class HallowedAbilityItems extends ExpertiseAbilityItems {
                 0,
                 10,
                 25,
-                List.of("§f§n15%§r§f Weapon Damage \uD83D\uDDE1", "§f§n.35x§r§f Radiant Damage ✦"),
+                List.of(
+                        makeWeaponDamageString(15),
+                        makeElementalDamageString(DamageType.RADIANT, .15)
+                ),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills

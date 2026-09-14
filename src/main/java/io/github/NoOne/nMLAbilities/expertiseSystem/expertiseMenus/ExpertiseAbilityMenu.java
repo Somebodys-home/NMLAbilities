@@ -48,9 +48,11 @@ public class ExpertiseAbilityMenu extends Menu {
         ItemStack selected = event.getCurrentItem();
         assert selected != null;
 
+        event.setCancelled(true);
+
         if (event.getSlot() == 53) {
             new ExpertiseMainMenu(nmlAbilities, player).open();
-        } else {
+        } else if (AbilityItemManager.isAnAbility(selected)) {
             if (Arrays.stream(selectedAbilities.getSelectedAbilitiesArray()).anyMatch(element -> element.equals(Objects.requireNonNull(selected.getItemMeta()).getDisplayName()))) {
                 playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou already have this ability selected!§r§c ⚠");
                 playerMenuUtility.getOwner().playSound(playerMenuUtility.getOwner(), Sound.BLOCK_NOTE_BLOCK_BASS, 2f, .5f);

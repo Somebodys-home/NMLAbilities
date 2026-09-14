@@ -37,7 +37,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
         );
     }
 
-    public static ItemStack rapidShot() {
+    public static ItemStack arrowHailstorm() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",
                 new HashMap<>() {{
@@ -51,7 +51,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
                 5,
                 25,
                 30,
-                List.of("§f§n35%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per arrow)"),
+                List.of(makeWeaponDamageString(35) + makeEverySecondString(.25)),
                 null,
                 List.of(BOW), 
                 skills
@@ -60,6 +60,6 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(steadyAim(), rapidShot());
+        return List.of(steadyAim(), arrowHailstorm());
     }
 }

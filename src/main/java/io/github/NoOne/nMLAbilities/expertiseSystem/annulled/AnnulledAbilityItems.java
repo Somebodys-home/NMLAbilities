@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
+import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
@@ -30,7 +31,7 @@ public class AnnulledAbilityItems extends ExpertiseAbilityItems {
                 8,
                 30,
                 50,
-                List.of("§5§n5x" + "§r§5" + " Dark Damage 🌀"),
+                List.of(makeElementalDamageString(DamageType.NECROTIC, 5)),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills
