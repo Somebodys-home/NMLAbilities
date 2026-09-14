@@ -1,24 +1,23 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.*;
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
+import static io.github.NoOne.nMLItems.enums.ItemType.AXE;
+import static io.github.NoOne.nMLItems.enums.ItemType.SWORD;
 
-public class MarauderAbilityItems extends AbilityItemManager {
-    public MarauderAbilityItems() {
-        super(NMLAbilities.getInstance());
+public class MarauderAbilityItems extends ExpertiseAbilityItems {
+    public MarauderAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack bladeTornado(Skills skills) {
+    public static ItemStack bladeTornado() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Blade Tornado",
                 new HashMap<>() {{
@@ -35,6 +34,12 @@ public class MarauderAbilityItems extends AbilityItemManager {
                 List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(every .25s)"),
                 null,
                 List.of(SWORD, AXE), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(bladeTornado());
     }
 }

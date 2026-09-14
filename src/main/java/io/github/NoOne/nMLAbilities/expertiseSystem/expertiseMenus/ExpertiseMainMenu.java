@@ -14,26 +14,23 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroMenu;
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierMenu;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererMenu;
 import io.github.NoOne.nMLItems.ItemCreator;
+import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ExpertiseMenu extends Menu {
+public class ExpertiseMainMenu extends Menu {
     private NMLAbilities nmlAbilities;
+    private Skills skills;
     private ExpertiseMenuItems expertiseMenuItems;
-    private ItemStack changeLoadout;
 
-    public ExpertiseMenu(NMLAbilities nmlAbilities, Player player) {
+    public ExpertiseMainMenu(NMLAbilities nmlAbilities, Player player) {
         super(player);
+
         this.nmlAbilities = nmlAbilities;
-        expertiseMenuItems = new ExpertiseMenuItems(nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills());
-        changeLoadout = ItemCreator.createItem(
-                Material.STRUCTURE_BLOCK,
-                1,
-                "§7§lChange Ability Loadout",
-                null
-        );
+        skills = nmlAbilities.getSkillSetManager().getSkillSet(player.getUniqueId()).getSkills();
+        expertiseMenuItems = new ExpertiseMenuItems(skills);
     }
 
     @Override
@@ -48,20 +45,22 @@ public class ExpertiseMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent event) {
+        ItemStack clickedItem =  event.getCurrentItem();
+
         event.setCancelled(true);
 
         switch (event.getSlot()) {
-            case 10 -> new SoldierMenu(nmlAbilities, player).open();
-            case 11 -> new AssassinMenu(nmlAbilities, player).open();
-            case 12 -> new MarauderMenu(nmlAbilities, player).open();
-            case 14 -> new CavalierMenu(nmlAbilities, player).open();
-            case 15 -> new MartialArtistMenu(nmlAbilities, player).open();
-            case 16 -> new ShieldHeroMenu(nmlAbilities, player).open();
-            case 22 -> new MarksmanMenu(nmlAbilities, player).open();
-            case 29 -> new SorcererMenu(nmlAbilities, player).open();
-            case 30 -> new PrimordialMenu(nmlAbilities, player).open();
-            case 32 -> new HallowedMenu(nmlAbilities, player).open();
-            case 33 -> new AnnulledMenu(nmlAbilities, player).open();
+            case 10 -> new SoldierMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 11 -> new AssassinMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 12 -> new MarauderMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 14 -> new CavalierMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 15 -> new MartialArtistMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 16 -> new ShieldHeroMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 22 -> new MarksmanMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 29 -> new SorcererMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 30 -> new PrimordialMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 32 -> new HallowedMenu(nmlAbilities, player, skills, clickedItem).open();
+            case 33 -> new AnnulledMenu(nmlAbilities, player, skills, clickedItem).open();
             case 44 -> new ExpertiseLoadoutMenu(nmlAbilities, player).open();
         }
     }
@@ -84,6 +83,11 @@ public class ExpertiseMenu extends Menu {
         inventory.setItem(30, expertiseMenuItems.primordial());
         inventory.setItem(32, expertiseMenuItems.hallowed());
         inventory.setItem(33, expertiseMenuItems.annulled());
-        inventory.setItem(44, changeLoadout);
+        inventory.setItem(44, ItemCreator.createItem(
+                Material.STRUCTURE_BLOCK,
+                1,
+                "§7§lChange Ability Loadout",
+                null
+        ));
     }
 }

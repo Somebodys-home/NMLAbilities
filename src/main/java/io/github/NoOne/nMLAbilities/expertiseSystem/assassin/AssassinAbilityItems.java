@@ -1,9 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,14 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
+import static io.github.NoOne.nMLItems.enums.ItemType.DAGGER;
 
-public class AssassinAbilityItems extends AbilityItemManager {
-    public AssassinAbilityItems() {
-        super(NMLAbilities.getInstance());
+public class AssassinAbilityItems extends ExpertiseAbilityItems {
+    public AssassinAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack slashandDash(Skills skills) {
+    public static ItemStack slashAndDash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash & Dash",
                 new HashMap<>() {{
@@ -35,6 +34,12 @@ public class AssassinAbilityItems extends AbilityItemManager {
                 List.of("§f§n150%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
                 List.of(DAGGER), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(slashAndDash());
     }
 }

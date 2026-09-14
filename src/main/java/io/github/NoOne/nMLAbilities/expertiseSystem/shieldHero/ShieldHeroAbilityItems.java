@@ -1,22 +1,22 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class ShieldHeroAbilityItems extends AbilityItemManager {
-    public ShieldHeroAbilityItems() {
-        super(NMLAbilities.getInstance());
+import static io.github.NoOne.nMLItems.enums.ItemType.SHIELD;
+
+public class ShieldHeroAbilityItems extends ExpertiseAbilityItems {
+    public ShieldHeroAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack secondWind(Skills skills) {
+    public static ItemStack secondWind() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Second Wind",
                 new HashMap<>() {{
@@ -33,6 +33,12 @@ public class ShieldHeroAbilityItems extends AbilityItemManager {
                 null,
                 List.of("§fRestore your §nGuard§r§f ⛨"),
                 List.of(SHIELD), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(secondWind());
     }
 }

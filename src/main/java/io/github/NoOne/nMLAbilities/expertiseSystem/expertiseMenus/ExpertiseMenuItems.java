@@ -5,9 +5,7 @@ import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExpertiseMenuItems {
@@ -31,6 +29,7 @@ public class ExpertiseMenuItems {
                         "§bCLICK TO SELECT!"
                 )
         );
+
         soldier.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         return soldier;
@@ -69,6 +68,7 @@ public class ExpertiseMenuItems {
                         "§bCLICK TO SELECT!"
                 )
         );
+
         marauder.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         return marauder;
@@ -88,10 +88,9 @@ public class ExpertiseMenuItems {
                         "§bCLICK TO SELECT!"
                 )
         );
-        ItemMeta itemMeta = cavalier.getItemMeta();
 
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        cavalier.setItemMeta(itemMeta);
+        cavalier.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         return cavalier;
     }
 

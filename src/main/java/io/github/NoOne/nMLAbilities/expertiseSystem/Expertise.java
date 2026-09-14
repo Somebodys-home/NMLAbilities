@@ -17,20 +17,19 @@ public enum Expertise {
     ANNULLED;
 
     public static String getString(Expertise expertise) {
-        switch (expertise) {
-            case SOLDIER: return "Soldier";
-            case ASSASSIN: return "Assassin";
-            case MARAUDER: return "Marauder";
-            case CAVALIER: return "Cavalier";
-            case MARTIAL_ARTIST: return "Martial Artist";
-            case SHIELD_HERO: return "Shield Hero";
-            case MARKSMAN: return "Marksman";
-            case SORCERER: return "Sorcerer";
-            case PRIMORDIAL: return "Primordial";
-            case HALLOWED: return "Hallowed";
-            case ANNULLED: return "Annulled";
-            default: return "";
-        }
+        return switch (expertise) {
+            case SOLDIER -> "Soldier";
+            case ASSASSIN -> "Assassin";
+            case MARAUDER -> "Marauder";
+            case CAVALIER -> "Cavalier";
+            case MARTIAL_ARTIST -> "Martial Artist";
+            case SHIELD_HERO -> "Shield Hero";
+            case MARKSMAN -> "Marksman";
+            case SORCERER -> "Sorcerer";
+            case PRIMORDIAL -> "Primordial";
+            case HALLOWED -> "Hallowed";
+            case ANNULLED -> "Annulled";
+        };
     }
 
     public static NamespacedKey makeExpertiseKey(NMLAbilities nmlAbilities, Expertise expertise) {

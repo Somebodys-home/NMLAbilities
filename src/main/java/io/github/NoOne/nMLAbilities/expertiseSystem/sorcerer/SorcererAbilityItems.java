@@ -1,22 +1,22 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
+
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SorcererAbilityItems extends AbilityItemManager {
-    public SorcererAbilityItems() {
-        super(NMLAbilities.getInstance());
+public class SorcererAbilityItems extends ExpertiseAbilityItems {
+    public SorcererAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack magicMissileEX(Skills skills) {
+    public static ItemStack magicMissileEX() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Magic Missile EX",
                 new HashMap<>() {{
@@ -33,10 +33,11 @@ public class SorcererAbilityItems extends AbilityItemManager {
                 List.of("§f§n50%" + "§r§f" + " Weapon Damage \uD83D\uDDE1 §7§o(per missile)"),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
-                skills);
+                skills
+        );
     }
 
-    public static ItemStack dragonsBreath(Skills skills) {
+    public static ItemStack dragonsBreath() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dragon's Breath",
                 new HashMap<>() {{
@@ -53,6 +54,12 @@ public class SorcererAbilityItems extends AbilityItemManager {
                 List.of("§c§n1x§r§c Fire Damage 🔥 §7§o(every 1s)"),
                 null,
                 List.of(WAND, STAFF), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(magicMissileEX(), dragonsBreath());
     }
 }

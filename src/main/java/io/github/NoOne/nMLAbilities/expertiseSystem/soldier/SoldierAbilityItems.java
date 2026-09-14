@@ -1,22 +1,22 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
+
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SoldierAbilityItems extends AbilityItemManager {
-    public SoldierAbilityItems() {
-        super(NMLAbilities.getInstance());
+public class SoldierAbilityItems extends ExpertiseAbilityItems {
+    public SoldierAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack slash(Skills skills) {
+    public static ItemStack slash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash",
                 new HashMap<>() {{
@@ -33,6 +33,12 @@ public class SoldierAbilityItems extends AbilityItemManager {
                 List.of("§f§n120%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
                 List.of(SWORD, AXE, SPEAR), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(slash());
     }
 }

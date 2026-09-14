@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities;
 
-import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMenu;
+import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMainMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +16,7 @@ public class ExpertiseCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            new ExpertiseMenu(nmlAbilities, player).open();
+            new ExpertiseMainMenu(nmlAbilities, player).open();
         }
 
         return true;

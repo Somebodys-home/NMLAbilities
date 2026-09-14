@@ -1,22 +1,22 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class MartialArtistAbilityItems extends AbilityItemManager {
-    public MartialArtistAbilityItems() {
-        super(NMLAbilities.getInstance());
+import static io.github.NoOne.nMLItems.enums.ItemType.GLOVE;
+
+public class MartialArtistAbilityItems extends ExpertiseAbilityItems {
+    public MartialArtistAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack tenHitCombo(Skills skills) {
+    public static ItemStack dropkick() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dropkick",
                 new HashMap<>() {{
@@ -35,5 +35,10 @@ public class MartialArtistAbilityItems extends AbilityItemManager {
                 List.of(GLOVE), 
                 skills
         );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(dropkick());
     }
 }

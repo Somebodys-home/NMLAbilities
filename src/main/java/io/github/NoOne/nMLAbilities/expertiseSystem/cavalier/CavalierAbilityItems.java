@@ -1,24 +1,24 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.*;
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
+import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
+import static io.github.NoOne.nMLItems.enums.ItemType.HAMMER;
+import static io.github.NoOne.nMLItems.enums.ItemType.SPEAR;
 
-public class CavalierAbilityItems extends AbilityItemManager {
-    public CavalierAbilityItems() {
-        super(NMLAbilities.getInstance());
+public class CavalierAbilityItems extends ExpertiseAbilityItems {
+    public CavalierAbilityItems(Skills skills) {
+        super(skills);
     }
 
-    public static ItemStack seismicSlam(Skills skills) {
+    public static ItemStack seismicSlam() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Seismic Slam",
                 new HashMap<>() {{
@@ -35,6 +35,12 @@ public class CavalierAbilityItems extends AbilityItemManager {
                 List.of("§f§n250%" + "§r§f" + " Weapon Damage \uD83D\uDDE1"),
                 null,
                 List.of(SPEAR, HAMMER), 
-                skills);
+                skills
+        );
+    }
+
+    @Override
+    public List<ItemStack> getAllExpertiseAbilityItems() {
+        return List.of(seismicSlam());
     }
 }

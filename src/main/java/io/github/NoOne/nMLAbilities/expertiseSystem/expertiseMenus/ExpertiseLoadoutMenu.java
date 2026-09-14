@@ -5,8 +5,6 @@ import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEvent;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLItems.ItemCreator;
 import org.bukkit.Bukkit;
@@ -21,9 +19,6 @@ import java.util.List;
 
 public class ExpertiseLoadoutMenu extends Menu {
     private NMLAbilities nmlAbilities;
-    private SelectedAbilities selectedAbilities;
-    private SelectedAbilitiesManager selectedAbilitiesManager;
-    private Player player;
     private ItemStack expertise1;
     private ItemStack expertise2;
     private ItemStack expertise3;
@@ -40,8 +35,6 @@ public class ExpertiseLoadoutMenu extends Menu {
         this.expertise1 = player.getInventory().getItem(1);
         this.expertise2 = player.getInventory().getItem(2);
         this.expertise3 = player.getInventory().getItem(3);
-        selectedAbilitiesManager = nmlAbilities.getSelectedManager();
-        selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(player.getUniqueId());
     }
 
     @Override
@@ -150,7 +143,7 @@ public class ExpertiseLoadoutMenu extends Menu {
                     new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                 }
             }
-            case 35 -> new ExpertiseMenu(nmlAbilities, player).open(); // closing menu
+            case 35 -> new ExpertiseMainMenu(nmlAbilities, player).open(); // closing menu
         }
     }
 
