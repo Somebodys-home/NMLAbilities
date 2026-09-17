@@ -1,25 +1,24 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class AbilityEffects { 
+public class AbilityEffects extends ExpertiseEffectsHelper { 
     public static void particleSphere(Particle particle, Location center, double radius, int particleCircles) {
         for (double i = 0; i <= Math.PI; i += Math.PI / particleCircles) { // vertical circles
-            double r = Math.sin(i) / radius;
-            double y = Math.cos(i) / radius;
+            double r = Math.sin(i) * radius;
+            double y = Math.cos(i) * radius;
 
             for (double a = 0; a < Math.PI * 2; a+= Math.PI / particleCircles) { // horizontal circles
                 double x = Math.cos(a) * r;
                 double z = Math.sin(a) * r;
                 Location particleLocation = center.clone().add(x, y, z);
 
-                center.getWorld().spawnParticle(particle, particleLocation, 1, 0, 0, 0, 0);
-                particleLocation.subtract(x, y, z); // reset location
+                center.getWorld().spawnParticle(particle, particleLocation, 1, 0, 0, 0);
             }
         }
     }
@@ -35,7 +34,6 @@ public class AbilityEffects {
                 Location particleLocation = center.clone().add(x, y, z);
 
                 center.getWorld().spawnParticle(Particle.DUST, particleLocation, 1, 0, 0, 0, dustOptions);
-                particleLocation.subtract(x, y, z); // reset location
             }
         }
     }
@@ -52,7 +50,6 @@ public class AbilityEffects {
                 Vector velocity = particleLocation.toVector().subtract(center.toVector()).normalize().multiply(speed);
 
                 center.getWorld().spawnParticle(particle, particleLocation, 0, velocity.getX(), velocity.getY(), velocity.getZ());
-                particleLocation.subtract(x, y, z); // reset location
             }
         }
     }

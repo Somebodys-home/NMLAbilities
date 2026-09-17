@@ -2,13 +2,12 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffect;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
@@ -21,17 +20,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MarksmanAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static ProfileManager profileManager;
-
-    public MarksmanAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        profileManager = nmlAbilities.getProfileManager();
-    }
+public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void steadyAim(Player player, boolean toggle) {
         OngoingAbilityEffect steadyAimEffect = new OngoingAbilityEffect(

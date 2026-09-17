@@ -8,6 +8,7 @@ import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
@@ -21,7 +22,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack chuckRock() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Chuck Rock",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.PRIMORDIAL, 1);
                 }},
                 "Pick up and chuck a rock. It's not magical or anything, you just find a rock and throw it.", 
@@ -42,20 +43,20 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack airBall() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Air Ball",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.PRIMORDIAL, 10);
                 }},
-                "Dunk on your foes with a compressed ball of air. Ball game.",
+                "Start balling so hard you dunk an air ball!",
                 null,
                 false,
                 "Area",
-                15,
+                13,
                 0,
                 10,
                 15,
                 List.of(
                         makeWeaponDamageString(50),
-                        makeElementalDamageString(DamageType.AIR, 2.5)
+                        makeElementalDamageString(DamageType.AIR, 2)
                 ),
                 null,
                 List.of(),
@@ -66,7 +67,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack pumpkinBomb() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Pumpkin Bomb",
-                new HashMap<>() {{
+                new LinkedHashMap<>(){{
                     put(Expertise.PRIMORDIAL, 15);
                     put(Expertise.ANNULLED, 5);
                 }},
@@ -76,10 +77,10 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
                 "Area",
                 20,
                 0,
-                15,
+                1,
                 30,
                 List.of(
-                        makeWeaponDamageString(100),
+                        makeWeaponDamageString(80),
                         makeElementalDamageString(DamageType.FIRE, 1.5),
                         makeElementalDamageString(DamageType.EARTH, 1.5)
                 ),

@@ -22,13 +22,8 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 
 public class ExpertiseAbilityItemMaker {
-    private static NMLAbilities nmlAbilities;
-    private static NamespacedKey anyWeaponKey;
-
-    public ExpertiseAbilityItemMaker(NMLAbilities nmlAbilities) {
-        ExpertiseAbilityItemMaker.nmlAbilities = nmlAbilities;
-        anyWeaponKey = new NamespacedKey(nmlAbilities, "any_weapon");
-    }
+    private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
+    private static NamespacedKey anyWeaponKey = new NamespacedKey(nmlAbilities, "any_weapon");
 
     public static ItemStack emptyExpertiseAbilityItem() {
         ItemStack expertise = ItemCreator.createItem(
@@ -49,7 +44,7 @@ public class ExpertiseAbilityItemMaker {
     }
 
     public static ItemStack makeExpertiseAbilityItem(String name, Map<Expertise, Integer> expertiseRequirements, String description, List<AbilityPrerequisite> prerequisites,
-                                                     boolean toggleable, String targeting, int range, int duration, int cooldown, int cost,
+                                                     boolean toggleable, String targeting, int range, double duration, int cooldown, int cost,
                                                      List<String> damage, List<String> effects, List<ItemType> weapons, Skills playerSkills) {
 
         Expertise firstExpertiseRequirement = expertiseRequirements.entrySet().iterator().next().getKey();
@@ -106,7 +101,13 @@ public class ExpertiseAbilityItemMaker {
             lore.add("§fRange: §a" + range + "m");
         }
 
-        if (duration != 0) lore.add("§fDuration: §3" + duration + "s");
+        if (duration != 0) {
+            if (duration == (int) duration) {
+                lore.add("§fDuration: §3" + (int) duration + "s");
+            } else {
+                lore.add("§fDuration: §3" + duration + "s");
+            }
+        }
 
         lore.add("§fCooldown: §b" + cooldown + "s");
         lore.add("§fCost: §6" + cost + "⚡");

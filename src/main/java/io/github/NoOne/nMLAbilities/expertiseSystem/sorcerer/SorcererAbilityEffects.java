@@ -3,39 +3,26 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
-import org.bukkit.*;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class SorcererAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static ProfileManager profileManager;
-
-    public SorcererAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        profileManager = nmlAbilities.getProfileManager();
-    }
-
+public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
     public static void magicMissileEX(Player player) {
         HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
                 profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .5);
 
-        EnergyManager.useEnergy(player, 15);
-        CooldownManager.putOnHardCooldown(player, 2.5);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 2.5);
+        useEnergyAndCooldown(player, 15, 2.5);
 
         new BukkitRunnable() {
             int missiles = 0;
@@ -161,18 +148,14 @@ public class SorcererAbilityEffects {
 
     public static void dragonsBreath(Player player) {
         HashMap<DamageType, Double> fire = DamageHelper.convertPlayerStat2Damage(profileManager.getPlayerProfile(player.getUniqueId()).getStats(), "firedamage");
-        HashSet<LivingEntity> hitEntities = new HashSet<>();
         int chargeUpTime = 40;
 
-        CooldownManager.putOnHardCooldown(player, 8);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 8);
-        EnergyManager.useEnergy(player, 25);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, chargeUpTime, 10, false, false, false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, chargeUpTime, 255, false, false, false));
+        useEnergyAndCooldown(player, 25, 8);
+        makeUnmovable(player, chargeUpTime);
 
-        /// charge up
+        // charge up
         new BukkitRunnable() {
-            int timer = chargeUpTime;
+            int timer = chargeUpTime * 20;
 
             @Override
             public void run() {
@@ -186,6 +169,7 @@ public class SorcererAbilityEffects {
                 Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector
                 Vector up = right.clone().crossProduct(forward).normalize(); // orthogonal basis vector
 
+                // making the closing spinning circle particle effect
                 for (int i = 0; i < particleCount; i++) {
                     double angle = 2 * Math.PI * i / particleCount + ((chargeUpTime - timer) * .02);
 
@@ -195,8 +179,9 @@ public class SorcererAbilityEffects {
                     player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, particleLocation, 0);
                 }
 
-                if (timer != 0 && timer % 13 == 0) player.playSound(player, Sound.ITEM_FLINTANDSTEEL_USE, 2f, 1f);
-                if (timer == 0) {
+                if (timer != 0 && timer % 13 == 0) {
+                    player.playSound(player, Sound.ITEM_FLINTANDSTEEL_USE, 2f, 1f);
+                } else if (timer == 0) {
                     cancel();
                     player.playSound(player, Sound.ITEM_ELYTRA_FLYING, 2f, .5f);
                 }
@@ -204,7 +189,7 @@ public class SorcererAbilityEffects {
         }.runTaskTimer(nmlAbilities, 0L, 1L);
 
 
-        /// dragon's breath
+        // dragon's breath
         new BukkitRunnable() {
             int timer = 0;
 
@@ -212,7 +197,7 @@ public class SorcererAbilityEffects {
             public void run() {
                 timer++;
 
-                /// flamethrower
+                // flamethrower effect
                 Location playerLocation = player.getLocation().add(0, 1.65, 0);
                 Vector forward = playerLocation.getDirection().normalize();
                 Location baseLocation = playerLocation.clone().add(forward.clone().multiply(1.3));
@@ -244,19 +229,13 @@ public class SorcererAbilityEffects {
 
                         for (Entity entity : nearby) {
                             if (entity instanceof LivingEntity livingEntity && entity != player) {
-                                hitEntities.add(livingEntity);
+                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, fire));
                             }
                         }
                     }
-
-                    for (LivingEntity livingEntity : hitEntities) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, fire));
-                    }
-
-                    hitEntities.clear();
                 }
 
-
+                // flamethrower end effect
                 if (timer == 80) {
                     player.stopSound(Sound.ITEM_ELYTRA_FLYING);
                     player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1f);

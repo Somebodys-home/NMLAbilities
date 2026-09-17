@@ -3,12 +3,11 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
@@ -20,14 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class MartialArtistAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static ProfileManager profileManager;
-
-    public MartialArtistAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        profileManager = nmlAbilities.getProfileManager();
-    }
+public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void dropKick(Player player) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();

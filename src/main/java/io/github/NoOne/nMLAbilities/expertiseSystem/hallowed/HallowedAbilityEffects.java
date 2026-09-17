@@ -3,29 +3,25 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
-public class HallowedAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static ProfileManager profileManager;
-
-    public HallowedAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        profileManager = nmlAbilities.getProfileManager();
-    }
+public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void halo(Player player) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();

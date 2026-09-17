@@ -3,6 +3,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
@@ -18,13 +19,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
-public class SoldierAbilityEffects {
-    private static ProfileManager profileManager;
-    public SoldierAbilityEffects(NMLAbilities nmlAbilities) {
-        profileManager = nmlAbilities.getProfileManager();
-    }
+public class SoldierAbilityEffects extends ExpertiseEffectsHelper {
+    private static ProfileManager profileManager = NMLAbilities.getInstance().getProfileManager();
 
     public static void slash(Player player) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();

@@ -3,10 +3,9 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.Bukkit;
@@ -22,14 +21,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
-public class CavalierAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static ProfileManager profileManager;
-
-    public CavalierAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        profileManager = nmlAbilities.getProfileManager();
-    }
+public class CavalierAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void seismicSlam(Player player) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();

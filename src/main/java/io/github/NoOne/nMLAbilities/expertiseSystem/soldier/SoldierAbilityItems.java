@@ -19,7 +19,7 @@ public class SoldierAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack slash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.SOLDIER, 1);
                 }},
                 "Yep.", 

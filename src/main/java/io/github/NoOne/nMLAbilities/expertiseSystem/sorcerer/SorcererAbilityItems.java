@@ -20,7 +20,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack magicMissileEX() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Magic Missile EX",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.SORCERER, 1);
                 }},
                 "Shoot your basic magic missile attack 5 times",
@@ -41,7 +41,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack dragonsBreath() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dragon's Breath",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.SORCERER, 25);
                 }},
                 "RRRRRAAAAAAGGGHHHHH out a cone of fire from your mouth",

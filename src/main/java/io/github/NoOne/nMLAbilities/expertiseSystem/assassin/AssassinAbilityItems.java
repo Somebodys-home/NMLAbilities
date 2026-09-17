@@ -20,7 +20,7 @@ public class AssassinAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack slashAndDash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash & Dash",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.ASSASSIN, 1);
                 }},
                 "Dash forwards, dealing damage to anyone in your way", 

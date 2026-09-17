@@ -5,11 +5,11 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -17,29 +17,17 @@ import java.util.List;
 import java.util.Set;
 
 public class AbilityItemManager {
-    private static NMLAbilities nmlAbilities;
-    private static NamespacedKey abilityKey;
-    private static NamespacedKey expertiseKey;
-    private static NamespacedKey cooldownKey;
-    private static NamespacedKey toggleKey;
-    private static NamespacedKey originalItemKey;
-    private static NamespacedKey energyKey;
-    private static NamespacedKey unusableKey;
+    private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
+    private static NamespacedKey abilityKey = new NamespacedKey(nmlAbilities, "ability");
+    private static NamespacedKey expertiseKey = new NamespacedKey(nmlAbilities, "expertise");
+    private static NamespacedKey cooldownKey = new NamespacedKey(nmlAbilities, "cooldownSystem");
+    private static NamespacedKey toggleKey = new NamespacedKey(nmlAbilities, "toggle");
+    private static NamespacedKey originalItemKey = new NamespacedKey(nmlAbilities, "originalItem");
+    private static NamespacedKey energyKey = new NamespacedKey(nmlAbilities, "energy");
+    private static NamespacedKey  unusableKey = new NamespacedKey(nmlAbilities, "unusable");
 
     // prerequisite keys
-    private static NamespacedKey groundedKey;
-
-    public AbilityItemManager(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        abilityKey = new NamespacedKey(nmlAbilities, "ability");
-        expertiseKey = new NamespacedKey(nmlAbilities, "expertise");
-        cooldownKey = new NamespacedKey(nmlAbilities, "cooldownSystem");
-        toggleKey = new NamespacedKey(nmlAbilities, "toggle");
-        originalItemKey = new NamespacedKey(nmlAbilities, "originalItem");
-        energyKey = new NamespacedKey(nmlAbilities, "energy");
-        unusableKey = new NamespacedKey(nmlAbilities, "unusable");
-        groundedKey = new NamespacedKey(nmlAbilities, "grounded");
-    }
+    private static NamespacedKey groundedKey = new NamespacedKey(nmlAbilities, "grounded");
 
     public static ItemStack emptyStyleAbilityItem() {
         ItemStack emptyStyle =  ItemCreator.createItem(

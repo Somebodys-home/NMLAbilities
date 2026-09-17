@@ -19,10 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -210,6 +207,13 @@ public class AbilityListener implements Listener {
     @EventHandler
     public void noJumping(PlayerJumpEvent event) {
         if (event.getPlayer().hasMetadata("ability_no_jump")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void noMoving(PlayerMoveEvent event) {
+        if (event.getPlayer().hasMetadata("ability_no_move")) {
             event.setCancelled(true);
         }
     }

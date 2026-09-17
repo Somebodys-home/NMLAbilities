@@ -19,7 +19,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack steadyAim() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Steady Aim",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.MARKSMAN, 1);
                 }},
                 "Slow your movements to increase your accuracy, making critical shots land easier.",
@@ -40,7 +40,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack arrowHailstorm() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.MARKSMAN, 30);
                 }},
                 "EXTREME WEATHER WARNING: A storm of hail-sized arrows has been forecasted in your area. Find shelter immediately.",

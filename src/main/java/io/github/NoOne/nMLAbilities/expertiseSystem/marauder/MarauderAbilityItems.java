@@ -20,7 +20,7 @@ public class MarauderAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack bladeTornado() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Blade Tornado",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.MARAUDER, 20);
                 }},
                 "Hurl yourself forwards as a whirligig of anger issues, bad intentions, and BLADES!",

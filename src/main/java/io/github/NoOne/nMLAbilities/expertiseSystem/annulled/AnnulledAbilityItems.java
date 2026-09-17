@@ -20,15 +20,15 @@ public class AnnulledAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack blackHole() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Black Hole",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.ANNULLED, 50);
                 }},
                 "...it's a black hole. It pulls in and spaghettifies things; I don't need to spell this out for you.",
                 null,
                 false,
                 "Area",
-                15,
-                8,
+                13,
+                7.75,
                 30,
                 50,
                 List.of(makeElementalDamageString(DamageType.NECROTIC, 5)),

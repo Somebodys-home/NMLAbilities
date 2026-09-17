@@ -19,7 +19,7 @@ public class MartialArtistAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack dropkick() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dropkick",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.MARTIAL_ARTIST, 10);
                 }},
                 "\"Officer I dropkicked that child in self defense.\"",

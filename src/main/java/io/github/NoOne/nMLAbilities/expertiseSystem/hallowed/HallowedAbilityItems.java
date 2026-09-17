@@ -20,7 +20,7 @@ public class HallowedAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack halo() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Halo",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.HALLOWED, 15);
                 }},
                 "Throw a ring of radiant energy that rebounds back to you, damaging anyone touching it", 

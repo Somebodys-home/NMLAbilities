@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
+import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -10,25 +11,17 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class ShieldHeroAbilityEffects {
-    private static NMLAbilities nmlAbilities;
-    private static GuardingSystem guardingSystem;
-
-    public ShieldHeroAbilityEffects(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        guardingSystem = nmlAbilities.getGuardingSystem();
-    }
+public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
+    private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
+    private static GuardingSystem guardingSystem = nmlAbilities.getGuardingSystem();
 
     public static void secondWind(Player player) {
         EnergyManager.useEnergy(player, 20);
         CooldownManager.putOnHardCooldown(player, 1.5);
         AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 30, 10, false, false, false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 30, 255, false, false, false));
+        makeUnmovable(player);
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
 
         new BukkitRunnable() {
@@ -54,6 +47,7 @@ public class ShieldHeroAbilityEffects {
                     AbilityEffects.expandingParticleSphere(Particle.END_ROD, player.getLocation(), 4, 30, .3);
                     player.playSound(player, Sound.ITEM_TOTEM_USE, 1f, 1f);
                     guardingSystem.fullyRegenerateGuard(player);
+                    makeMovable(player);
                     cancel();
                 }
             }

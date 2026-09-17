@@ -21,7 +21,7 @@ public class CavalierAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack seismicSlam() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Seismic Slam",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.CAVALIER, 10);
                 }},
                 "Jump into the air, then crash into the ground, launching anyone nearby away from you", 

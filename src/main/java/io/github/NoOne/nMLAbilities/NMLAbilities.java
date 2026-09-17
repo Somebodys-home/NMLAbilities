@@ -8,19 +8,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist.MartialArtistAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
@@ -56,20 +44,6 @@ public class NMLAbilities extends JavaPlugin {
 
         cooldownManager = new CooldownManager(this);
         cooldownManager.start();
-
-        new AbilityItemManager(this);
-        new ExpertiseAbilityItemMaker(this);
-        new SoldierAbilityEffects(this);
-        new AssassinAbilityEffects(this);
-        new MarauderAbilityEffects(this);
-        new CavalierAbilityEffects(this);
-        new MartialArtistAbilityEffects(this);
-        new ShieldHeroAbilityEffects(this);
-        new MarksmanAbilityEffects(this);
-        new SorcererAbilityEffects(this);
-        new PrimordialAbilityEffects(this);
-        new HallowedAbilityEffects(this);
-        new AnnulledAbilityEffects(this);
 
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(), this);

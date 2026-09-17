@@ -19,7 +19,7 @@ public class ShieldHeroAbilityItems extends ExpertiseAbilityItems {
     public static ItemStack secondWind() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Second Wind",
-                new HashMap<>() {{
+                new HashMap<>(){{
                     put(Expertise.SHIELD_HERO, 1);
                 }},
                 "Take a moment to steel your resolve to fully regain your guard", 
