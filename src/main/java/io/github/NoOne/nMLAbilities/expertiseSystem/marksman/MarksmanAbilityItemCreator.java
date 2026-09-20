@@ -20,7 +20,7 @@ public class MarksmanAbilityItemCreator extends ExpertiseAbilityItemHelper {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Steady Aim",
                 new HashMap<>(){{
-                    put(Expertise.MARKSMAN, 1);
+                    put(Expertise.MARKSMAN, 8);
                 }},
                 "Slow your movements to increase your accuracy, making critical shots land easier.",
                 null,

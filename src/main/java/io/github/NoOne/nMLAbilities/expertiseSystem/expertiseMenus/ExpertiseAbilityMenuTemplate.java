@@ -7,6 +7,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,14 +17,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 // the parent for the other ability selection menus
-public class ExpertiseAbilityMenu extends Menu {
+public class ExpertiseAbilityMenuTemplate extends Menu {
     private ItemStack clickedItem;
     private ExpertiseAbilityItemHelper expertiseAbilityItemHelper;
     protected NMLAbilities nmlAbilities;
     protected SelectedAbilities selectedAbilities;
     protected Skills skills;
 
-    public ExpertiseAbilityMenu(NMLAbilities nmlAbilities, Player player, ItemStack clickedItem, ExpertiseAbilityItemHelper expertiseAbilityItemHelper) {
+    public ExpertiseAbilityMenuTemplate(NMLAbilities nmlAbilities, Player player, ItemStack clickedItem, ExpertiseAbilityItemHelper expertiseAbilityItemHelper) {
         super(player);
 
         this.nmlAbilities = nmlAbilities;
@@ -53,7 +54,7 @@ public class ExpertiseAbilityMenu extends Menu {
         if (event.getSlot() == 53) {
             new ExpertiseMainMenu(nmlAbilities, player).open();
         } else if (AbilityItemManager.isAnAbility(selected)) {
-            if (Arrays.stream(selectedAbilities.getSelectedAbilitiesArray()).anyMatch(element -> element.equals(Objects.requireNonNull(selected.getItemMeta()).getDisplayName()))) {
+            if (Arrays.stream(selectedAbilities.getSelectedAbilitiesArray()).anyMatch(element -> element.equals(ChatColor.stripColor(Objects.requireNonNull(selected.getItemMeta()).getDisplayName())))) {
                 playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou already have this ability selected!§r§c ⚠");
                 playerMenuUtility.getOwner().playSound(playerMenuUtility.getOwner(), Sound.BLOCK_NOTE_BLOCK_BASS, 2f, .5f);
                 return;

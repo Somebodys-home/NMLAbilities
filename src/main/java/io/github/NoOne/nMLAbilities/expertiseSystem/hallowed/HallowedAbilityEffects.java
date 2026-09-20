@@ -49,10 +49,8 @@ public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
                 AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, haloCenter, haloRadius - .1, 120);
 
                 // damage
-                if (ticks % 5 == 0) {
-                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, haloCenter, haloRadius)) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
-                    }
+                for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, haloCenter, haloRadius)) {
+                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage, 5));
                 }
 
                 if (progress <= 1) { // while halo is going forwards, slow down
@@ -113,10 +111,10 @@ public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
                         // cuz that means its moving faster = has to start shrinking sooner
 
                         if (shrinkTimeReduction == -1 && shrinkSpeedMultiplier == -1) { // it only gets set once at the start
-                            if (distance < 5) { // if you're close to the halo, have it shrink sooner
+                            if (distance < 7) { // if you're close to the halo, have it shrink sooner
                                 shrinkTimeReduction = .8;
                                 shrinkSpeedMultiplier = 1;
-                            } else if (distance > 25) { //  if you're far from the halo, have it shrink faster and a little sooner
+                            } else if (distance > 20) { //  if you're far from the halo, have it shrink faster and a little sooner
                                 shrinkTimeReduction = .6;
                                 shrinkSpeedMultiplier = .85;
                             } else {

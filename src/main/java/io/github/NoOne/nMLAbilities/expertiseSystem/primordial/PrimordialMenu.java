@@ -1,12 +1,12 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseAbilityMenu;
+import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseAbilityMenuTemplate;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PrimordialMenu extends ExpertiseAbilityMenu {
+public class PrimordialMenu extends ExpertiseAbilityMenuTemplate {
     public PrimordialMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
         super(nmlAbilities, player, clickedItem, new PrimordialAbilityItemCreator(skills));
     }

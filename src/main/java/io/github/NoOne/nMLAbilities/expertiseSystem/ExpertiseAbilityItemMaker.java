@@ -69,10 +69,7 @@ public class ExpertiseAbilityItemMaker {
         lore.add("");
 
         // description
-        for (String line : linebreak(description, 33)) {
-            lore.add("§7" + line);
-        }
-
+        lore.addAll(linebreak(description, 36));
         lore.add("");
 
         // prerequisites
@@ -114,16 +111,16 @@ public class ExpertiseAbilityItemMaker {
 
         // damage stats
         if (damage != null) {
-            lore.add("§b§l----------Damage----------");
+            lore.add("§b§l-----------Damage-----------");
             lore.addAll(damage);
         }
 
         if (effects != null) {
-            lore.add("§b§l----------Effects----------");
+            lore.add("§b§l-----------Effects-----------");
             lore.addAll(effects);
         }
 
-        lore.add("§b§l----------Weapons---------");
+        lore.add("§b§l-----------Weapons----------");
         if (weapons == null) {
             lore.add("§e- (None)");
         } else {
@@ -218,7 +215,7 @@ public class ExpertiseAbilityItemMaker {
 
             String chunk = string.substring(i, end).trim();
             if (!chunk.isEmpty()) {
-                breaks.add(chunk);
+                breaks.add("§7" + chunk);
             }
 
             i = end;

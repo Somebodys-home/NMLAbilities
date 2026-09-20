@@ -29,7 +29,9 @@ public class ExpertiseAbilityItemHelper {
             return DamageType.toChatColor(damageType) + "§n" + (int) value + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
                     DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
         } else {
-            return DamageType.toChatColor(damageType) + "§n" + value + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
+            String valueString = Double.toString(value).replace("0.", ".");
+
+            return DamageType.toChatColor(damageType) + "§n" + valueString + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
                     DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
         }
     }

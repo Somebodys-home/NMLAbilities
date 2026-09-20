@@ -1,12 +1,12 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseAbilityMenu;
+import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseAbilityMenuTemplate;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class CavalierMenu extends ExpertiseAbilityMenu {
+public class CavalierMenu extends ExpertiseAbilityMenuTemplate {
     public CavalierMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
         super(nmlAbilities, player, clickedItem, new CavalierAbilityItemCreator(skills));
     }

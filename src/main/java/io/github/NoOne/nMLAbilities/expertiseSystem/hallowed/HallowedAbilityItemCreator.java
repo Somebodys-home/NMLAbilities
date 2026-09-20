@@ -32,8 +32,8 @@ public class HallowedAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 17,
                 25,
                 List.of(
-                        makeWeaponDamageString(15),
-                        makeElementalDamageString(DamageType.RADIANT, .15)
+                        makeWeaponDamageString(15) + makeEverySecondString(.25),
+                        makeElementalDamageString(DamageType.RADIANT, .15) + makeEverySecondString(.25)
                 ),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
