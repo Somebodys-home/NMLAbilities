@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ShieldHeroMenu extends ExpertiseAbilityMenu {
     public ShieldHeroMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new ShieldHeroAbilityItems(skills));
+        super(nmlAbilities, player, clickedItem, new ShieldHeroAbilityItemCreator(skills));
     }
 
     @Override

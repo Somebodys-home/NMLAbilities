@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,8 +13,8 @@ import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GRO
 import static io.github.NoOne.nMLItems.enums.ItemType.HAMMER;
 import static io.github.NoOne.nMLItems.enums.ItemType.SPEAR;
 
-public class CavalierAbilityItems extends ExpertiseAbilityItems {
-    public CavalierAbilityItems(Skills skills) {
+public class CavalierAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public CavalierAbilityItemCreator(Skills skills) {
         super(skills);
     }
 

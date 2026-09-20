@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,8 +12,8 @@ import java.util.List;
 import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
 import static io.github.NoOne.nMLItems.enums.ItemType.DAGGER;
 
-public class AssassinAbilityItems extends ExpertiseAbilityItems {
-    public AssassinAbilityItems(Skills skills) {
+public class AssassinAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public AssassinAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
@@ -23,16 +23,16 @@ public class AssassinAbilityItems extends ExpertiseAbilityItems {
                 new HashMap<>(){{
                     put(Expertise.ASSASSIN, 1);
                 }},
-                "Dash forwards, dealing damage to anyone in your way", 
+                "Dash forwards, dealing damage to anyone in your path",
                 List.of(GROUNDED),
                 false,
                 "Area",
                 10,
                 0,
                 5,
-                20,
+                15,
                 List.of(makeWeaponDamageString(150)),
-                null,
+                List.of(makeInvincibleString(.3)),
                 List.of(DAGGER), 
                 skills
         );

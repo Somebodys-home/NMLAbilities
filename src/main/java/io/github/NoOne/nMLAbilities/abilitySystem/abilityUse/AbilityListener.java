@@ -11,6 +11,7 @@ import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -214,7 +215,12 @@ public class AbilityListener implements Listener {
     @EventHandler
     public void noMoving(PlayerMoveEvent event) {
         if (event.getPlayer().hasMetadata("ability_no_move")) {
-            event.setCancelled(true);
+            Location from = event.getFrom();
+            Location to = event.getTo();
+
+            if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
+                event.setCancelled(true);
+            }
         }
     }
 

@@ -3,12 +3,9 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -22,45 +19,41 @@ import java.util.*;
 public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void dropKick(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> physicalDamage = DamageHelper.convertPlayerStat2Damage(stats, "physicaldamage");
+        HashMap<DamageType, Double> physicalDamage = getDamageForAbility(player, DamageType.PHYSICAL, 1);
         Vector dropkickDirection = player.getLocation().getDirection().setY(0).normalize();
         double speed = Maneuvers.getSpeed(player) / 10;
         Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.4);
-        HashSet<UUID> alreadyHitEntities = new HashSet<>();
 
         if (!player.isOnGround()) { // so the dropkick is about the same both in the air and the ground
             dropKick = player.getVelocity().add(dropkickDirection.multiply(.75).setY(.3)).setY(.3);
         }
 
-        EnergyManager.useEnergy(player, 15);
-        CooldownManager.putOnHardCooldown(player, 1.5);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.5);
+        useEnergyAndCooldown(player, 15, 1.5);
         player.setVelocity(dropKick);
         player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
-        // dropkick loop
+        // dropkick runnable
         new BukkitRunnable() {
             int groundGracePeriod = 5;
             boolean inHitStop = false;
             int hitstopGracePeriodTimer = 0; // the time that you have to chain hitstops
             double incomingSpeed = Maneuvers.getSpeed(player) / 10;
+            HashSet<LivingEntity> alreadyHitEntities = new HashSet<>();
 
             @Override
             public void run() {
                 Location baseLocation = player.getLocation().add(0, 1, 0);
                 Location hitbox = baseLocation.clone().add(dropkickDirection);
-                Collection<Entity> hitEntities = player.getWorld().getNearbyEntities(hitbox, 1, 2, 1);
+                ArrayList<LivingEntity> hitEntities = getNearbyEntitiesExcludingPlayer(player, hitbox, 1, 2, 1);
                 Location behind = baseLocation.clone().subtract(baseLocation.getDirection().setY(0).normalize().multiply(0.5));
 
                 groundGracePeriod--;
                 hitstopGracePeriodTimer--;
-                player.getWorld().spawnParticle(Particle.SNOWFLAKE, behind, 10, .15, .15, .15, 0);
+                hitEntities.removeIf(alreadyHitEntities::contains);
 
-                // hit entities filtering
-                hitEntities.removeIf(entity -> !(entity instanceof LivingEntity) || entity.isDead() || alreadyHitEntities.contains(entity.getUniqueId()) ||
-                                    entity.hasMetadata("hologram"));
-                hitEntities.remove(player);
+                if (!inHitStop) {
+                    player.getWorld().spawnParticle(Particle.SNOWFLAKE, behind, 10, .15, .15, .15, 0);
+                }
 
                 // stop if the player hits the ground
                 if (groundGracePeriod <= 0 && player.isOnGround()) {
@@ -73,7 +66,7 @@ public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
                     incomingSpeed = Maneuvers.getSpeed(player) / 10;
                 }
 
-                /// you've hit something
+                // you've hit something
                 if (!hitEntities.isEmpty() && !inHitStop) {
                     double damageMultiplier = Math.clamp(incomingSpeed * .85, 1, 3);
                     HashMap<DamageType, Double> finalPhysicalDamage = DamageHelper.multiplyDamageMap(physicalDamage, damageMultiplier);
@@ -92,17 +85,17 @@ public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
                         );
 
                         // damage and knockback
-                        for (Entity hitEntity : hitEntities) {
+                        for (LivingEntity hitEntity : hitEntities) {
                             Vector knockback = hitEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(.5 + damageMultiplier).setY(.25);
 
-                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
+                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(hitEntity, player, finalPhysicalDamage));
                             hitEntity.setVelocity(knockback);
                         }
 
                         cancel();
                     } else { // high velocity effect
                         player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 1f, 2f);
-                        AttackCooldownSystem.setOrPauseAttackCooldown(player, .66);
+                        AttackCooldownSystem.pauseAttackCooldown(player, .66);
                         inHitStop = true;
 
                         // saving entities outside the hitbox to be paused during hitstop and what velocity they had beforehand
@@ -157,10 +150,10 @@ public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
 
                                 // when hitstop ends
                                 if (timer == 0) {
-                                    for (Entity hitEntity : hitEntities) { // apply knockback and damage for every hit enemy
+                                    for (LivingEntity hitEntity : hitEntities) { // apply knockback and damage for every hit enemy
                                         hitEntity.setVelocity(knockbacks.get(hitEntity));
-                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) hitEntity, player, finalPhysicalDamage));
-                                        alreadyHitEntities.add(hitEntity.getUniqueId()); // and make sure they can't be hit again
+                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(hitEntity, player, finalPhysicalDamage));
+                                        alreadyHitEntities.add(hitEntity); // and make sure they can't be hit again
                                     }
 
                                     for (Entity nearbyEntity : prevVelocities.keySet()) { // and knockback for every nearby guy that isn't the player

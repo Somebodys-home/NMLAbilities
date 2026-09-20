@@ -1,14 +1,9 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -27,8 +22,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void chuckRock(Player player) {
         World world = player.getWorld();
-        HashMap<DamageType, Double> physicalDamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(
-                                            profileManager.getPlayerProfile(player.getUniqueId()).getStats(), "physicaldamage"), 1.5);
+        HashMap<DamageType, Double> physicalDamage = getDamageForAbility(player, DamageType.PHYSICAL, 1.5);
 
         useEnergyAndCooldown(player, 10, .5);
 
@@ -50,18 +44,16 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Location stoneLocation = rock.getLocation();
-                Collection<Entity> hitEntities = world.getNearbyEntities(stoneLocation, 1, 1, 1);
+                Location rockLocation = rock.getLocation();
+                Collection<Entity> hitEntities = world.getNearbyEntities(rockLocation, 1, 1, 1);
 
-                for (Entity entity :  hitEntities) {
-                    if (entity instanceof LivingEntity livingEntity && entity != player) {
-                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, physicalDamage));
-                    }
+                for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, rockLocation, 1)) {
+                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, physicalDamage));
                 }
 
                 if (!hitEntities.isEmpty() || !rock.isValid() || rock.isDead()) {
-                    world.spawnParticle(Particle.BLOCK, stoneLocation, 100, 0, 0 ,0, 0, Bukkit.createBlockData(Material.STONE));
-                    player.playSound(stoneLocation, Sound.BLOCK_STONE_BREAK, 2f, 2f);
+                    world.spawnParticle(Particle.BLOCK, rockLocation, 100, 0, 0 ,0, 0, Bukkit.createBlockData(Material.STONE));
+                    player.playSound(rockLocation, Sound.BLOCK_STONE_BREAK, 2f, 2f);
                     cancel();
                 }
             }
@@ -69,22 +61,18 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
     }
 
     public static void pumpkinBomb(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> earth = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(stats, "earthdamage"), 1.5);
-        HashMap<DamageType, Double> fire = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(stats, "firedamage"), 1.5);
-        HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .8);
-
-        totalDamage.remove("earthdamage");
-        totalDamage.remove("firedamage");
-        totalDamage.putAll(earth);
-        totalDamage.putAll(fire);
+        World world = player.getWorld();
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, new HashMap<>(){{
+            put(DamageType.EARTH, 1.5);
+            put(DamageType.FIRE, 1.5);
+        }});
 
         // pumpkin bomb
         BlockFace face = yawToFace(player.getLocation().getYaw());
         Directional data = (Directional) Bukkit.createBlockData(Material.JACK_O_LANTERN);
         data.setFacing(face);
 
-        FallingBlock pumpkinBomb = player.getWorld().spawnFallingBlock(player.getLocation().add(0, 1, 0), data);
+        FallingBlock pumpkinBomb = world.spawnFallingBlock(player.getLocation().add(0, 1, 0), data);
 
         pumpkinBomb.setCancelDrop(true);
         pumpkinBomb.setVelocity(player.getLocation().getDirection().multiply(.25).setY(.75));
@@ -93,11 +81,9 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
         Location baseLocation = player.getEyeLocation().clone().subtract(0, .5, 0);
         Vector forward = baseLocation.getDirection().normalize().multiply(1.2);
         Location swing = baseLocation.clone().add(forward);
-        player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, swing, 1);
+        world.spawnParticle(Particle.SWEEP_ATTACK, swing, 1);
 
-        EnergyManager.useEnergy(player, 30);
-        CooldownManager.putOnHardCooldown(player, 1.25);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1.25);
+        useEnergyAndCooldown(player, 30, 1.25);
         player.playSound(player.getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 1f, 1f);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
@@ -108,15 +94,15 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
             @Override
             public void run() {
                 Location pumpkinBombLocation = pumpkinBomb.getLocation();
-                Collection<Entity> nearbyEntities = player.getWorld().getNearbyEntities(pumpkinBombLocation, 1, 1, 1);
+                Collection<Entity> nearbyEntities = world.getNearbyEntities(pumpkinBombLocation, 1, 1, 1);
                 Particle.DustOptions yellowTrail = new Particle.DustOptions(Color.fromRGB(255, 244, 110), 2F);
 
                 nearbyEntities.remove(pumpkinBomb);
                 nearbyEntities.remove(player);
-                player.getWorld().spawnParticle(Particle.DUST, pumpkinBombLocation, 1, 0, 0, 0, yellowTrail);
+                world.spawnParticle(Particle.DUST, pumpkinBombLocation, 1, 0, 0, 0, yellowTrail);
                 candyTimer--;
 
-                // candy
+                // spawn candy
                 if (candyTimer == 0) {
                     candyTimer = candyInterval;
 
@@ -131,7 +117,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                             Material.YELLOW_CONCRETE_POWDER
                     );
                     Material candyMaterial = candyColors.get(new Random().nextInt(candyColors.size()));
-                    FallingBlock candy = player.getWorld().spawnFallingBlock(pumpkinBombLocation.add(0, 1.5, 0), Bukkit.createBlockData(candyMaterial));
+                    FallingBlock candy = world.spawnFallingBlock(pumpkinBombLocation.add(0, 1.5, 0), Bukkit.createBlockData(candyMaterial));
                     double randomX = (Math.random() - 0.5) * 0.5;
                     double randomZ = (Math.random() - 0.5) * 0.5;
 
@@ -153,7 +139,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                 // explosion
                 if (triggered || !pumpkinBomb.isValid() || pumpkinBomb.isDead()) {
                     pumpkinBomb.remove();
-                    player.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, pumpkinBombLocation, 1);
+                    world.spawnParticle(Particle.EXPLOSION_EMITTER, pumpkinBombLocation, 1);
                     player.playSound(pumpkinBombLocation, Sound.ENTITY_GENERIC_EXPLODE, 2f, 1f);
                     player.playSound(pumpkinBombLocation, Sound.ENTITY_WITHER_DEATH, 1.5f, 1f);
 
@@ -169,7 +155,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                                 Location fireworkLocation = pumpkinBombLocation.clone().add(
                                         (Math.random() - .5) * 12, (Math.random() - .5) * 12, (Math.random() - .5) * 12);
 
-                                Firework firework = (Firework) player.getWorld().spawnEntity(fireworkLocation, EntityType.FIREWORK_ROCKET);
+                                Firework firework = (Firework) world.spawnEntity(fireworkLocation, EntityType.FIREWORK_ROCKET);
                                 FireworkMeta fireworkMeta = firework.getFireworkMeta();
 
                                 fireworkMeta.addEffect(FireworkEffect.builder()
@@ -188,11 +174,8 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                         }
                     }.runTaskTimer(nmlAbilities,6L, 2L);
 
-                    // damage
-                    for (Entity entity : player.getWorld().getNearbyEntities(pumpkinBombLocation, 4, 4, 4)) {
-                        if (entity instanceof LivingEntity livingEntity && entity != player) {
-                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, totalDamage));
-                        }
+                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, pumpkinBombLocation, 4)) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                     }
 
                     cancel();
@@ -202,18 +185,12 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
     }
 
     public static void airBall(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> airDamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(stats, "airdamage"), 2);
-        HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .5);
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .5, new HashMap<>(){{put(DamageType.AIR, 2.0);}});
         Particle.DustOptions air = new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1.0F);
         World world = player.getWorld();
 
-        totalDamage.remove("airdamage");
-        totalDamage.putAll(airDamage);
-        player.setMetadata("no_fall_damage", new FixedMetadataValue(nmlAbilities, true));
-        EnergyManager.useEnergy(player, 15);
-        CooldownManager.putOnHardCooldown(player, 2);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 2);
+        makeKneecapsUnbreakable(player);
+        useEnergyAndCooldown(player, 15, 2);
         player.playSound(player, Sound.ENTITY_BREEZE_JUMP, 1f, 1f);
 
         BukkitRunnable chargeAirBall = new BukkitRunnable() {
@@ -223,7 +200,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                 Vector forward = playerLocation.getDirection().normalize().multiply(2.25);
                 Location center = playerLocation.clone().add(forward);
 
-                AbilityEffects.particleSphere(air, center, .75, 4);
+                AbilityEffects.particleSphere(air, center, .75, 6);
             }
         };
 
@@ -232,13 +209,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
             @Override
             public void run() {
                 if (player.isOnGround()) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            player.removeMetadata("no_fall_damage", nmlAbilities);
-                        }
-                    }.runTaskLater(nmlAbilities, 1L);
-
+                    makeKneecapsBreakable(player);
                     cancel();
                 }
             }
@@ -246,7 +217,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
 
         // sequence
         new BukkitRunnable() {
-            Vector jump = player.getLocation().getDirection().multiply(2.75).setY(1.15);
+            Vector jump = player.getLocation().getDirection().multiply(2.25).setY(1.15);
             int timer = 0;
 
             @Override
@@ -267,7 +238,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
 
                         // the y is the opposite of the direction (that the ball will fly = player's looking)
                         Vector oppDirection = player.getLocation().getDirection().normalize().multiply(-1);
-                        Vector smallerJump = jump.clone().multiply(.2).add(oppDirection);
+                        Vector smallerJump = jump.clone().multiply(.15).add(oppDirection);
                         Vector recoil = new Vector(smallerJump.getX(), oppDirection.getY() * .4,  smallerJump.getZ());
 
                         // try to make the distance of the recoil similar across all angles
@@ -297,7 +268,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                             public void run() {
                                 duration++;
                                 center.add(airBallVelocity);
-                                AbilityEffects.particleSphere(air, center, .75, 4);
+                                AbilityEffects.particleSphere(air, center, .75, 6);
 
                                 // triggering air ball
                                 Collection<Entity> triggeringEntities = world.getNearbyEntities(center, 1, 1, 1);
@@ -306,7 +277,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                                 // explosion when run out of time, hits a block or entity
                                 if (duration == 20 || !center.getBlock().isPassable() || !triggeringEntities.isEmpty()) {
                                     int radius = 4;
-                                    int particleCircles = 15;
+                                    int particleCircles = 20;
 
                                     cancel();
                                     world.playSound(center, Sound.ENTITY_BREEZE_WIND_BURST, 2f, 1f);
@@ -315,16 +286,14 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                                     AbilityEffects.particleSphere(air, center, radius, particleCircles);
 
                                     // damage
-                                    for (Entity entity : world.getNearbyEntities(center, radius, radius, radius)) {
-                                        if (entity instanceof LivingEntity livingEntity && entity != player) {
-                                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, totalDamage));
+                                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, center, radius)) {
+                                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
 
-                                            // knockback
-                                            Vector direction = livingEntity.getLocation().toVector().subtract(center.toVector()).normalize();
-                                            Vector knockback = direction.multiply(1.2).setY(.5);
+                                        // knockback
+                                        Vector direction = livingEntity.getLocation().toVector().subtract(center.toVector()).normalize();
+                                        Vector knockback = direction.multiply(1.2).setY(.5);
 
-                                            livingEntity.setVelocity(knockback);
-                                        }
+                                        livingEntity.setVelocity(knockback);
                                     }
                                 }
                             }

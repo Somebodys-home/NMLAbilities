@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.SHIELD;
 
-public class ShieldHeroAbilityItems extends ExpertiseAbilityItems {
-    public ShieldHeroAbilityItems(Skills skills) {
+public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public ShieldHeroAbilityItemCreator(Skills skills) {
         super(skills);
     }
 

@@ -1,39 +1,24 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
-import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class SoldierAbilityEffects extends ExpertiseEffectsHelper {
-    private static ProfileManager profileManager = NMLAbilities.getInstance().getProfileManager();
-
     public static void slash(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damageStats = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), 1.2);
+        HashMap<DamageType, Double> damageStats = getDamageForAbility(player, 1.2);
         Location location = player.getLocation();
-        HashSet<LivingEntity> hitEntities = new HashSet<>();
 
-        CooldownManager.putOnHardCooldown(player, 1);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 1);
-        EnergyManager.useEnergy(player, 15);
+        useEnergyAndCooldown(player, 15, 1);
         player.playSound(location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
         for (double i = -Math.PI / 2; i <= Math.PI / 2; i += Math.PI / 10) {
@@ -44,15 +29,9 @@ public class SoldierAbilityEffects extends ExpertiseEffectsHelper {
 
             player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1);
 
-            for (Entity entity : player.getWorld().getNearbyEntities(particleLocation, 1.5, 1.5, 1.5)) {
-                if (!entity.equals(player) && entity instanceof LivingEntity livingEntity) {
-                    hitEntities.add(livingEntity);
-                }
+            for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, particleLocation, 1.5)) {
+                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
             }
-        }
-
-        for (LivingEntity livingEntity : hitEntities) {
-            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
         }
     }
 }

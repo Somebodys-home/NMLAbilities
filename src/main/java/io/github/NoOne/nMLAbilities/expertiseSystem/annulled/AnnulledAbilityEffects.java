@@ -2,26 +2,25 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
     public static void blackHole(Player player) {
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, DamageType.NECROTIC, 5);
         Particle.DustOptions blackHole = new Particle.DustOptions(Color.fromRGB(0, 0, 0), 1F);
 
         EnergyManager.useEnergy(player, 50);
-        CooldownManager.putOnInfiniteHardCooldown(player);
-        AttackCooldownSystem.pauseAttackCooldown(player);
+        putOnInfiniteCooldown(player);
         player.playSound(player, Sound.ENTITY_WITHER_SHOOT, 1f, 1f);
 
         new BukkitRunnable() {
@@ -41,8 +40,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
                     cancel();
                     player.playSound(player, Sound.ITEM_ELYTRA_FLYING, 2f, 1f);
                     player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1f, 1f);
-                    CooldownManager.removeHardCooldown(player);
-                    AttackCooldownSystem.resumeAttackCooldown(player);
+                    removeInfiniteCooldown(player);
 
                     // black hole runnable
                     new BukkitRunnable() {
@@ -103,8 +101,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
                                 }.runTaskLater(nmlAbilities, 3);
 
                                 for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, center, maxBlackHoleRadius)) {
-                                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player,
-                                            getDamageForAbility(player, DamageType.NECROTIC, 5)));
+                                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                                 }
                             }
                         }

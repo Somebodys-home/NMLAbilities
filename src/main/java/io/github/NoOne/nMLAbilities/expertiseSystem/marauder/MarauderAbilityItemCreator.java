@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,8 +12,8 @@ import java.util.List;
 import static io.github.NoOne.nMLItems.enums.ItemType.AXE;
 import static io.github.NoOne.nMLItems.enums.ItemType.SWORD;
 
-public class MarauderAbilityItems extends ExpertiseAbilityItems {
-    public MarauderAbilityItems(Skills skills) {
+public class MarauderAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public MarauderAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
@@ -31,7 +31,7 @@ public class MarauderAbilityItems extends ExpertiseAbilityItems {
                 5,
                 20,
                 30,
-                List.of(makeWeaponDamageString(50) + makeEverySecondString(.25)),
+                List.of(makeWeaponDamageString(25) + makeEverySecondString(.25)),
                 null,
                 List.of(SWORD, AXE), 
                 skills

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class PrimordialMenu extends ExpertiseAbilityMenu {
     public PrimordialMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new PrimordialAbilityItems(skills));
+        super(nmlAbilities, player, clickedItem, new PrimordialAbilityItemCreator(skills));
     }
 
     @Override

@@ -4,7 +4,7 @@ import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Sound;
@@ -18,17 +18,17 @@ import java.util.Objects;
 // the parent for the other ability selection menus
 public class ExpertiseAbilityMenu extends Menu {
     private ItemStack clickedItem;
-    private ExpertiseAbilityItems expertiseAbilityItems;
+    private ExpertiseAbilityItemHelper expertiseAbilityItemHelper;
     protected NMLAbilities nmlAbilities;
     protected SelectedAbilities selectedAbilities;
     protected Skills skills;
 
-    public ExpertiseAbilityMenu(NMLAbilities nmlAbilities, Player player, ItemStack clickedItem, ExpertiseAbilityItems expertiseAbilityItems) {
+    public ExpertiseAbilityMenu(NMLAbilities nmlAbilities, Player player, ItemStack clickedItem, ExpertiseAbilityItemHelper expertiseAbilityItemHelper) {
         super(player);
 
         this.nmlAbilities = nmlAbilities;
         this.clickedItem = clickedItem;
-        this.expertiseAbilityItems = expertiseAbilityItems;
+        this.expertiseAbilityItemHelper = expertiseAbilityItemHelper;
         selectedAbilities = nmlAbilities.getSelectedManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
         skills = nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills();
     }
@@ -83,7 +83,7 @@ public class ExpertiseAbilityMenu extends Menu {
         inventory.setItem(4, clickedItem);
         inventory.setItem(53, ItemCreator.createBackoutButton());
 
-        for (ItemStack abilityItem : expertiseAbilityItems.getAllExpertiseAbilityItems()) {
+        for (ItemStack abilityItem : expertiseAbilityItemHelper.getAllExpertiseAbilityItems()) {
             inventory.setItem(inventory.firstEmpty(), abilityItem);
         }
     }

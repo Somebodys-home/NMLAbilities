@@ -2,8 +2,8 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,8 +14,8 @@ import java.util.List;
 import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class PrimordialAbilityItems extends ExpertiseAbilityItems {
-    public PrimordialAbilityItems(Skills skills) {
+public class PrimordialAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public PrimordialAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
@@ -77,7 +77,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItems {
                 "Area",
                 20,
                 0,
-                1,
+                15,
                 30,
                 List.of(
                         makeWeaponDamageString(80),

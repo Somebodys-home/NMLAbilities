@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.BOW;
 
-public class MarksmanAbilityItems extends ExpertiseAbilityItems {
-    public MarksmanAbilityItems(Skills skills) {
+public class MarksmanAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public MarksmanAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
@@ -31,7 +31,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
                 10,
                 15,
                 null,
-                List.of("§7-50% §nSpeed§r§7 ✦", "§9+30% §nCrit Damage§r§9 ☠"),
+                List.of("§7-50% §nSpeed§r§7 ✦", "§9+30% §nCrit. Chance§r§9 ☠"),
                 List.of(BOW),
                 skills
         );
@@ -51,7 +51,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItems {
                 5,
                 25,
                 30,
-                List.of(makeWeaponDamageString(35) + makeEverySecondString(.25)),
+                List.of(makeWeaponDamageString(35) + makePerString("arrow")),
                 null,
                 List.of(BOW), 
                 skills

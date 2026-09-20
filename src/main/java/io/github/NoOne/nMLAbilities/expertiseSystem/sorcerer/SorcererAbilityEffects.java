@@ -1,26 +1,24 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Random;
 
 public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
     public static void magicMissileEX(Player player) {
-        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(
-                profileManager.getPlayerProfile(player.getUniqueId()).getStats()), .5);
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .5);
 
         useEnergyAndCooldown(player, 15, 2.5);
 
@@ -36,7 +34,6 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
 
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, .6f, 1f);
 
-                Set<UUID> hitEntityUUIDs = new HashSet<>();
                 Random random = new Random();
                 Vector direction = player.getEyeLocation().getDirection().normalize();
 
@@ -125,15 +122,9 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                         if (Double.isNaN(finalY) || finalY < worldMinY + 0.1) finalY = worldMinY + 0.1;
 
                         Location particleLocation = new Location(player.getWorld(), finalX, finalY, finalZ);
-                        Collection<Entity> nearbyEntities = player.getWorld().getNearbyEntities(particleLocation, 2, 2, 2);
 
-                        // entity collision
-                        for (Entity entity : nearbyEntities) {
-                            if (entity instanceof LivingEntity livingEntity && entity != player) {
-                                if (hitEntityUUIDs.add(entity.getUniqueId())) { // still works
-                                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage, 0));
-                                }
-                            }
+                        for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, particleLocation, 2)) {
+                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage, 5));
                         }
 
                         player.getWorld().spawnParticle(Particle.GLOW, particleLocation, 50, 0.1, 0.075, 0.1, 0);
@@ -147,23 +138,24 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
     }
 
     public static void dragonsBreath(Player player) {
-        HashMap<DamageType, Double> fire = DamageHelper.convertPlayerStat2Damage(profileManager.getPlayerProfile(player.getUniqueId()).getStats(), "firedamage");
-        int chargeUpTime = 40;
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, DamageType.FIRE, .25);
+        final int chargeUpTime = 40;
+        final int dragonsBreathTime = 80;
 
         useEnergyAndCooldown(player, 25, 8);
         makeUnmovable(player, chargeUpTime);
 
         // charge up
-        new BukkitRunnable() {
-            int timer = chargeUpTime * 20;
+        BukkitRunnable chargeUp = new BukkitRunnable() {
+            int timer = chargeUpTime;
 
             @Override
             public void run() {
                 timer--;
 
                 Location playerLocation = player.getLocation().add(0, 1.65, 0);
-                Vector forward = playerLocation.getDirection().normalize();
-                Location center = playerLocation.clone().add(forward.clone().multiply(1.5));
+                Vector forward = playerLocation.getDirection();
+                Location center = playerLocation.clone().add(forward.clone().multiply(.75));
                 int particleCount = 5;
                 double radius = Math.max((double) timer / 50, .1);
                 Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector
@@ -184,18 +176,18 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                 } else if (timer == 0) {
                     cancel();
                     player.playSound(player, Sound.ITEM_ELYTRA_FLYING, 2f, .5f);
+                    makeMovable(player);
                 }
             }
-        }.runTaskTimer(nmlAbilities, 0L, 1L);
-
+        };
 
         // dragon's breath
-        new BukkitRunnable() {
-            int timer = 0;
+        BukkitRunnable dragonsBreath = new BukkitRunnable() {
+            int timer = dragonsBreathTime;
 
             @Override
             public void run() {
-                timer++;
+                timer--;
 
                 // flamethrower effect
                 Location playerLocation = player.getLocation().add(0, 1.65, 0);
@@ -209,7 +201,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
 
                 Location particleLocation = particleVector.toLocation(player.getWorld()).add(baseLocation);
 
-                for (int i = 0; i < 12; i++) { // Amount of fire
+                for (int i = 0; i < 12; i++) { // Amount of damage
                     Vector particlePath = playerDirection.clone();
 
                     particlePath.add(new Vector(Math.random() - Math.random(), Math.random() - Math.random(), Math.random() - Math.random()));
@@ -220,23 +212,18 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                 }
 
                 // damage
-                if (timer % 5 == 0) {
-                    Vector direction = player.getEyeLocation().getDirection().normalize();
+                Vector direction = player.getEyeLocation().getDirection().normalize();
 
-                    for (double d = 0; d <= 12; d += .5) {
-                        Location checkLoc = player.getEyeLocation().add(direction.clone().multiply(d));
-                        Collection<Entity> nearby = checkLoc.getWorld().getNearbyEntities(checkLoc, 1, 1, 1);
+                for (double d = 0; d <= 12; d += .5) {
+                    Location checkLoc = player.getEyeLocation().add(direction.clone().multiply(d));
 
-                        for (Entity entity : nearby) {
-                            if (entity instanceof LivingEntity livingEntity && entity != player) {
-                                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, fire));
-                            }
-                        }
+                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, checkLoc, 1)) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage, 5));
                     }
                 }
 
                 // flamethrower end effect
-                if (timer == 80) {
+                if (timer == 0) {
                     player.stopSound(Sound.ITEM_ELYTRA_FLYING);
                     player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1f);
 
@@ -248,7 +235,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                     int particleCount = 20;
 
                     for (int i = 0; i < particleCount; i++) {
-                        double angle = 2 * Math.PI * i / particleCount + ((chargeUpTime - timer) * .02);
+                        double angle = 2 * Math.PI * i / particleCount + ((chargeUpTime - dragonsBreathTime) * .02);
 
                         Vector offset = up.clone().multiply(Math.cos(angle)).add(right.clone().multiply(Math.sin(angle))).multiply(.1);
                         particleLocation = center.clone().add(offset);
@@ -260,6 +247,27 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                     cancel();
                 }
             }
-        }.runTaskTimer(nmlAbilities, chargeUpTime, 1);
+        };
+
+        // sequence
+        new BukkitRunnable() {
+            int timer = 0;
+
+            @Override
+            public void run() {
+                switch (timer) {
+                    case 0 -> chargeUp.runTaskTimer(nmlAbilities, 0, 1);
+                    case chargeUpTime -> {
+                        chargeUp.cancel();
+                        dragonsBreath.runTaskTimer(nmlAbilities, 0, 1);
+                    }
+                    case chargeUpTime + dragonsBreathTime -> {
+                        cancel();
+                    }
+                };
+
+                timer++;
+            }
+        }.runTaskTimer(nmlAbilities, 0, 1);
     }
 }

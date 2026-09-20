@@ -1,19 +1,14 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,12 +18,9 @@ import java.util.HashMap;
 
 public class MarauderAbilityEffects extends ExpertiseEffectsHelper {
     public static void bladeTornado(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .5);
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .25);
 
-        EnergyManager.useEnergy(player, 30);
-        CooldownManager.putOnHardCooldown(player, 6);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, 6);
+        useEnergyAndCooldown(player, 30, 6);
         player.getAttribute(Attribute.STEP_HEIGHT).setBaseValue(1);
         breakKneecaps(player);
 
@@ -39,26 +31,25 @@ public class MarauderAbilityEffects extends ExpertiseEffectsHelper {
             public void run() {
                 tornadoTicks--;
 
-                // tiny dash
-                if (player.isOnGround()) {
-                    Vector tinyDash = player.getLocation().getDirection().multiply(.5);
-                    tinyDash.setY(-2);
-                    player.setVelocity(tinyDash);
-                }
+                Location playerLocation = player.getLocation();
 
-                // particles
-                if (tornadoTicks % 2 == 0) {
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, player.getLocation().clone().add(new Vector(0, .5, 0)), 1, 4);
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, player.getLocation().clone().add(new Vector(0, 1.25, 0)), 1.5, 6);
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, player.getLocation().clone().add(new Vector(0, 2, 0)), 2, 8);
-                }
+                playerLocation.setPitch(0);
 
-                if (tornadoTicks % 3 == 0) player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .5f);
-                if (tornadoTicks % 5 == 0) {
-                    for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 2.25, 2, 2.25)) {
-                        if (entity instanceof LivingEntity livingEntity && !entity.equals(player)) {
-                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
-                        }
+                Vector direction = playerLocation.getDirection();
+                Vector tinyDash = direction.clone().multiply(.5).setY(-.125);
+
+                player.setVelocity(tinyDash);
+                playerLocation.add(direction); // so the particles are properly on the player instead of like, one block behind
+
+                if (tornadoTicks % 3 == 0) {
+                    player.playSound(playerLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .5f);
+                } else if (tornadoTicks % 4 == 0) {
+                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, .5, 0)), 1, 4);
+                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 1.25, 0)), 1.5, 6);
+                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 2, 0)), 2, 8);
+                } else if (tornadoTicks % 5 == 0) {
+                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, playerLocation, 2.25, 2, 2.25)) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
                     }
                 }
 

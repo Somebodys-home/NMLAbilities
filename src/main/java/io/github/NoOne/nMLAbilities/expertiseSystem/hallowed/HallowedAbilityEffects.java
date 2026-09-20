@@ -1,126 +1,135 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
-
     public static void halo(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> radiantDamage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStat2Damage(stats, "radiantdamage"), .35);
-        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .15);
-        HashSet<LivingEntity> hitEntities = new HashSet<>();
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .15, new HashMap<>(){{put(DamageType.RADIANT, .35);}});
 
-        damage.remove("radiantdamage");
-        damage.putAll(radiantDamage);
         EnergyManager.useEnergy(player, 25);
-        CooldownManager.putOnInfiniteHardCooldown(player);
+        putOnInfiniteCooldown(player);
         player.playSound(player, Sound.ITEM_TRIDENT_RIPTIDE_1, 1f, 1f);
         player.playSound(player, Sound.ITEM_ELYTRA_FLYING, .5f, 1f);
 
         new BukkitRunnable() {
             int ticks = 0;
-            int maxTicks = 80;
-            Location center = player.getLocation().clone().add(0, 1, 0);
-            Vector baseVelocity = player.getLocation().getDirection().normalize().multiply(.4);
-
+            Location haloCenter = player.getLocation().clone().add(0, 1, 0);
+            Vector baseHaloVelocity = player.getLocation().getDirection().normalize().multiply(.4);
+            double haloRadius = 4;
+            double minHaloRadius = .5;
+            double shrinkTimeReduction = -1; // the multiplier on how soon the halo should start shrinking such that its the proper size when it hits the player's head
+            double shrinkSpeedMultiplier = -1; // the multiplier on how quickly the halo should start shrinking such that its the proper size when it hits the player's head
+            
             @Override
             public void run() {
                 ticks++;
 
-                double progress = (double) ticks / ((double) maxTicks / 2);
-                double speedFactor;
+                // how long the halo has been out
+                // halo starts returning when progress = 1
+                double progress = (double) ticks / 40;
+                double speedFactor; // the speed the halo should be moving
+                Location endLocation = player.getLocation().clone().add(0, 2, 0); // halo ends on the player's had
 
-                if (progress <= 1) { // slowdown going forwards
-                    speedFactor = 1 - (progress * progress);
-                    center.add(baseVelocity.clone().multiply(speedFactor * 1.5));
-                } else { // coming back, tracking the player
-                    double t = progress - 1;
-                    speedFactor = t * t;
+                // halo
+                AbilityEffects.horizontalParticleCircle(Particle.END_ROD, haloCenter, haloRadius, 100);
+                AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, haloCenter, haloRadius - .1, 120);
 
-                    Location playerCenter = player.getLocation().clone().add(0, 2, 0);
-                    Vector toPlayer = playerCenter.toVector().subtract(center.toVector()).normalize();
-                    Vector blended = baseVelocity.clone().normalize().multiply(1 - t).add(toPlayer.multiply(t)).normalize();
-                    Vector step = blended.multiply(speedFactor * 3);
+                // damage
+                if (ticks % 5 == 0) {
+                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, haloCenter, haloRadius)) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
+                    }
+                }
 
-                    if (step.lengthSquared() > center.distanceSquared(playerCenter)) {
-                        CooldownManager.removeHardCooldown(player);
+                if (progress <= 1) { // while halo is going forwards, slow down
+                    speedFactor = (1 - (progress * progress)) * 1.5;
+                    haloCenter.add(baseHaloVelocity.clone().multiply(speedFactor));
+                } else { // coming back, track the player
+                    double backwardsProgress = Math.min(progress - 1, 1);
+
+                    speedFactor = Math.pow(backwardsProgress, 2); // square acceleration, such that the halo eases into its speed
+
+                    Vector directionToPlayer = endLocation.toVector().subtract(haloCenter.toVector()).normalize();
+                    Vector originalVelocityInfluence = baseHaloVelocity.clone().normalize().multiply(1 - backwardsProgress);
+                    // how much of the direction of the halo's original base velocity is being applied to the halo's return velocity
+                    // scales with backwards progress, such that when it equals 1, its not being applied anymore
+                    // gives the halo its boomeranging curve when its returning back
+
+                    Vector returningVelocityInfluence = directionToPlayer.multiply(backwardsProgress);
+                    // how much of the return direction to the player is being applied to the halo's return velocity
+                    // scales with backwards progress
+                    // the mirror to originalVelocityInfluence
+
+                    Vector blendedDirection = originalVelocityInfluence.add(returningVelocityInfluence).normalize();
+                    Vector step = blendedDirection.multiply(speedFactor * 3);
+
+                    if (step.lengthSquared() > haloCenter.distanceSquared(endLocation)) { // when the halo hits the player
+                        removeInfiniteCooldown(player);
                         player.playSound(player, Sound.BLOCK_AMETHYST_BLOCK_PLACE, 1f, 1f);
                         player.stopSound(Sound.ITEM_ELYTRA_FLYING);
-                        center = playerCenter.clone(); // snap to player
-                        this.cancel(); // stop the main loop right away
+                        haloCenter = endLocation.clone(); // snap to player
+                        cancel();
 
                         // mini halo
                         new BukkitRunnable() {
-                            int timer = 0;
+                            int timer = 40;
 
                             @Override
                             public void run() {
-                                timer++;
+                                timer--;
 
-                                Location center = player.getLocation();
-                                double radius = .5; // <- max radius
-                                int particleCount = 100;
+                                Location head = player.getLocation().add(0, 2, 0);
 
-                                if (timer != 40) {
-                                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, center.add(0, 2, 0), radius, particleCount);
+                                if (timer != 0) {
+                                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, head, minHaloRadius, 20);
                                 } else { // burst
                                     player.playSound(player, Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1f, 1f);
-                                    AbilityEffects.expandingHorizontalParticleCircle(Particle.END_ROD, center.add(0, 2, 0), radius, particleCount, .3);
+                                    AbilityEffects.expandingHorizontalParticleCircle(Particle.END_ROD, head, minHaloRadius, 100, .3);
                                     cancel();
                                 }
                             }
                         }.runTaskTimer(nmlAbilities, 0L, 1L);
-                        return;
-                    } else {
-                        center.add(step);
-                    }
-                }
+                    } else { // while it's still flying
+                        haloCenter.add(step);
 
-                // halo
-                Location playerCenter = player.getLocation().clone().add(0, 2, 0);
-                double distance = center.distance(playerCenter);
-                double shrinkStart = 12; // what distance from the player to start shrinking
-                double currentRadius;
+                        // start shrinking the halo when halo's coming back, its close enough to the player, and its been flying long enough
+                        double distance = haloCenter.distance(endLocation);
+                        double shrinkStart = 12 * (1 + (backwardsProgress / 5));
+                        // the distance from the player to start shrinking, farther the longer the halo has been flying
+                        // cuz that means its moving faster = has to start shrinking sooner
 
-                if (progress <= 1 || distance > shrinkStart) {
-                    currentRadius = 4; // outbound
-                } else {
-                    double shrinkProgress = Math.min(1.0, (shrinkStart - distance) / shrinkStart);
-                    currentRadius = 4 - (3.5 * shrinkProgress); // 4 → 0.5
-                }
+                        if (shrinkTimeReduction == -1 && shrinkSpeedMultiplier == -1) { // it only gets set once at the start
+                            if (distance < 5) { // if you're close to the halo, have it shrink sooner
+                                shrinkTimeReduction = .8;
+                                shrinkSpeedMultiplier = 1;
+                            } else if (distance > 25) { //  if you're far from the halo, have it shrink faster and a little sooner
+                                shrinkTimeReduction = .6;
+                                shrinkSpeedMultiplier = .85;
+                            } else {
+                                shrinkTimeReduction = 1;
+                                shrinkSpeedMultiplier = 1;
+                            }
+                        }
 
-                AbilityEffects.horizontalParticleCircle(Particle.END_ROD, center, currentRadius, 100);
-                AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, center, currentRadius - .1, 120);
-
-                // damage
-                if (ticks % 5 == 0) {
-                    for (Entity entity : player.getWorld().getNearbyEntities(center, 4, .5, 4)) {
-                        if (entity instanceof LivingEntity livingEntity && entity != player) {
-                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
+                        if (backwardsProgress >= (.55 * shrinkTimeReduction) && distance <= shrinkStart) {
+                            haloRadius = Math.max(minHaloRadius, haloRadius * (.775 * shrinkSpeedMultiplier));
                         }
                     }
                 }
-
-                hitEntities.clear();
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
     }

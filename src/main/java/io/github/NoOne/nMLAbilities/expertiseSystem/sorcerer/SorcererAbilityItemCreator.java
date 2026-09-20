@@ -2,8 +2,8 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,8 +12,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SorcererAbilityItems extends ExpertiseAbilityItems {
-    public SorcererAbilityItems(Skills skills) {
+public class SorcererAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public SorcererAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
@@ -50,9 +50,9 @@ public class SorcererAbilityItems extends ExpertiseAbilityItems {
                 "Area",
                 12,
                 5,
-                20,
+                1,
                 25,
-                List.of(makeElementalDamageString(DamageType.FIRE, 1) + makeEverySecondString(1)),
+                List.of(makeElementalDamageString(DamageType.FIRE, .25) + makeEverySecondString(.25)),
                 null,
                 List.of(WAND, STAFF), 
                 skills

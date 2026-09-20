@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class HallowedMenu extends ExpertiseAbilityMenu {
     public HallowedMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new HallowedAbilityItems(skills));
+        super(nmlAbilities, player, clickedItem, new HallowedAbilityItemCreator(skills));
     }
 
     @Override

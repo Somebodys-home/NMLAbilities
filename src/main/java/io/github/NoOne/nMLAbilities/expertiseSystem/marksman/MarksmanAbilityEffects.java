@@ -1,17 +1,13 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffect;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
-import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
+import io.github.NoOne.nMLWeapons.ArrowTracker;
 import org.bukkit.*;
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,21 +20,56 @@ import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
-
     public static void steadyAim(Player player, boolean toggle) {
+        BukkitRunnable steadyAimRunnable = new BukkitRunnable() {
+            double angle = 0;
+
+            @Override
+            public void run() {
+                Location playerLocation = player.getLocation().add(0, .1, 0);
+
+                if (!player.isSprinting()) {
+                    double x = Math.cos(Math.toRadians(angle));
+                    double perpX = Math.cos(Math.toRadians(angle + 90));
+                    double z = Math.sin(Math.toRadians(angle));
+                    double perpZ = Math.sin(Math.toRadians(angle + 90));
+
+                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18);
+                    AbilityEffects.particleLine(
+                            Particle.ELECTRIC_SPARK,
+                            playerLocation.clone().add(x, 0, z),
+                            playerLocation.clone().add(-x, 0, -z),
+                            9
+                    );
+                    AbilityEffects.particleLine(
+                            Particle.ELECTRIC_SPARK,
+                            playerLocation.clone().add(perpX, 0, perpZ),
+                            playerLocation.clone().add(-perpX, 0, -perpZ),
+                            9
+                    );
+                    angle += 1.5;
+
+                    if (angle >= 360) {
+                        angle = 0;
+                    }
+                } else { // show lesser effect when moving
+                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
+                }
+            }
+        };
+
         OngoingAbilityEffect steadyAimEffect = new OngoingAbilityEffect(
                 "steady aim",
                 new HashMap<>(){{
                     put("critchance", 30.0);
                     put("speed", -50.0);
                 }},
-                steadyAimAbilityEffect(player),
+                steadyAimRunnable,
                 0,
                 1
         );
 
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, .5);
-        CooldownManager.putOnHardCooldown(player, .5);
+        putOnCooldown(player, .5);
 
         if (toggle) {
             EnergyManager.useEnergy(player, 15);
@@ -49,19 +80,16 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
     }
 
     public static void arrowHailStorm(Player player) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> damage = DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), .35);
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .35);
         World world = player.getWorld();
         int maxTargetingRange = 15;
         int radius = 6;
         final int reticuleTicks = 40;
         final int arrowHailTicks = 100;
 
-        EnergyManager.useEnergy(player, 30);
-        AttackCooldownSystem.setOrPauseAttackCooldown(player, reticuleTicks / 20.0);
-        CooldownManager.putOnHardCooldown(player, reticuleTicks / 20.0);
+        useEnergyAndCooldown(player, 30, reticuleTicks / 20.0);
 
-        /// shoot arrow into the sky
+        // shoot arrow into the sky
         Location playerLocation = player.getLocation();
         Vector direction = playerLocation.getDirection().normalize();
         double y = playerLocation.getY();
@@ -73,7 +101,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
         AbilityEffects.particleLine(Particle.COMPOSTER, start, end, 150);
         player.playSound(player, Sound.ITEM_CROSSBOW_SHOOT, 2f, 1f);
 
-        /// reticule
+        // reticule
         Location reticuleCenterLocation;
         Location eyeLocation = player.getEyeLocation();
         Vector eyeDirection = eyeLocation.getDirection();
@@ -123,12 +151,12 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
             }
         };
 
-        /// arrow hail
+        // arrow hail
         Location finalReticuleCenterLocation = reticuleCenterLocation;
         BukkitRunnable arrowHail = new BukkitRunnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 5; i++) { // how many arrows per tick
                     double angle = ThreadLocalRandom.current().nextDouble(0, 2 * Math.PI);
                     double distance = Math.sqrt(ThreadLocalRandom.current().nextDouble()) * radius;
                     double xOffset = distance * Math.cos(angle);
@@ -136,7 +164,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
                     Location startingLocation = finalReticuleCenterLocation.clone().add(xOffset, 30, zOffset);
                     Arrow arrow = world.spawnArrow(startingLocation, new Vector(0, -1, 0), 3f, 3f);
 
-                    turnIntoAbilityArrow(arrow, player, damage);
+                    turnIntoAbilityArrow(arrow, player, damage, false, 150);
                     setNoDamageTicks(arrow, 5);
 
                     if (i == 0 || i == 3) {
@@ -146,7 +174,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
             }
         };
 
-        /// sequence
+        // sequence
         new BukkitRunnable() {
             int timer = 0;
 
@@ -169,88 +197,9 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
         }.runTaskTimer(nmlAbilities, 0L, 1L);
     }
 
-    private static void turnIntoAbilityArrow(Arrow arrow, Player shooter, HashMap<DamageType, Double> damageMap) {
-        arrow.setCritical(false);
-        arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
-        arrow.setMetadata("custom_arrow", new FixedMetadataValue(nmlAbilities, damageMap));
+    private static void turnIntoAbilityArrow(Arrow arrow, Player shooter, HashMap<DamageType, Double> damageMap, boolean trail, int despawnTicks) {
+        ArrowTracker.makeCustomArrow(arrow, damageMap, trail, despawnTicks);
         arrow.setShooter(shooter, false);
-
-        // arrow despawn task
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (arrow.isDead() || arrow.isInBlock()) {
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            arrow.remove();
-                            cancel();
-                        }
-                    }.runTaskTimer(nmlAbilities, 100L, 2L);
-
-                    cancel();
-                }
-            }
-        }.runTaskTimer(nmlAbilities, 0L, 2L);
-    }
-
-    public static BukkitRunnable steadyAimAbilityEffect(Player player) {
-        return new BukkitRunnable() {
-            double angle = 0;
-
-            @Override
-            public void run() {
-                Location playerLocation = player.getLocation().add(0, .1, 0);
-
-                if (!player.isSprinting()) {
-                    double x = Math.cos(Math.toRadians(angle));
-                    double perpX = Math.cos(Math.toRadians(angle + 90));
-                    double z = Math.sin(Math.toRadians(angle));
-                    double perpZ = Math.sin(Math.toRadians(angle + 90));
-
-                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18); /// dw about this
-                    AbilityEffects.particleLine(
-                            Particle.ELECTRIC_SPARK,
-                            playerLocation.clone().add(x, 0, z),
-                            playerLocation.clone().add(-x, 0, -z),
-                            9
-                    );
-                    AbilityEffects.particleLine(
-                            Particle.ELECTRIC_SPARK,
-                            playerLocation.clone().add(perpX, 0, perpZ),
-                            playerLocation.clone().add(-perpX, 0, -perpZ),
-                            9
-                    );
-                    angle += 1.5;
-
-                    if (angle >= 360) {
-                        angle = 0;
-                    }
-                } else { // show lesser effect when moving
-                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
-                }
-            }
-        };
-    }
-
-    private static void setArrowTrail(Arrow arrow, Particle particle) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (arrow.isDead() || arrow.isOnGround()) {
-                    this.cancel();
-                    return;
-                }
-
-                double speed = arrow.getVelocity().length();
-                int particleCount = (int) (Math.pow(speed, 2) * 5);
-
-                if (particleCount > 0) {
-                    Location loc = arrow.getLocation();
-                    arrow.getWorld().spawnParticle(particle, loc, particleCount,0, 0, 0, 0);
-                }
-            }
-        }.runTaskTimer(nmlAbilities, 0, 1);
     }
 
     private static void setNoDamageTicks(Arrow arrow, int noDamageTicks) {

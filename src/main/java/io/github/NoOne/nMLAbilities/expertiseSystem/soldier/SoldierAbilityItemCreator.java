@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SoldierAbilityItems extends ExpertiseAbilityItems {
-    public SoldierAbilityItems(Skills skills) {
+public class SoldierAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public SoldierAbilityItemCreator(Skills skills) {
         super(skills);
     }
 

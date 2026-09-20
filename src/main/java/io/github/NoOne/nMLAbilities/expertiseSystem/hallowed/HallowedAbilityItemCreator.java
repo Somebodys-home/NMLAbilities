@@ -1,9 +1,9 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
+package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,26 +12,29 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class AnnulledAbilityItems extends ExpertiseAbilityItems {
-    public AnnulledAbilityItems(Skills skills) {
+public class HallowedAbilityItemCreator extends ExpertiseAbilityItemHelper {
+    public HallowedAbilityItemCreator(Skills skills) {
         super(skills);
     }
 
-    public static ItemStack blackHole() {
+    public static ItemStack halo() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "Black Hole",
+                "Halo",
                 new HashMap<>(){{
-                    put(Expertise.ANNULLED, 50);
+                    put(Expertise.HALLOWED, 15);
                 }},
-                "...it's a black hole. It pulls in and spaghettifies things; I don't need to spell this out for you.",
+                "Throw a ring of radiant energy that rebounds back to you, damaging anyone touching it", 
                 null,
                 false,
                 "Area",
-                13,
-                7.75,
-                30,
-                50,
-                List.of(makeElementalDamageString(DamageType.NECROTIC, 5)),
+                20,
+                0,
+                17,
+                25,
+                List.of(
+                        makeWeaponDamageString(15),
+                        makeElementalDamageString(DamageType.RADIANT, .15)
+                ),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills
@@ -40,6 +43,6 @@ public class AnnulledAbilityItems extends ExpertiseAbilityItems {
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(blackHole());
+        return List.of(halo());
     }
 }

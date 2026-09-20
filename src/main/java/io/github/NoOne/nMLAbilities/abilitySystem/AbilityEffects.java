@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
-import io.github.NoOne.nMLAbilities.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
