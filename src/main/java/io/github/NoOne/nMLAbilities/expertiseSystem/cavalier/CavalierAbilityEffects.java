@@ -42,8 +42,7 @@ public class CavalierAbilityEffects extends ExpertiseEffectsHelper {
             Vector slam = player.getLocation().getDirection().multiply(1.5).setY(-2.2);
 
             player.setVelocity(slam);
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .3f);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2f, .3f);
 
             // landing effect
             new BukkitRunnable() {

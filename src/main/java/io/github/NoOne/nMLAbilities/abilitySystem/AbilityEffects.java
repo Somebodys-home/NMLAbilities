@@ -65,6 +65,17 @@ public class AbilityEffects extends ExpertiseEffectsHelper {
         }
     }
 
+    public static void horizontalParticleCircle(Particle.DustOptions dustOptions, Location center, double radius, int particleCount) {
+        for (int i = 0; i < particleCount; i++) {
+            double angle = 2 * Math.PI * i / particleCount;
+            double x = Math.cos(angle) * radius;
+            double z = Math.sin(angle) * radius;
+            Location particleLocation = center.clone().add(x, 0, z);
+
+            center.getWorld().spawnParticle(Particle.DUST, particleLocation, 1, 0, 0, 0, 0, dustOptions);
+        }
+    }
+
     public static void expandingHorizontalParticleCircle(Particle particle, Location center, double radius, int particleCount, double speed) {
         for (int i = 0; i < particleCount; i++) {
             double angle = 2 * Math.PI * i / particleCount;

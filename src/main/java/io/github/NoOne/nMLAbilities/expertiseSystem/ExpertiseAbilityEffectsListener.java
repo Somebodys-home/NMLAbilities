@@ -47,6 +47,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
 
                 // Marauder abilities
                 case "Blade Tornado" -> MarauderAbilityEffects.bladeTornado(player);
+                case "Stomping Tantrum" -> MarauderAbilityEffects.stompingTantrum(player);
 
                 // Cavalier abilities
                 case "Seismic Slam" -> CavalierAbilityEffects.seismicSlam(player);

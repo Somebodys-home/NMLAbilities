@@ -10,8 +10,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
     public static void secondWind(Player player) {
+        int chargeUpTime = 30;
+
         useEnergyAndCooldown(player, 20, 1.5);
-        makeUnmovable(player);
+        makeUnmovable(player, chargeUpTime);
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
 
         new BukkitRunnable() {
@@ -28,12 +30,12 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
 
                 AbilityEffects.horizontalParticleCircle(Particle.END_ROD, center, radius, particleCount);
 
-                if (timer % 10 == 0 && timer != 30) {
+                if (timer % 10 == 0 && timer != chargeUpTime) {
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
                 }
 
                 // explosion
-                if (timer == 30) {
+                if (timer == chargeUpTime) {
                     AbilityEffects.expandingParticleSphere(Particle.END_ROD, player.getLocation(), 4, 30, .3);
                     player.playSound(player, Sound.ITEM_TOTEM_USE, 1f, 1f);
                     guardingSystem.fullyRegenerateGuard(player);

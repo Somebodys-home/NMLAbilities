@@ -155,7 +155,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
 
                 Location playerLocation = player.getLocation().add(0, 1.65, 0);
                 Vector forward = playerLocation.getDirection();
-                Location center = playerLocation.clone().add(forward.clone().multiply(.75));
+                Location center = playerLocation.clone().add(forward.clone().multiply(1.5));
                 int particleCount = 5;
                 double radius = Math.max((double) timer / 50, .1);
                 Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector

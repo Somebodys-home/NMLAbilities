@@ -13,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -47,17 +49,14 @@ public class ExpertiseEffectsHelper {
         AttackCooldownSystem.resumeAttackCooldown(player);
     }
 
-    public static void makeUnmovable(Player player) {
-        player.setMetadata("ability_no_move", new FixedMetadataValue(nmlAbilities, true));
-    }
-
     public static void makeUnmovable(Player player, int ticks) {
-        makeUnmovable(player);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, ticks, 7, false, false, false));
+        breakKneecaps(player);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                makeUnmovable(player);
+                fixKneecaps(player);
             }
         }.runTaskLater(nmlAbilities, ticks);
     }
@@ -126,6 +125,19 @@ public class ExpertiseEffectsHelper {
         }
 
         return totalDamage;
+    }
+
+    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamagePercent, DamageType damageType, double multiplier) {
+        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
+
+        return new HashMap<>() {{
+            putAll(DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamagePercent));
+
+            if (playerDamages.containsKey(damageType)) {
+                put(damageType, playerDamages.get(damageType) * multiplier);
+            }
+        }};
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, DamageType damageType, double multiplier) {

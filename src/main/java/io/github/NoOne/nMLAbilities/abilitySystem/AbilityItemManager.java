@@ -4,6 +4,7 @@ import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -172,7 +173,7 @@ public class AbilityItemManager {
     }
 
     public static String getRawAbilityName(ItemStack item) {
-        return item.getItemMeta().getDisplayName().replaceAll("§.", "");
+        return ChatColor.stripColor(item.getItemMeta().getDisplayName());
     }
 
     public static boolean isAnAbility(ItemStack item) {

@@ -11,7 +11,6 @@ import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -20,7 +19,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -209,18 +211,6 @@ public class AbilityListener implements Listener {
     public void noJumping(PlayerJumpEvent event) {
         if (event.getPlayer().hasMetadata("ability_no_jump")) {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void noMoving(PlayerMoveEvent event) {
-        if (event.getPlayer().hasMetadata("ability_no_move")) {
-            Location from = event.getFrom();
-            Location to = event.getTo();
-
-            if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
-                event.setCancelled(true);
-            }
         }
     }
 

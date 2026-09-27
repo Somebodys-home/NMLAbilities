@@ -59,4 +59,8 @@ public class ExpertiseAbilityItemHelper {
             return "§fBecome §nIninvincible§r§f for " + time + "s";
         }
     }
+
+    protected static String makeTimesString(int times) {
+        return " §8§o(x" + times + ")";
+    }
 }
