@@ -13,48 +13,41 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
 
     public static void chuckRock(Player player) {
         World world = player.getWorld();
         HashMap<DamageType, Double> physicalDamage = getDamageForAbility(player, DamageType.PHYSICAL, 1.5);
+        Location playerLocation = player.getLocation();
 
+        world.spawnParticle(Particle.SWEEP_ATTACK, playerLocation.add(0, 1, 0).add(playerLocation.getDirection().multiply(1.2)), 1);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, .5f, 1f);
         useEnergyAndCooldown(player, 10, .5);
 
         // rock
-        FallingBlock rock = world.spawnFallingBlock(player.getLocation().add(0, 1.5, 0), Bukkit.createBlockData(Material.STONE_BUTTON));
+        FallingBlock rock = world.spawnFallingBlock(playerLocation, Bukkit.createBlockData(Material.STONE_BUTTON));
 
         rock.setCancelDrop(true);
-        rock.setVelocity(player.getLocation().getDirection().multiply(2).add(new Vector(0, .3, 0)));
+        rock.setVelocity(playerLocation.getDirection().multiply(1.35).add(new Vector(0, .3, 0)));
 
-        // sweep particle
-        Location baseLocation = player.getEyeLocation().clone().subtract(0, .5, 0);
-        Vector forward = baseLocation.getDirection().normalize().multiply(1.2);
-        Location swing = baseLocation.clone().add(forward);
-
-        world.spawnParticle(Particle.SWEEP_ATTACK, swing, 1);
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, .5f, 2f);
-
-        // on hit effect
+        // rock effect
         new BukkitRunnable() {
             @Override
             public void run() {
                 Location rockLocation = rock.getLocation();
-                Collection<Entity> hitEntities = world.getNearbyEntities(rockLocation, 1, 1, 1);
-
-                for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, rockLocation, 1)) {
-                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, physicalDamage));
-                }
+                ArrayList<LivingEntity> hitEntities = getNearbyEntitiesExcludingPlayer(player, rockLocation, 1);
 
                 if (!hitEntities.isEmpty() || !rock.isValid() || rock.isDead()) {
+                    cancel();
                     world.spawnParticle(Particle.BLOCK, rockLocation, 100, 0, 0 ,0, 0, Bukkit.createBlockData(Material.STONE));
                     player.playSound(rockLocation, Sound.BLOCK_STONE_BREAK, 2f, 2f);
-                    cancel();
+                    rock.remove();
+
+                    for (LivingEntity livingEntity : hitEntities) {
+                        Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, physicalDamage));
+                    }
                 }
             }
         }.runTaskTimer(nmlAbilities, 0L, 1L);
@@ -79,7 +72,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
 
         // sweep particle
         Location baseLocation = player.getEyeLocation().clone().subtract(0, .5, 0);
-        Vector forward = baseLocation.getDirection().normalize().multiply(1.2);
+        Vector forward = baseLocation.getDirection().multiply(1.2);
         Location swing = baseLocation.clone().add(forward);
         world.spawnParticle(Particle.SWEEP_ATTACK, swing, 1);
 
@@ -197,7 +190,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
             @Override
             public void run() {
                 Location playerLocation = player.getLocation().clone().add(0, 1, 0);
-                Vector forward = playerLocation.getDirection().normalize().multiply(2.25);
+                Vector forward = playerLocation.getDirection().multiply(2.25);
                 Location center = playerLocation.clone().add(forward);
 
                 AbilityEffects.particleSphere(air, center, .75, 6);
@@ -237,7 +230,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                         // this makes it so the player still gets knock backed relative to how they fired the ball while respecting what their jump was
 
                         // the y is the opposite of the direction (that the ball will fly = player's looking)
-                        Vector oppDirection = player.getLocation().getDirection().normalize().multiply(-1);
+                        Vector oppDirection = player.getLocation().getDirection().multiply(-1);
                         Vector smallerJump = jump.clone().multiply(.15).add(oppDirection);
                         Vector recoil = new Vector(smallerJump.getX(), oppDirection.getY() * .4,  smallerJump.getZ());
 
@@ -259,9 +252,9 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                         // shooting air ball
                         new BukkitRunnable() {
                             int duration = 0;
-                            Vector airBallVelocity = player.getLocation().getDirection().normalize().multiply(.33);
+                            Vector airBallVelocity = player.getLocation().getDirection().multiply(.33);
                             Location playerLocation = player.getLocation().clone().add(0, 1, 0);
-                            Vector forward = playerLocation.getDirection().normalize().multiply(2.25);
+                            Vector forward = playerLocation.getDirection().multiply(2.25);
                             Location center = playerLocation.clone().add(forward);
 
                             @Override

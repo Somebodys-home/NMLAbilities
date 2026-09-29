@@ -16,6 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +90,10 @@ public class ExpertiseEffectsHelper {
         player.removeMetadata("invincible", nmlAbilities);
     }
 
+    public static Vector makeKnockbackVector(Location entityLocation, Location epicenter, double scale, double y) {
+        return entityLocation.toVector().subtract(epicenter.toVector()).normalize().multiply(scale).setY(y);
+    }
+    
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamagePercent, HashMap<DamageType, Double> elementalDamages) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);

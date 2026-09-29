@@ -1,5 +1,6 @@
-package io.github.NoOne.nMLAbilities;
+package io.github.NoOne.nMLAbilities.commands;
 
+import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.expertiseSystem.expertiseMenus.ExpertiseMainMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

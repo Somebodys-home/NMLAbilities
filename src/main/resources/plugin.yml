@@ -12,3 +12,6 @@ commands:
   expertise:
     description: Opens the menu to choose your expertise
     usage: /<command>
+  setRotation:
+    description: sets the player's yaw and pitch (for testing abilities)
+    usage: /<command>

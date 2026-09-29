@@ -90,7 +90,7 @@ public class AbilityEffects extends ExpertiseEffectsHelper {
 
     public static void verticalParticleCircleFacingEntity(Particle.DustOptions dustOptions, Entity entity, double radius, int particleCount, double distanceFromEntity) {
         Location center = entity.getLocation().add(0, 1.5, 0).add(entity.getLocation().getDirection().multiply(distanceFromEntity)); // blocks in front
-        Vector dirX = entity.getLocation().getDirection().normalize(); // Face forward vector
+        Vector dirX = entity.getLocation().getDirection(); // Face forward vector
         Vector dirY = new Vector(0, 1, 0); // Up vector
         Vector dirZ = dirX.clone().crossProduct(dirY).normalize(); // Right vector
 

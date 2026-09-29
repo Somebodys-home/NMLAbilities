@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class PrimordialAbilityItemCreator extends ExpertiseAbilityItemHelper {
@@ -25,8 +24,8 @@ public class PrimordialAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 new HashMap<>(){{
                     put(Expertise.PRIMORDIAL, 1);
                 }},
-                "Pick up and chuck a rock. It's not magical or anything, you just find a rock and throw it.", 
-                List.of(GROUNDED),
+                "You pick up and chuck a rock. It's not magical or anything, you just find a rock and throw it.",
+                null,
                 false,
                 "Single",
                 20,

@@ -91,7 +91,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
 
         // shoot arrow into the sky
         Location playerLocation = player.getLocation();
-        Vector direction = playerLocation.getDirection().normalize();
+        Vector direction = playerLocation.getDirection();
         double y = playerLocation.getY();
         Location start = playerLocation.clone().add(direction.clone().multiply(1.1));
         Location end = playerLocation.clone().add(direction.clone().multiply(2));

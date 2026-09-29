@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
@@ -37,8 +38,29 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
         );
     }
 
+    public static ItemStack shieldBash() {
+        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
+                "Shield Bash",
+                new HashMap<>(){{
+                    put(Expertise.SHIELD_HERO, 5);
+                }},
+                "Not to be confused with a shield punch, a shield bash is for ramming into people to knock them upside",
+                List.of(AbilityPrerequisite.GROUNDED),
+                false,
+                "Area",
+                7,
+                0,
+                7, 
+                10,
+                List.of(makeWeaponDamageString(100)),
+                List.of(makeInvincibleString(1)),
+                List.of(SHIELD),
+                skills
+        );
+    }
+
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(secondWind());
+        return List.of(secondWind(), shieldBash());
     }
 }

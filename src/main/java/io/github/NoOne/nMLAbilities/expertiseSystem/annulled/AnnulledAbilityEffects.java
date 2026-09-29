@@ -26,7 +26,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
         new BukkitRunnable() {
             int timer = 100;
             Location center = player.getLocation().clone().add(0, 1, 0);
-            Vector velocity = player.getLocation().getDirection().normalize().multiply(.15);
+            Vector velocity = player.getLocation().getDirection().multiply(.15);
 
             @Override
             public void run() {

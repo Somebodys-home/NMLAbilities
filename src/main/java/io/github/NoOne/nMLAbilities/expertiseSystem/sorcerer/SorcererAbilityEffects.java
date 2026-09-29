@@ -35,7 +35,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, .6f, 1f);
 
                 Random random = new Random();
-                Vector direction = player.getEyeLocation().getDirection().normalize();
+                Vector direction = player.getEyeLocation().getDirection();
 
                 Vector randomVec = new Vector(random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5);
                 if (randomVec.lengthSquared() < 1e-6) randomVec = new Vector(0.001, 0.001, 0.001);
@@ -71,7 +71,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                     end = rayTraceResult.getHitEntity().getLocation().add(0, 0.5, 0);
                 } else {
                     Location startLocation = player.getLocation().add(0, 1, 0);
-                    Vector forward = startLocation.getDirection().normalize().multiply(16); // max range
+                    Vector forward = startLocation.getDirection().multiply(16); // max range
                     end = startLocation.clone().add(forward);
                 }
 
@@ -191,7 +191,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
 
                 // flamethrower effect
                 Location playerLocation = player.getLocation().add(0, 1.65, 0);
-                Vector forward = playerLocation.getDirection().normalize();
+                Vector forward = playerLocation.getDirection();
                 Location baseLocation = playerLocation.clone().add(forward.clone().multiply(1.3));
                 Vector playerDirection = player.getLocation().getDirection();
                 Vector particleVector = playerDirection.clone();
@@ -212,7 +212,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                 }
 
                 // damage
-                Vector direction = player.getEyeLocation().getDirection().normalize();
+                Vector direction = player.getEyeLocation().getDirection();
 
                 for (double d = 0; d <= 12; d += .5) {
                     Location checkLoc = player.getEyeLocation().add(direction.clone().multiply(d));
@@ -228,7 +228,7 @@ public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
                     player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1f);
 
                     playerLocation = player.getLocation().add(0, 1.65, 0);
-                    forward = playerLocation.getDirection().normalize();
+                    forward = playerLocation.getDirection();
                     Location center = playerLocation.clone().add(forward.clone().multiply(1.5));
                     Vector right = forward.clone().crossProduct(new Vector(0, 1, 0)).normalize(); // orthogonal basis vector
                     Vector up = right.clone().crossProduct(forward).normalize(); // orthogonal basis vector

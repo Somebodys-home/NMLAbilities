@@ -28,7 +28,7 @@ public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
         new BukkitRunnable() {
             int ticks = 0;
             Location haloCenter = player.getLocation().clone().add(0, 1, 0);
-            Vector baseHaloVelocity = player.getLocation().getDirection().normalize().multiply(.4);
+            Vector baseHaloVelocity = player.getLocation().getDirection().multiply(.4);
             double haloRadius = 4;
             double minHaloRadius = .5;
             double shrinkTimeReduction = -1; // the multiplier on how soon the halo should start shrinking such that its the proper size when it hits the player's head

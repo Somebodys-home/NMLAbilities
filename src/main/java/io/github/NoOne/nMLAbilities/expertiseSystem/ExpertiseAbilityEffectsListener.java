@@ -57,6 +57,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
 
                 // Shield Hero abilities
                 case "Second Wind" -> ShieldHeroAbilityEffects.secondWind(player);
+                case "Shield Bash" -> ShieldHeroAbilityEffects.shieldBash(player);
 
                 // Marksman abilities
                 case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailStorm(player);
@@ -76,6 +77,8 @@ public class ExpertiseAbilityEffectsListener implements Listener {
 
                 // Annulled abilities
                 case "Black Hole" -> AnnulledAbilityEffects.blackHole(player);
+
+                default -> player.sendMessage("§c§nThis ability doesn't have an effect yet!");
             }
         }
     }

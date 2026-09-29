@@ -7,6 +7,8 @@ import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
+import io.github.NoOne.nMLAbilities.commands.ExpertiseCommand;
+import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
@@ -46,6 +48,7 @@ public class NMLAbilities extends JavaPlugin {
         cooldownManager.start();
 
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));
+        getCommand("setRotation").setExecutor(new SetRotationCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new SelectedAbilitiesListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
