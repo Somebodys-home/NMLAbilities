@@ -81,7 +81,6 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
             ItemDisplay shield = world.spawn(shieldLocation, ItemDisplay.class, entity -> {
                 entity.setItemStack(ItemStack.of(Material.SHIELD));
                 entity.setRotation(playerLocation.getYaw() + 180, 0);
-                entity.setTeleportDuration(0);
                 entity.setTransformationMatrix(
                         new Matrix4f()
                                 .scale(2)
@@ -111,7 +110,7 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
                 }
 
                 // particles
-                if (timer >= 12) {
+                if (timer >= 14) {
                     Particle.DustOptions white = new Particle.DustOptions(Color.WHITE, 1f);
                     double radians = -Math.toRadians(shieldLocation.getYaw());
                     Vector aLittleBehind = direction.clone().multiply(-.5).setY(0);
@@ -125,7 +124,6 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
                 }
 
                 // damage
-
                 for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, shieldLocation, 1.5, 1, 1.5)) {
                     if (!hitEntities.contains(livingEntity)) {
                         Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
@@ -142,5 +140,82 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
                 }
             }
         }.runTaskTimer(nmlAbilities, 5L, 1L);
+    }
+
+    public static void shieldPunch(Player player) {
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, 1.5);
+        World world = player.getWorld();
+
+        new BukkitRunnable() {
+            ArrayList<LivingEntity> hitEntities = new ArrayList<>(); // make sure we can only hit an entity once
+            int ticks = 0;
+            final int windUpTicks = 15;
+            Location playerLocation = player.getLocation();
+            Vector direction = playerLocation.getDirection();
+            Location shieldLocation = playerLocation.clone().add(0, 1.5, 0).add(direction.setY(0).normalize().multiply(.75));
+            ItemDisplay shield = world.spawn(shieldLocation, ItemDisplay.class, entity -> {
+                entity.setItemStack(ItemStack.of(Material.SHIELD));
+                entity.setTransformationMatrix(
+                        new Matrix4f()
+                                .scale(2)
+                                .translation(-.5f, 0, -.5f)
+                                .rotateZ((float) Math.toRadians(90))
+                                .rotateX((float) Math.toRadians(90))
+                );
+                entity.setTeleportDuration(1);
+                entity.setInterpolationDuration(20);
+                entity.setVisibleByDefault(false);
+            });
+
+            @Override
+            public void run() {
+                ticks++;
+
+                playerLocation = player.getLocation();
+                direction = playerLocation.getDirection();
+                direction.setY(0);
+                direction.normalize();
+                shieldLocation = playerLocation.clone().add(0, .5, 0).add(direction.clone().multiply(-.4));
+                shieldLocation.setRotation(playerLocation.getYaw() + 180, 0); // makes the shield upright and facing where the player looks
+
+                double radians = -Math.toRadians(playerLocation.getYaw());
+                Vector leftShoulder = new Vector(.5, 0, 0).rotateAroundY(radians);
+
+
+                if (ticks < windUpTicks) { // starting location / wind up
+                    shieldLocation.add(leftShoulder);
+                    shield.teleport(shieldLocation);
+
+                    if (!shield.isVisibleByDefault()) {
+                        shield.setVisibleByDefault(true);
+                    }
+                } else { // manual punch interpolation
+                    Location finalInitialPunchLocation = playerLocation.clone().add(0, 1.25, 0).add(direction.clone().multiply(.2));
+                    Location finalPunchLocation = finalInitialPunchLocation.clone().add(direction.clone().multiply(1.25));
+                    Matrix4f matrix = new Matrix4f()
+                            .scale(2)
+                            .translation(-.5f, 0, -.5f);
+
+                    finalPunchLocation.setRotation(playerLocation.getYaw() + 180, 180); // makes the shield upright and facing where the player looks
+                    shield.teleport(finalPunchLocation);
+                    shield.setTransformationMatrix(matrix);
+
+                    if (ticks == windUpTicks + 20) {
+                        cancel();
+                        shield.remove();
+                    }
+
+                    // damage
+                    for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, shieldLocation, 2, 1, 2)) {
+                        if (!hitEntities.contains(livingEntity)) {
+                            Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
+                            hitEntities.add(livingEntity);
+                            livingEntity.setVelocity(makeKnockbackVector(livingEntity.getLocation(), playerLocation, 1.2, .35));
+                            player.playSound(playerLocation, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 2f, 1f);
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(nmlAbilities, 0, 1);
     }
 }

@@ -58,6 +58,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
                 // Shield Hero abilities
                 case "Second Wind" -> ShieldHeroAbilityEffects.secondWind(player);
                 case "Shield Bash" -> ShieldHeroAbilityEffects.shieldBash(player);
+                case "Shield Punch" -> ShieldHeroAbilityEffects.shieldPunch(player);
 
                 // Marksman abilities
                 case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailStorm(player);

@@ -94,10 +94,10 @@ public class ExpertiseEffectsHelper {
         return entityLocation.toVector().subtract(epicenter.toVector()).normalize().multiply(scale).setY(y);
     }
     
-    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamagePercent, HashMap<DamageType, Double> elementalDamages) {
+    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, HashMap<DamageType, Double> elementalDamages) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
-        HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(playerDamages, weaponDamagePercent);
+        HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(playerDamages, weaponDamageMultiplier);
 
         for (Map.Entry<DamageType, Double> entry : elementalDamages.entrySet()) { // elementalDamages being every ability's damage type and multiplier for that type
             DamageType damageType = entry.getKey();
@@ -110,10 +110,10 @@ public class ExpertiseEffectsHelper {
         return totalDamage;
     }
 
-    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamagePercent) {
+    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
 
-        return DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamagePercent);
+        return DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamageMultiplier);
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, HashMap<DamageType, Double> elementalDamages) {
@@ -132,12 +132,12 @@ public class ExpertiseEffectsHelper {
         return totalDamage;
     }
 
-    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamagePercent, DamageType damageType, double multiplier) {
+    public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, DamageType damageType, double multiplier) {
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
 
         return new HashMap<>() {{
-            putAll(DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamagePercent));
+            putAll(DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamageMultiplier));
 
             if (playerDamages.containsKey(damageType)) {
                 put(damageType, playerDamages.get(damageType) * multiplier);

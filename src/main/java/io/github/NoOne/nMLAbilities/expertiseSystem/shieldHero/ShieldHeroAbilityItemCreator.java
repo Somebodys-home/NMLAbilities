@@ -29,7 +29,7 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 "Self",
                 0,
                 0,
-                20,
+                30,
                 10,
                 null,
                 List.of("§fRestore your §nGuard§r§f ⛨"),
@@ -50,7 +50,7 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 "Area",
                 7,
                 0,
-                7, 
+                7,
                 10,
                 List.of(makeWeaponDamageString(100)),
                 List.of(makeInvincibleString(1)),
@@ -59,8 +59,29 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
         );
     }
 
+    public static ItemStack shieldPunch() {
+        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
+                "Shield Punch",
+                new HashMap<>(){{
+                    put(Expertise.SHIELD_HERO, 5);
+                }},
+                "Not to be confused with a shield bash, a shield punch is for clocking the everloving &kshit out of somebody",
+                null,
+                false,
+                "Single",
+                3,
+                0,
+                1, // todo: 10
+                15,
+                List.of(makeWeaponDamageString(150)),
+                null,
+                List.of(SHIELD),
+                skills
+        );
+    }
+
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(secondWind(), shieldBash());
+        return List.of(secondWind(), shieldBash(), shieldPunch());
     }
 }

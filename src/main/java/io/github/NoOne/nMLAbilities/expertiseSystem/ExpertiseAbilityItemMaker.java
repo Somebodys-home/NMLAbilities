@@ -69,7 +69,7 @@ public class ExpertiseAbilityItemMaker {
         lore.add("");
 
         // description
-        lore.addAll(linebreak(description, 36));
+        lore.addAll(linebreak(description));
         lore.add("");
 
         // prerequisites
@@ -199,28 +199,41 @@ public class ExpertiseAbilityItemMaker {
         return expertiseItem;
     }
 
-    private static List<String> linebreak(String string, int size) {
-        List<String> breaks = new ArrayList<>();
-        int i = 0;
+    private static ArrayList<String> linebreak(String string) {
+        ArrayList<String> breaks = new ArrayList<>();
+        int startingIndex = 0;
 
-        while (i < string.length()) {
-            int end = Math.min(string.length(), i + size);
+        while (startingIndex < string.length()) {
+            // the ending index of the current string break is 36 characters or the length of the string
+            int end = Math.min(string.length(), startingIndex + 36);
 
+            // if there's more to the string, and it doesn't end on a space, move the end to the previous word
             if (end < string.length() && string.charAt(end) != ' ') {
                 int lastSpace = string.lastIndexOf(' ', end);
-                if (lastSpace > i) {
-                    end = lastSpace; // move break point to last space
+
+                if (lastSpace > startingIndex) {
+                    end = lastSpace;
                 }
             }
 
-            String chunk = string.substring(i, end).trim();
-            if (!chunk.isEmpty()) {
-                breaks.add("§7" + chunk);
+            // actually getting that chunk of the string and making it gray
+            String chunk = "§7" + string.substring(startingIndex, end).trim();
+
+            // censoring swear words in abilities
+            while (chunk.contains("&k")) {
+                int censorIndex = chunk.indexOf("&k");
+                String tempChunk = chunk.substring(censorIndex);
+                String censorWord = tempChunk.substring(0, tempChunk.indexOf(" ")); // the idea is the censored word would be "&kblah ", for example
+                String censoredWord = censorWord.replace("&", "§") + "§r§7";
+
+                chunk = chunk.replace(censorWord, censoredWord);
             }
 
-            i = end;
-            while (i < string.length() && string.charAt(i) == ' ') {
-                i++;
+            breaks.add(chunk);
+            startingIndex = end;
+
+            while (startingIndex < string.length() && string.charAt(startingIndex) == ' ') {
+                startingIndex++;
             }
         }
 
