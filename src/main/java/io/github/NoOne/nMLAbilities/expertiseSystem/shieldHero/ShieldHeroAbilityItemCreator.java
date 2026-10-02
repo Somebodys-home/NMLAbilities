@@ -51,7 +51,7 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 7,
                 0,
                 7,
-                10,
+                15,
                 List.of(makeWeaponDamageString(100)),
                 List.of(makeInvincibleString(1)),
                 List.of(SHIELD),
@@ -71,9 +71,9 @@ public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 "Single",
                 3,
                 0,
-                1, // todo: 10
-                15,
-                List.of(makeWeaponDamageString(150)),
+                10,
+                20,
+                List.of(makeWeaponDamageString(200)),
                 null,
                 List.of(SHIELD),
                 skills
