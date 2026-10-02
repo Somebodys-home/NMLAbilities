@@ -3,8 +3,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
@@ -16,7 +15,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
+public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
 
     public static void dropKick(Player player) {
         HashMap<DamageType, Double> physicalDamage = getDamageForAbility(player, DamageType.PHYSICAL, 1);
@@ -76,7 +75,7 @@ public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
                         player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 2f, 1f);
 
                         // hit effect
-                        AbilityEffects.verticalParticleCircleFacingEntity(
+                        verticalParticleCircleFacingEntity(
                                 new Particle.DustOptions(Color.fromRGB(255, 255, 255), 1.0F),
                                 player,
                                 1,
@@ -134,7 +133,7 @@ public class MartialArtistAbilityEffects extends ExpertiseEffectsHelper {
 
                                 for (Entity hitEntity : hitEntities) { // for every hit entity
                                     hitEntity.teleport(freezeLocations.get(hitEntity)); // freeze them in place
-                                    AbilityEffects.verticalParticleCircleBetweenEntities( // make the hit effect
+                                    verticalParticleCircleBetweenEntities( // make the hit effect
                                             new Particle.DustOptions(Color.fromRGB(230, 185, 9), 1.0F),
                                             player,
                                             hitEntity,

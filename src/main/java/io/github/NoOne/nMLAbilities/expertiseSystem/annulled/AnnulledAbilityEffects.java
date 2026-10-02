@@ -2,8 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
@@ -14,7 +13,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
+public class AnnulledAbilityEffects extends AbilityEffectsHelper {
     public static void blackHole(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, DamageType.NECROTIC, 5);
         Particle.DustOptions blackHole = new Particle.DustOptions(Color.fromRGB(0, 0, 0), 1F);
@@ -33,7 +32,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
                 timer--;
 
                 center.add(velocity);
-                AbilityEffects.particleSphere(blackHole, center, .5, 6); // tiny black hole
+                particleSphere(blackHole, center, .5, 6); // tiny black hole
 
                 // big black hole triggers when times up, or it hits a block or entity
                 if (timer == 0 || !center.getBlock().isPassable() || !getNearbyEntitiesExcludingPlayer(player, center, .5, .5, .5).isEmpty()) {
@@ -67,7 +66,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
 
                             // black hole particles
                             particleCircles = blackHoleRadius + 10;
-                            AbilityEffects.particleSphere(Particle.SQUID_INK, center, blackHoleRadius, particleCircles);
+                            particleSphere(Particle.SQUID_INK, center, blackHoleRadius, particleCircles);
 
                             // pull
                             for (LivingEntity entity : getNearbyEntitiesExcludingPlayer(player, center, pullRadius)) {
@@ -83,7 +82,7 @@ public class AnnulledAbilityEffects extends ExpertiseEffectsHelper {
                                 player.stopSound(Sound.ITEM_ELYTRA_FLYING);
                                 player.playSound(player, Sound.ENTITY_WITHER_SPAWN, 2f, 1f);
                                 player.playSound(player, Sound.ENTITY_WITHER_DEATH, .5f, 1f);
-                                AbilityEffects.expandingParticleSphere(Particle.SQUID_INK, center, 2, particleCircles * 2, 1.2);
+                                expandingParticleSphere(Particle.SQUID_INK, center, 2, particleCircles * 2, 1.2);
 
                                 // explosion particles
                                 new BukkitRunnable() {

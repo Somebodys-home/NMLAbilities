@@ -2,8 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.LivingEntity;
@@ -16,7 +15,7 @@ import org.joml.Matrix4f;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
+public class ShieldHeroAbilityEffects extends AbilityEffectsHelper {
     public static void secondWind(Player player) {
         int chargeUpTime = 30;
 
@@ -36,7 +35,7 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
                 int particleCount = 75;
                 Location center = player.getLocation().clone().add(0, 0.15, 0);
 
-                AbilityEffects.horizontalParticleCircle(Particle.END_ROD, center, radius, particleCount);
+                horizontalParticleCircle(Particle.END_ROD, center, radius, particleCount);
 
                 if (timer % 10 == 0 && timer != chargeUpTime) {
                     player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
@@ -44,7 +43,7 @@ public class ShieldHeroAbilityEffects extends ExpertiseEffectsHelper {
 
                 // explosion
                 if (timer == chargeUpTime) {
-                    AbilityEffects.expandingParticleSphere(Particle.END_ROD, player.getLocation(), 4, 30, .3);
+                    expandingParticleSphere(Particle.END_ROD, player.getLocation(), 4, 30, .3);
                     player.playSound(player, Sound.ITEM_TOTEM_USE, 1f, 1f);
                     guardingSystem.fullyRegenerateGuard(player);
                     makeMovable(player);

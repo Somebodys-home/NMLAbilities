@@ -2,8 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,7 +15,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
-public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
+public class HallowedAbilityEffects extends AbilityEffectsHelper {
     public static void halo(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, .15, new HashMap<>(){{put(DamageType.RADIANT, .35);}});
 
@@ -45,8 +44,8 @@ public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
                 Location endLocation = player.getLocation().clone().add(0, 2, 0); // halo ends on the player's had
 
                 // halo
-                AbilityEffects.horizontalParticleCircle(Particle.END_ROD, haloCenter, haloRadius, 100);
-                AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, haloCenter, haloRadius - .1, 120);
+                horizontalParticleCircle(Particle.END_ROD, haloCenter, haloRadius, 100);
+                horizontalParticleCircle(Particle.ELECTRIC_SPARK, haloCenter, haloRadius - .1, 120);
 
                 // damage
                 for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, haloCenter, haloRadius)) {
@@ -93,10 +92,10 @@ public class HallowedAbilityEffects extends ExpertiseEffectsHelper {
                                 Location head = player.getLocation().add(0, 2, 0);
 
                                 if (timer != 0) {
-                                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, head, minHaloRadius, 20);
+                                    horizontalParticleCircle(Particle.ELECTRIC_SPARK, head, minHaloRadius, 20);
                                 } else { // burst
                                     player.playSound(player, Sound.BLOCK_AMETHYST_BLOCK_RESONATE, 1f, 1f);
-                                    AbilityEffects.expandingHorizontalParticleCircle(Particle.END_ROD, head, minHaloRadius, 100, .3);
+                                    expandingHorizontalParticleCircle(Particle.END_ROD, head, minHaloRadius, 100, .3);
                                     cancel();
                                 }
                             }

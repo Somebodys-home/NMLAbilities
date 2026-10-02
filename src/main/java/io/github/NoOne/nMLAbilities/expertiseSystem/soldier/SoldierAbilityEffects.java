@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
-public class SoldierAbilityEffects extends ExpertiseEffectsHelper {
+public class SoldierAbilityEffects extends AbilityEffectsHelper {
     public static void slash(Player player) {
         HashMap<DamageType, Double> damageStats = getDamageForAbility(player, 1.2);
         Location location = player.getLocation();

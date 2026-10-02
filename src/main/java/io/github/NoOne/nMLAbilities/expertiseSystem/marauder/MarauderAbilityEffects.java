@@ -2,8 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -15,7 +14,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MarauderAbilityEffects extends ExpertiseEffectsHelper {
+public class MarauderAbilityEffects extends AbilityEffectsHelper {
     public static void bladeTornado(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, .25);
 
@@ -43,9 +42,9 @@ public class MarauderAbilityEffects extends ExpertiseEffectsHelper {
                 if (tornadoTicks % 3 == 0) {
                     player.playSound(playerLocation, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, .5f);
                 } else if (tornadoTicks % 4 == 0) {
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, .5, 0)), 1, 4);
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 1.25, 0)), 1.5, 6);
-                    AbilityEffects.horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 2, 0)), 2, 8);
+                    horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, .5, 0)), 1, 4);
+                    horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 1.25, 0)), 1.5, 6);
+                    horizontalParticleCircle(Particle.SWEEP_ATTACK, playerLocation.clone().add(new Vector(0, 2, 0)), 2, 8);
                 } else if (tornadoTicks % 5 == 0) {
                     for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, playerLocation, 2.25, 2, 2.25)) {
                         Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damage));
@@ -98,12 +97,12 @@ public class MarauderAbilityEffects extends ExpertiseEffectsHelper {
 
                             if (stompCount >= heavyStompStart) {
                                 explosion = Particle.EXPLOSION_EMITTER;
-                                AbilityEffects.expandingHorizontalParticleCircle(Particle.FLAME, particleLocation, 1.5, 40, .3);
+                                expandingHorizontalParticleCircle(Particle.FLAME, particleLocation, 1.5, 40, .3);
                                 player.playSound(player.getLocation(), Sound.ENTITY_WITHER_HURT, 1f, 1f);
                                 radius = 3;
                             } else {
                                 explosion = Particle.EXPLOSION;
-                                AbilityEffects.expandingHorizontalParticleCircle(Particle.FLAME, particleLocation, 1, 30, .3);
+                                expandingHorizontalParticleCircle(Particle.FLAME, particleLocation, 1, 30, .3);
                                 radius = 2;
                             }
 

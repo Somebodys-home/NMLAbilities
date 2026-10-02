@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
-public class CavalierAbilityEffects extends ExpertiseEffectsHelper {
+public class CavalierAbilityEffects extends AbilityEffectsHelper {
 
     public static void seismicSlam(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, 2.5);

@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AssassinAbilityEffects extends ExpertiseEffectsHelper {
+public class AssassinAbilityEffects extends AbilityEffectsHelper {
     public static void slashAndDash(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, 1.5);
         World world = player.getWorld();

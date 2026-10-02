@@ -1,8 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffect;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
@@ -19,7 +18,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
+public class MarksmanAbilityEffects extends AbilityEffectsHelper {
     public static void steadyAim(Player player, boolean toggle) {
         BukkitRunnable steadyAimRunnable = new BukkitRunnable() {
             double angle = 0;
@@ -34,14 +33,14 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
                     double z = Math.sin(Math.toRadians(angle));
                     double perpZ = Math.sin(Math.toRadians(angle + 90));
 
-                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18);
-                    AbilityEffects.particleLine(
+                    horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .75, 18);
+                    particleLine(
                             Particle.ELECTRIC_SPARK,
                             playerLocation.clone().add(x, 0, z),
                             playerLocation.clone().add(-x, 0, -z),
                             9
                     );
-                    AbilityEffects.particleLine(
+                    particleLine(
                             Particle.ELECTRIC_SPARK,
                             playerLocation.clone().add(perpX, 0, perpZ),
                             playerLocation.clone().add(-perpX, 0, -perpZ),
@@ -53,7 +52,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
                         angle = 0;
                     }
                 } else { // show lesser effect when moving
-                    AbilityEffects.horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
+                    horizontalParticleCircle(Particle.ELECTRIC_SPARK, playerLocation, .25, 5);
                 }
             }
         };
@@ -98,7 +97,7 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
 
         start.setY(y);
         end.setY(y + 30);
-        AbilityEffects.particleLine(Particle.COMPOSTER, start, end, 150);
+        particleLine(Particle.COMPOSTER, start, end, 150);
         player.playSound(player, Sound.ITEM_CROSSBOW_SHOOT, 2f, 1f);
 
         // reticule
@@ -134,15 +133,15 @@ public class MarksmanAbilityEffects extends ExpertiseEffectsHelper {
         BukkitRunnable reticule = new BukkitRunnable() {
             @Override
             public void run() {
-                AbilityEffects.horizontalParticleCircle(Particle.COMPOSTER, finalReticuleCenterLocation1.clone().add(0, -.2, 0), radius, 75);
-                AbilityEffects.horizontalParticleCircle(Particle.COMPOSTER, finalReticuleCenterLocation1.clone().add(0, -.2, 0), radius * .75, 50);
-                AbilityEffects.particleLine(
+                horizontalParticleCircle(Particle.COMPOSTER, finalReticuleCenterLocation1.clone().add(0, -.2, 0), radius, 75);
+                horizontalParticleCircle(Particle.COMPOSTER, finalReticuleCenterLocation1.clone().add(0, -.2, 0), radius * .75, 50);
+                particleLine(
                         Particle.COMPOSTER,
                         finalReticuleCenterLocation1.clone().add(8.5, 0, 0),
                         finalReticuleCenterLocation1.clone().add(-8.5, 0, 0),
                         30
                 );
-                AbilityEffects.particleLine(
+                particleLine(
                         Particle.COMPOSTER,
                         finalReticuleCenterLocation1.clone().add(0, 0, 8.5),
                         finalReticuleCenterLocation1.clone().add(0, 0, -8.5),

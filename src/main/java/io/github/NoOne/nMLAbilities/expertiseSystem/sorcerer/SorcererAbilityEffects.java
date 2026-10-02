@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.Random;
 
-public class SorcererAbilityEffects extends ExpertiseEffectsHelper {
+public class SorcererAbilityEffects extends AbilityEffectsHelper {
     public static void magicMissileEX(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, .5);
 

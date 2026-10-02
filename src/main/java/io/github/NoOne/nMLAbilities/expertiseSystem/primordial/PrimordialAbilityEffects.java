@@ -2,8 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.primordial;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffects;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseEffectsHelper;
+import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -15,7 +14,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
+public class PrimordialAbilityEffects extends AbilityEffectsHelper {
 
     public static void chuckRock(Player player) {
         World world = player.getWorld();
@@ -193,7 +192,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                 Vector forward = playerLocation.getDirection().multiply(2.25);
                 Location center = playerLocation.clone().add(forward);
 
-                AbilityEffects.particleSphere(air, center, .75, 6);
+                particleSphere(air, center, .75, 6);
             }
         };
 
@@ -261,7 +260,7 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                             public void run() {
                                 duration++;
                                 center.add(airBallVelocity);
-                                AbilityEffects.particleSphere(air, center, .75, 6);
+                                particleSphere(air, center, .75, 6);
 
                                 // triggering air ball
                                 Collection<Entity> triggeringEntities = world.getNearbyEntities(center, 1, 1, 1);
@@ -275,8 +274,8 @@ public class PrimordialAbilityEffects extends ExpertiseEffectsHelper {
                                     cancel();
                                     world.playSound(center, Sound.ENTITY_BREEZE_WIND_BURST, 2f, 1f);
                                     world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, .5f, 1f);
-                                    AbilityEffects.expandingParticleSphere(Particle.SNOWFLAKE, center, radius, particleCircles, .3);
-                                    AbilityEffects.particleSphere(air, center, radius, particleCircles);
+                                    expandingParticleSphere(Particle.SNOWFLAKE, center, radius, particleCircles, .3);
+                                    particleSphere(air, center, radius, particleCircles);
 
                                     // damage
                                     for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, center, radius)) {
