@@ -7,7 +7,6 @@ import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,7 +22,6 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class ExpertiseAbilityItemMaker {
     private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
-    private static NamespacedKey anyWeaponKey = new NamespacedKey(nmlAbilities, "any_weapon");
 
     public static ItemStack emptyExpertiseAbilityItem() {
         ItemStack expertise = ItemCreator.createItem(
@@ -47,17 +45,22 @@ public class ExpertiseAbilityItemMaker {
                                                      boolean toggleable, String targeting, int range, double duration, int cooldown, int cost,
                                                      List<String> damage, List<String> effects, List<ItemType> weapons, Skills playerSkills) {
 
+        boolean meetsRequirements = AbilityItemManager.meetsExpertiseRequirements(playerSkills, expertiseRequirements);
         Expertise firstExpertiseRequirement = expertiseRequirements.entrySet().iterator().next().getKey();
-        Material abilityMaterial = getExpertiseAbilityMaterial(firstExpertiseRequirement);
-        String color = getExpertiseColor(firstExpertiseRequirement);
-        List<String> lore = new ArrayList<>();
+        String color = Expertise.toChatColor(firstExpertiseRequirement);
+        ArrayList<String> lore = new ArrayList<>();
+        Material abilityMaterial = Expertise.toMaterial(firstExpertiseRequirement);
+
+        if (!meetsRequirements) {
+            abilityMaterial = Material.BARRIER;
+        }
 
         // skill requirements
         for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
-            String string = Expertise.getString(entry.getKey());
+            String string = Expertise.toString(entry.getKey());
             String requirementString = "§8Lv. " + entry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
 
-            if (AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue())) {
+            if (AbilityItemManager.meetsExpertiseRequirements(playerSkills, expertiseRequirements)) {
                 requirementString += " §a✔";
             } else {
                 requirementString += " §c✖";
@@ -77,9 +80,7 @@ public class ExpertiseAbilityItemMaker {
             lore.add("§c§nPrerequisites:");
 
             for (AbilityPrerequisite abilityPrerequisite : prerequisites) {
-                switch (abilityPrerequisite) {
-                    case GROUNDED -> lore.add("§c- Grounded");
-                }
+                lore.add("§c- " + AbilityPrerequisite.toString(abilityPrerequisite));
             }
 
             lore.add("");
@@ -121,6 +122,7 @@ public class ExpertiseAbilityItemMaker {
         }
 
         lore.add("§b§l-----------Weapons----------");
+
         if (weapons == null) {
             lore.add("§e- (None)");
         } else {
@@ -143,59 +145,19 @@ public class ExpertiseAbilityItemMaker {
 
         ItemStack expertiseItem = ItemCreator.createItem(
                 abilityMaterial,
-                1,
                 color + "§l" + name,
                 lore
         );
 
-        ItemMeta meta = expertiseItem.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        expertiseItem.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        AbilityItemManager.setExpertiseKeys(expertiseItem, cooldown, cost, toggleable);
+        AbilityItemManager.setExpertiseRequirements(expertiseItem, expertiseRequirements);
+        AbilityItemManager.setWeaponsForAbility(expertiseItem, weapons);
 
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-        /// setting keys
-        pdc.set(AbilityItemManager.getAbilityKey(), PersistentDataType.INTEGER, 1); // ability key
-        pdc.set(AbilityItemManager.getExpertiseKey(), PersistentDataType.INTEGER, 1); // expertise ability key
-        pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown); // cooldownSystem key
-        pdc.set(AbilityItemManager.getEnergyKey(), PersistentDataType.INTEGER, cost); // energy cost key
-
-        // toggleable ability keys
-        if (toggleable) {
-            pdc.set(AbilityItemManager.getToggleKey(), PersistentDataType.BOOLEAN, false);
-            pdc.set(AbilityItemManager.getOriginalItemKey(), PersistentDataType.STRING, expertiseItem.getType().toString());
-        }
-
-        // usable weapons keys
-        if (weapons != null) {
-            if (weapons.isEmpty()) {
-                pdc.set(anyWeaponKey, PersistentDataType.BOOLEAN, true);
-            } else {
-                for (ItemType weapon : weapons) {
-                    pdc.set(new NamespacedKey(nmlAbilities, ItemType.toString(weapon)), PersistentDataType.BOOLEAN, true);
-                }
-            }
-        }
-
-        // expertise requirements keys
-        for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
-            if (!AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue())) {
-                pdc.set(AbilityItemManager.getUnusableKey(), PersistentDataType.BOOLEAN, true);
-                expertiseItem.setType(Material.BARRIER); // also set the type here if you can't use the ability cuz idk where else to put it
-            }
-
-            pdc.set(Expertise.makeExpertiseKey(nmlAbilities, entry.getKey()), PersistentDataType.INTEGER, entry.getValue());
-        }
-
-        // ability prerequisite keys
         if (prerequisites != null) {
-            for (AbilityPrerequisite abilityPrerequisite : prerequisites) {
-                switch (abilityPrerequisite) {
-                    case GROUNDED -> pdc.set(AbilityItemManager.getGroundedKey(), PersistentDataType.BOOLEAN, true);
-                }
-            }
+            AbilityItemManager.setPrerequisites(expertiseItem, prerequisites);
         }
 
-        expertiseItem.setItemMeta(meta);
         return expertiseItem;
     }
 
@@ -238,40 +200,5 @@ public class ExpertiseAbilityItemMaker {
         }
 
         return breaks;
-    }
-
-    private static Material getExpertiseAbilityMaterial(Expertise expertise) {
-        return switch (expertise) {
-            case SOLDIER -> Material.DIAMOND_SWORD;
-            case ASSASSIN -> Material.BLACK_WOOL;
-            case MARAUDER -> Material.GOLDEN_AXE;
-            case CAVALIER -> Material.MACE;
-            case MARTIAL_ARTIST -> Material.RED_GLAZED_TERRACOTTA;
-            case SHIELD_HERO -> Material.SHIELD;
-            case MARKSMAN -> Material.TARGET;
-            case SORCERER -> Material.BOOK;
-            case PRIMORDIAL -> Material.OAK_SAPLING;
-            case HALLOWED -> Material.OXEYE_DAISY;
-            case ANNULLED -> Material.CRYING_OBSIDIAN;
-        };
-    }
-
-    private static String getExpertiseColor(Expertise expertise) {
-        return switch (expertise) {
-            case SOLDIER -> "§c";
-            case ASSASSIN -> "§8";
-            case MARAUDER, MARTIAL_ARTIST -> "§4";
-            case CAVALIER -> "§9";
-            case SHIELD_HERO -> "§3";
-            case MARKSMAN -> "§a";
-            case SORCERER -> "§6";
-            case PRIMORDIAL -> "§2";
-            case HALLOWED -> "§f";
-            case ANNULLED -> "§5";
-        };
-    }
-
-    public static NamespacedKey getAnyWeaponKey() {
-        return anyWeaponKey;
     }
 }

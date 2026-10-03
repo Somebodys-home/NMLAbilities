@@ -23,7 +23,7 @@ public class MarauderAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 new HashMap<>(){{
                     put(Expertise.MARAUDER, 10);
                 }},
-                "(Waiting for annin to come up with a description)",
+                "DO THE EARTHQUAKE!!!",
                 null,
                 false,
                 "Area",

@@ -1,5 +1,18 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
 public enum AbilityPrerequisite {
-    GROUNDED
+    GROUNDED;
+
+    public static String toString(AbilityPrerequisite abilityPrerequisite) {
+        return switch (abilityPrerequisite) {
+            case GROUNDED -> "Grounded";
+        };
+    }
+
+    public static AbilityPrerequisite fromString(String string) {
+        return switch (string) {
+            case "Grounded" -> GROUNDED;
+            default -> null;
+        };
+    }
 }

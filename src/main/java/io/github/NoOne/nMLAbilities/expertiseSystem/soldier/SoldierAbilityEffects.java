@@ -11,12 +11,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SoldierAbilityEffects extends AbilityEffectsHelper {
     public static void slash(Player player) {
         HashMap<DamageType, Double> damageStats = getDamageForAbility(player, 1.2);
         Location location = player.getLocation();
+        ArrayList<LivingEntity> hitEntities = new ArrayList<>();
 
         useEnergyAndCooldown(player, 15, 1);
         player.playSound(location, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
@@ -29,8 +31,11 @@ public class SoldierAbilityEffects extends AbilityEffectsHelper {
 
             player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLocation, 1);
 
-            for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, particleLocation, 1.5)) {
-                Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
+            for (LivingEntity livingEntity : getNearbyEntitiesExcludingPlayer(player, particleLocation, 1)) {
+                if (!hitEntities.contains(livingEntity)) {
+                    Bukkit.getPluginManager().callEvent(new CustomDamageEvent(livingEntity, player, damageStats));
+                    hitEntities.add(livingEntity);
+                }
             }
         }
     }

@@ -3,6 +3,8 @@ package io.github.NoOne.nMLAbilities.abilitySystem;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLItems.ItemCreator;
+import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,26 +16,26 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+
+import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class AbilityItemManager {
     private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
     private static NamespacedKey abilityKey = new NamespacedKey(nmlAbilities, "ability");
-    private static NamespacedKey expertiseKey = new NamespacedKey(nmlAbilities, "expertise");
-    private static NamespacedKey cooldownKey = new NamespacedKey(nmlAbilities, "cooldownSystem");
+    private static NamespacedKey expertiseRequirementsKey = new NamespacedKey(nmlAbilities, "expertiseRequirements");
+    private static NamespacedKey cooldownKey = new NamespacedKey(nmlAbilities, "cooldown");
     private static NamespacedKey toggleKey = new NamespacedKey(nmlAbilities, "toggle");
     private static NamespacedKey originalItemKey = new NamespacedKey(nmlAbilities, "originalItem");
     private static NamespacedKey energyKey = new NamespacedKey(nmlAbilities, "energy");
-    private static NamespacedKey  unusableKey = new NamespacedKey(nmlAbilities, "unusable");
-
-    // prerequisite keys
-    private static NamespacedKey groundedKey = new NamespacedKey(nmlAbilities, "grounded");
+    private static NamespacedKey prerequisitesKey = new NamespacedKey(nmlAbilities, "prerequisites");
+    private static NamespacedKey weaponsKey = new NamespacedKey(nmlAbilities, "weapons");
 
     public static ItemStack emptyStyleAbilityItem() {
-        ItemStack emptyStyle =  ItemCreator.createItem(
+        ItemStack emptyStyle = ItemCreator.createItem(
                 Material.LIGHT_BLUE_DYE,
-                1,
                 "§bEmpty Style Ability",
                 List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
         );
@@ -46,12 +48,7 @@ public class AbilityItemManager {
     }
 
     public static ItemStack cooldownItem() {
-        ItemStack cooldown  =  ItemCreator.createItem(
-                Material.GRAY_DYE,
-                1,
-                "§7This ability is on cooldown!",
-                List.of()
-        );
+        ItemStack cooldown = ItemCreator.createItem(Material.GRAY_DYE, "§7This ability is on cooldown!");
         ItemMeta itemMeta = cooldown.getItemMeta();
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
@@ -60,44 +57,46 @@ public class AbilityItemManager {
         return cooldown;
     }
 
-    public static boolean meetsExpertiseRequirement(Skills skills, Expertise expertise, int levelRequirement) {
-        int playerSkillLevel = 0;
+    public static void setExpertiseKeys(ItemStack ability, int cooldown, int energyCost, boolean toggleable) {
+        ItemMeta itemMeta = ability.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
-        switch (expertise) {
-            case SOLDIER -> playerSkillLevel = skills.getSoldierLevel();
-            case ASSASSIN -> playerSkillLevel = skills.getAssassinLevel();
-            case MARAUDER -> playerSkillLevel = skills.getMarauderLevel();
-            case CAVALIER -> playerSkillLevel = skills.getCavalierLevel();
-            case MARTIAL_ARTIST -> playerSkillLevel = skills.getMartialArtistLevel();
-            case SHIELD_HERO -> playerSkillLevel = skills.getShieldHeroLevel();
-            case MARKSMAN -> playerSkillLevel = skills.getMarksmanLevel();
-            case SORCERER -> playerSkillLevel = skills.getSorcererLevel();
-            case PRIMORDIAL -> playerSkillLevel = skills.getPrimordialLevel();
-            case HALLOWED -> playerSkillLevel = skills.getHallowedLevel();
-            case ANNULLED -> playerSkillLevel = skills.getAnnulledLevel();
+        pdc.set(AbilityItemManager.getAbilityKey(), PersistentDataType.BOOLEAN, true);
+        pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown);
+        pdc.set(AbilityItemManager.getEnergyKey(), PersistentDataType.INTEGER, energyCost);
+
+        if (toggleable) {
+            pdc.set(AbilityItemManager.getToggleKey(), PersistentDataType.BOOLEAN, false);
+            pdc.set(AbilityItemManager.getOriginalItemKey(), PersistentDataType.STRING, ability.getType().toString());
         }
 
-        return playerSkillLevel >= levelRequirement;
+        ability.setItemMeta(itemMeta);
     }
 
-    public static boolean meetsPrerequisites(Player player, ItemStack item) {
-        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
-        ArrayList<NamespacedKey> prerequisiteKeys = new ArrayList<>();
-        boolean met = false;
+    public static void setExpertiseRequirements(ItemStack ability, Map<Expertise, Integer> requirements) {
+        ItemMeta itemMeta = ability.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        String expertiseString = "";
 
-        if (persistentDataContainer.has(groundedKey)) {
-            prerequisiteKeys.add(groundedKey);
+        for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
+            expertiseString += Expertise.toString(entry.getKey()) + "-" + entry.getValue() + "/";
         }
 
-        for (NamespacedKey namespacedKey : prerequisiteKeys) {
-            if (namespacedKey == groundedKey) {
-                met = player.isOnGround();
-            }
+        pdc.set(expertiseRequirementsKey, PersistentDataType.STRING, expertiseString);
+        ability.setItemMeta(itemMeta);
+    }
 
-            if (!met) break;
+    public static void setPrerequisites(ItemStack ability, List<AbilityPrerequisite> prerequisites) {
+        ItemMeta itemMeta = ability.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        String prerequisitesString = "";
+
+        for (AbilityPrerequisite abilityPrerequisite : prerequisites) {
+            prerequisitesString += AbilityPrerequisite.toString(abilityPrerequisite) + "/";
         }
 
-        return met;
+        pdc.set(prerequisitesKey, PersistentDataType.STRING, prerequisitesString);
+        ability.setItemMeta(itemMeta);
     }
 
     public static void setToggleState(ItemStack ability, boolean toggle) {
@@ -117,6 +116,136 @@ public class AbilityItemManager {
 
             ability.setItemMeta(meta);
         }
+    }
+
+    public static void setWeaponsForAbility(ItemStack ability, List<ItemType> weapons) {
+        ItemMeta itemMeta = ability.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        String weaponsString = "";
+
+        if (weapons == null) {
+            weaponsString = "none";
+        } else {
+            if (weapons.isEmpty()) {
+                weaponsString = "any";
+            } else {
+                for (ItemType itemType : weapons) {
+                    weaponsString += ItemType.toString(itemType) + "/";
+                }
+            }
+        }
+
+        pdc.set(weaponsKey, PersistentDataType.STRING, weaponsString);
+        ability.setItemMeta(itemMeta);
+    }
+
+    public static boolean meetsExpertiseRequirements(Skills skills, Map<Expertise, Integer> requirements) {
+        for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
+            int playerSkillLevel = switch (entry.getKey()) {
+                case SOLDIER -> skills.getSoldierLevel();
+                case ASSASSIN -> skills.getAssassinLevel();
+                case MARAUDER -> skills.getMarauderLevel();
+                case CAVALIER -> skills.getCavalierLevel();
+                case MARTIAL_ARTIST -> skills.getMartialArtistLevel();
+                case SHIELD_HERO -> skills.getShieldHeroLevel();
+                case MARKSMAN -> skills.getMarksmanLevel();
+                case SORCERER -> skills.getSorcererLevel();
+                case PRIMORDIAL -> skills.getPrimordialLevel();
+                case HALLOWED -> skills.getHallowedLevel();
+                case ANNULLED -> skills.getAnnulledLevel();
+            };
+
+            if (playerSkillLevel < entry.getValue()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean meetsExpertiseRequirements(Skills skills, ItemStack ability) {
+        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
+        HashMap<Expertise, Integer> requirements = new HashMap<>(){{
+            if (pdc.has(expertiseRequirementsKey, PersistentDataType.STRING)) {
+                String requirements = pdc.get(expertiseRequirementsKey, PersistentDataType.STRING);
+
+                for (String requirement : requirements.split("/")) {
+                    String[] splits = requirement.split("-");
+
+                    put(Expertise.fromString(splits[0]), Integer.parseInt(splits[1]));
+                }
+            }
+        }};
+
+        return meetsExpertiseRequirements(skills, requirements);
+    }
+
+    public static boolean meetsPrerequisites(Player player, ItemStack ability) {
+        ArrayList<AbilityPrerequisite> prerequisites = getPrerequisitesForAbility(ability);
+
+        if (!prerequisites.isEmpty()) { // if there's no prerequisites, then the player meets them by default
+            for (AbilityPrerequisite abilityPrerequisite : prerequisites) {
+                switch (abilityPrerequisite) {
+                    case GROUNDED -> {
+                        if (!player.isOnGround()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isHoldingWeaponForAbility(Player player, ItemStack abilityItem) {
+        ArrayList<ItemType> requiredWeapons = getWeaponsForAbility(abilityItem);
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        ItemStack offhand = player.getInventory().getItemInOffHand();
+
+        if (requiredWeapons.isEmpty()) { // if an ability doesnt use weapons
+            return true;
+        } else {
+            for (ItemType itemType : requiredWeapons) { // iterates thru all the weapon types, returning true if the player matches one of em
+                if (itemType == GLOVE) {
+                    if (ItemSystem.isItemType(mainHand, GLOVE) && ItemSystem.isItemType(offhand, GLOVE)) {
+                        return true;
+                    }
+                } else if (itemType == BOW) {
+                    if (ItemSystem.isItemType(mainHand, BOW) && ItemSystem.isItemType(offhand, QUIVER)) {
+                        return true;
+                    }
+                } else if (itemType == SHIELD) {
+                    if (ItemSystem.isItemType(mainHand, SHIELD) || ItemSystem.isItemType(offhand, SHIELD)) {
+                        return true;
+                    }
+                } else {
+                    if (ItemSystem.isItemType(mainHand, itemType)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isAnAbility(ItemStack item) {
+        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(abilityKey);
+
+        return false;
+    }
+
+    public static boolean isToggleable(ItemStack item) {
+        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(toggleKey);
+
+        return false;
+    }
+
+    public static boolean getToggleState(ItemStack item) {
+        if (isToggleable(item)) return Boolean.TRUE.equals(item.getItemMeta().getPersistentDataContainer().get(toggleKey, PersistentDataType.BOOLEAN));
+
+        return false;
     }
 
     public static int getCooldown(ItemStack item) {
@@ -143,6 +272,10 @@ public class AbilityItemManager {
         return -1;
     }
 
+    public static String getRawAbilityName(ItemStack item) {
+        return ChatColor.stripColor(item.getItemMeta().getDisplayName());
+    }
+
     public static Material getOriginalItemMaterial(ItemStack item) {
         if (item != null) {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
@@ -164,7 +297,7 @@ public class AbilityItemManager {
         PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
 
         for (Expertise expertise : Expertise.values()) {
-            if (persistentDataContainer.has(new NamespacedKey(nmlAbilities, Expertise.getString(expertise)))) {
+            if (persistentDataContainer.has(new NamespacedKey(nmlAbilities, Expertise.toString(expertise)))) {
                 expertises.add(expertise);
             }
         }
@@ -172,40 +305,48 @@ public class AbilityItemManager {
         return expertises;
     }
 
-    public static String getRawAbilityName(ItemStack item) {
-        return ChatColor.stripColor(item.getItemMeta().getDisplayName());
+    public static ArrayList<AbilityPrerequisite> getPrerequisitesForAbility(ItemStack item) {
+        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+
+        return new ArrayList<>(){{
+            if (pdc.has(prerequisitesKey, PersistentDataType.STRING)) {
+                for (String string : pdc.get(prerequisitesKey, PersistentDataType.STRING).split("/")) {
+                    add(AbilityPrerequisite.fromString(string));
+                }
+            }
+        }};
     }
 
-    public static boolean isAnAbility(ItemStack item) {
-        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(abilityKey);
+    public static ArrayList<ItemType> getWeaponsForAbility(ItemStack item) {
+        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
 
-        return false;
-    }
+        if (pdc.has(weaponsKey, PersistentDataType.STRING)) {
+            String weaponString = pdc.get(weaponsKey, PersistentDataType.STRING);
 
-    public static boolean isToggleable(ItemStack item) {
-        if (item != null && item.hasItemMeta()) return item.getItemMeta().getPersistentDataContainer().has(toggleKey);
+            if (weaponString.equals("none")) {
+                return new ArrayList<>();
+            } else if (weaponString.equals("any")) {
+                return new ArrayList<>(List.of(SWORD, DAGGER, AXE, HAMMER, SPEAR, GLOVE, BOW, WAND, STAFF, CATALYST, SHIELD));
+            } else {
+                ArrayList<ItemType> weapons = new ArrayList<>(){{
+                    for (String string : weaponString.split("/")) {
+                        add(ItemType.fromString(string));
+                    }
+                }};
 
-        return false;
-    }
+                return weapons;
+            }
+        }
 
-    public static boolean getToggleState(ItemStack item) {
-        if (isToggleable(item)) return Boolean.TRUE.equals(item.getItemMeta().getPersistentDataContainer().get(toggleKey, PersistentDataType.BOOLEAN));
-
-        return false;
-    }
-
-    public static boolean hasPrerequisites(ItemStack item) {
-        Set<NamespacedKey> keys = item.getItemMeta().getPersistentDataContainer().getKeys();
-
-        return keys.contains(groundedKey);
+        return null;
     }
 
     public static NamespacedKey getAbilityKey() {
         return abilityKey;
     }
 
-    public static NamespacedKey getExpertiseKey() {
-        return expertiseKey;
+    public static NamespacedKey getExpertiseRequirementsKey() {
+        return expertiseRequirementsKey;
     }
 
     public static NamespacedKey getCooldownKey() {
@@ -224,11 +365,7 @@ public class AbilityItemManager {
         return energyKey;
     }
 
-    public static NamespacedKey getUnusableKey() {
-        return unusableKey;
-    }
-
-    public static NamespacedKey getGroundedKey() {
-        return groundedKey;
+    public static NamespacedKey getPrerequisitesKey() {
+        return prerequisitesKey;
     }
 }

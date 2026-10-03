@@ -7,11 +7,8 @@ import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -27,20 +24,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.*;
-
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 
 public class AbilityListener implements Listener {
-    private static NMLAbilities nmlAbilities;
     private ProfileManager profileManager;
     private ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
     private ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
 
     public AbilityListener(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
         this.profileManager = nmlAbilities.getProfileManager();
     }
 
@@ -72,13 +66,13 @@ public class AbilityListener implements Listener {
             }
 
             // prerequisite check
-            if (AbilityItemManager.hasPrerequisites(ability) && !AbilityItemManager.meetsPrerequisites(player, ability)) {
+            if (!AbilityItemManager.meetsPrerequisites(player, ability)) {
                 player.sendMessage("§c⚠ §nPrerequisites not met!§r§c ⚠");
                 return;
             }
 
             // weapon check
-            if (!isHoldingWeaponForAbility(player, ability)) {
+            if (!AbilityItemManager.isHoldingWeaponForAbility(player, ability)) {
                 player.sendMessage("§c⚠ §nRequirements not met!§r§c ⚠");
                 return;
             }
@@ -98,7 +92,7 @@ public class AbilityListener implements Listener {
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 }
-            } else { // if it isnt a toggleable
+            } else { // if it isn't a toggleable
                 if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) { // energy check
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
@@ -224,59 +218,5 @@ public class AbilityListener implements Listener {
                 type == InventoryType.FURNACE ||
                 type == InventoryType.BLAST_FURNACE ||
                 type == InventoryType.SMOKER;
-    }
-
-    private List<ItemType> getWeaponsForAbility(ItemStack item) {
-        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-        List<ItemType> weapons = new ArrayList<>(List.of(SWORD, DAGGER, AXE, HAMMER, SPEAR, GLOVE, BOW, WAND, STAFF, CATALYST, SHIELD));
-        List<ItemType> weaponsToRemove = new ArrayList<>();
-
-        if (item.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
-            return weapons;
-        }
-
-        for (ItemType weapon : weapons) {
-            NamespacedKey weaponKey = new NamespacedKey(nmlAbilities, ItemType.toString(weapon));
-
-            if (!pdc.has(weaponKey)) {
-                weaponsToRemove.add(weapon);
-            }
-        }
-
-        weapons.removeAll(weaponsToRemove);
-        return weapons;
-    }
-
-    private boolean isHoldingWeaponForAbility(Player player, ItemStack abilityItem) {
-        List<ItemType> requiredWeapons = getWeaponsForAbility(abilityItem);
-        ItemStack mainhand = player.getInventory().getItemInMainHand();
-        ItemStack offhand = player.getInventory().getItemInOffHand();
-
-        // if an ability uses any weapon
-        if (abilityItem.getItemMeta().getPersistentDataContainer().has(ExpertiseAbilityItemMaker.getAnyWeaponKey())) {
-            for (ItemType itemType : requiredWeapons) {
-                if (ItemSystem.isItemType(mainhand, itemType)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        if (requiredWeapons.contains(GLOVE)) {
-            return ItemSystem.isItemType(mainhand, GLOVE) && ItemSystem.isItemType(offhand, GLOVE);
-        } else if (requiredWeapons.contains(BOW)) {
-            return ItemSystem.isItemType(mainhand, BOW) && ItemSystem.isItemType(offhand, QUIVER);
-        } else if (requiredWeapons.contains(SHIELD)) {
-            return ItemSystem.isItemType(mainhand, SHIELD) || ItemSystem.isItemType(offhand, SHIELD);
-        } else {
-            for (ItemType itemType : requiredWeapons) {
-                if (ItemSystem.isItemType(mainhand, itemType)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 }

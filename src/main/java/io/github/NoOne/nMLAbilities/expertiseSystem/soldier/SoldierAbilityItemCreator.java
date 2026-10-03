@@ -26,7 +26,7 @@ public class SoldierAbilityItemCreator extends ExpertiseAbilityItemHelper {
                 null,
                 false,
                 "Area",
-                2,
+                3,
                 0,
                 2,
                 15,

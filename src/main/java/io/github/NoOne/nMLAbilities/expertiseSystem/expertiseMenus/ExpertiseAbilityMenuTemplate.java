@@ -60,7 +60,7 @@ public class ExpertiseAbilityMenuTemplate extends Menu {
                 return;
             }
 
-            if (selected.getItemMeta().getPersistentDataContainer().has(AbilityItemManager.getUnusableKey())) {
+            if (!AbilityItemManager.meetsExpertiseRequirements(skills, selected)) {
                 playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou are too inexperienced for this ability!§r§c ⚠");
                 playerMenuUtility.getOwner().playSound(playerMenuUtility.getOwner(), Sound.BLOCK_NOTE_BLOCK_BASS, 2f, .5f);
                 return;
