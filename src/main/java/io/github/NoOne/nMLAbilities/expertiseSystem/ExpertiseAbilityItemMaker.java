@@ -1,8 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem;
 
-import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
@@ -21,8 +20,6 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 
 public class ExpertiseAbilityItemMaker {
-    private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
-
     public static ItemStack emptyExpertiseAbilityItem() {
         ItemStack expertise = ItemCreator.createItem(
                 Material.MAGENTA_DYE,

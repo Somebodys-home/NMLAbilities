@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem;
+package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;

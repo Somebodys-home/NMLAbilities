@@ -2,7 +2,8 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
 import org.bukkit.*;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.LivingEntity;
@@ -77,16 +78,17 @@ public class ShieldHeroAbilityEffects extends AbilityEffectsHelper {
             Location playerLocation = player.getLocation();
             Vector direction = playerLocation.getDirection();
             Location shieldLocation = playerLocation.clone().add(0, 1.5, 0).add(direction.setY(0).normalize().multiply(1.25));
-            ItemDisplay shield = world.spawn(shieldLocation, ItemDisplay.class, entity -> {
-                entity.setItemStack(ItemStack.of(Material.SHIELD));
-                entity.setRotation(playerLocation.getYaw() + 180, 0);
-                entity.setTransformationMatrix(
-                        new Matrix4f()
-                                .scale(2)
-                                .translation(-.5f, 0, -.5f)
-                );
-                entity.setVisibleByDefault(false);
-            });
+            ItemDisplay shield = (ItemDisplay) AbilityEffectsTracker.makeAbilityDisplay(
+                    world.spawn(shieldLocation, ItemDisplay.class, entity -> {
+                        entity.setItemStack(ItemStack.of(Material.SHIELD));
+                        entity.setRotation(playerLocation.getYaw() + 180, 0);
+                        entity.setTransformationMatrix(
+                                new Matrix4f()
+                                        .scale(2)
+                                        .translation(-.5f, 0, -.5f)
+                        );
+                        entity.setVisibleByDefault(false);
+            }));
 
             @Override
             public void run() {
@@ -156,20 +158,21 @@ public class ShieldHeroAbilityEffects extends AbilityEffectsHelper {
             Location playerLocation = player.getLocation();
             Vector direction = playerLocation.getDirection();
             Location shieldLocation = playerLocation.clone().add(0, 1.5, 0).add(direction.setY(0).normalize().multiply(.75));
-            ItemDisplay shield = world.spawn(shieldLocation, ItemDisplay.class, entity -> {
-                entity.setItemStack(ItemStack.of(Material.SHIELD));
-                entity.setTransformationMatrix(
-                        new Matrix4f()
-                                .scale(2)
-                                .translation(-.5f, 0, -.5f)
-                                .rotateZ((float) Math.toRadians(90))
-                                .rotateX((float) Math.toRadians(90))
+            ItemDisplay shield = (ItemDisplay) AbilityEffectsTracker.makeAbilityDisplay(
+                    world.spawn(shieldLocation, ItemDisplay.class, entity -> {
+                        entity.setItemStack(ItemStack.of(Material.SHIELD));
+                        entity.setTransformationMatrix(
+                                new Matrix4f()
+                                        .scale(2)
+                                        .translation(-.5f, 0, -.5f)
+                                        .rotateZ((float) Math.toRadians(90))
+                                        .rotateX((float) Math.toRadians(90))
                                 // rotations make the shield face straight ahead and the front of the shield face out to the left
-                );
-                entity.setVisibleByDefault(false);
-                entity.setInterpolationDuration(1);
-                entity.setTeleportDuration(1);
-            });
+                        );
+                        entity.setVisibleByDefault(false);
+                        entity.setInterpolationDuration(1);
+                        entity.setTeleportDuration(1);
+            }));
 
             @Override
             public void run() {

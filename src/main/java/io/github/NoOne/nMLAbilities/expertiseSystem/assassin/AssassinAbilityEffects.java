@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

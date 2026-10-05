@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 public class CooldownInstance {
     private int hotbarSlot;
     private double cooldown;
-    private ItemStack originalItem; // store what was there before cooldownSystem
+    private ItemStack originalItem; // store what was there before cooldown
 
     public CooldownInstance(int hotbarSlot, double cooldown, ItemStack originalItem) {
         this.hotbarSlot = hotbarSlot;

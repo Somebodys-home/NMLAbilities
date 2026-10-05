@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 public enum AbilityPrerequisite {
     GROUNDED;

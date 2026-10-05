@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;

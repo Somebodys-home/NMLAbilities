@@ -87,7 +87,7 @@ public class AbilityListener implements Listener {
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
-                } else { // if it will be turned off, put on cooldownSystem
+                } else { // if it will be turned off, put on cooldown
                     AbilityItemManager.setToggleState(ability, false);
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
                     CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));

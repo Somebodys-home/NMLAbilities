@@ -1,17 +1,29 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects;
+package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLPlayerStats.statSystem.StatChangeEvent;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class OngoingAbilityEffectsTracker {
+public class AbilityEffectsTracker {
     private static HashMap<UUID, ArrayList<OngoingAbilityEffect>> ongoingAbilityEffects = new HashMap<>();
+    private static ArrayList<Display> displays = new ArrayList<>();
 
-    public static void addAbilityEffect(NMLAbilities nmlAbilities, Player player, OngoingAbilityEffect ongoingAbilityEffect) {
+    public static void startDisplayTracker() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                displays.removeIf(display -> display.isDead() || !display.isValid());
+            }
+        }.runTaskTimer(NMLAbilities.getInstance(), 0, 20);
+    }
+
+    public static void addOngoingAbilityEffect(NMLAbilities nmlAbilities, Player player, OngoingAbilityEffect ongoingAbilityEffect) {
         ArrayList<OngoingAbilityEffect> arrayList = ongoingAbilityEffects.getOrDefault(player.getUniqueId(), new ArrayList<>());
 
         for (Map.Entry<String, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
@@ -23,7 +35,7 @@ public class OngoingAbilityEffectsTracker {
         ongoingAbilityEffects.put(player.getUniqueId(), arrayList);
     }
 
-    public static void removeAbilityEffect(Player player, String abilityEffectName) {
+    public static void removeOngoingAbilityEffect(Player player, String abilityEffectName) {
         if (!ongoingAbilityEffects.containsKey(player.getUniqueId())) return;
 
         ArrayList<OngoingAbilityEffect> ongoingAbilityEffectArrayList = ongoingAbilityEffects.get(player.getUniqueId());
@@ -44,7 +56,7 @@ public class OngoingAbilityEffectsTracker {
         }
     }
 
-    public static void removeAllAbilityEffects(Player player, Stats stats) {
+    public static void removeAllOngoingAbilityEffects(Player player, Stats stats) {
         if (!ongoingAbilityEffects.containsKey(player.getUniqueId())) return;
 
         ArrayList<OngoingAbilityEffect> ongoingAbilityEffectArrayList = ongoingAbilityEffects.get(player.getUniqueId());
@@ -60,5 +72,15 @@ public class OngoingAbilityEffectsTracker {
 
             iterator.remove();
         }
+    }
+
+    public static void removeAllDisplays() {
+        for (Display display : displays) {
+            display.remove();
+        }
+    }
+    public static Display makeAbilityDisplay(Display display) {
+        displays.add(display);
+        return display;
     }
 }

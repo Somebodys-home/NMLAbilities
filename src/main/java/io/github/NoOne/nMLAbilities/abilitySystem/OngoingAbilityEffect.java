@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects;
+package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import org.bukkit.scheduler.BukkitRunnable;
 

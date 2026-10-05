@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.ItemSystem;

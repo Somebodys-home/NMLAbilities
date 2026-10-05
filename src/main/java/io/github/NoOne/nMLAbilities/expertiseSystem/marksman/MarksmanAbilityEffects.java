@@ -1,9 +1,9 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.expertiseSystem.AbilityEffectsHelper;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffect;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
+import io.github.NoOne.nMLAbilities.abilitySystem.OngoingAbilityEffect;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import io.github.NoOne.nMLWeapons.ArrowTracker;
 import org.bukkit.*;
@@ -72,9 +72,9 @@ public class MarksmanAbilityEffects extends AbilityEffectsHelper {
 
         if (toggle) {
             EnergyManager.useEnergy(player, 15);
-            OngoingAbilityEffectsTracker.addAbilityEffect(nmlAbilities, player, steadyAimEffect);
+            AbilityEffectsTracker.addOngoingAbilityEffect(nmlAbilities, player, steadyAimEffect);
         } else {
-            OngoingAbilityEffectsTracker.removeAbilityEffect(player, "steady aim");
+            AbilityEffectsTracker.removeOngoingAbilityEffect(player, "steady aim");
         }
     }
 

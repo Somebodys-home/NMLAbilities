@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities;
 
 import io.github.NoOne.menuSystem.MenuListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -10,7 +11,6 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.commands.ExpertiseCommand;
 import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ongoingAbilityEffects.OngoingAbilityEffectsTracker;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
@@ -63,9 +63,10 @@ public class NMLAbilities extends JavaPlugin {
             AbilityItemManager.setToggleState(playerInventory.getItem(1), false);
             AbilityItemManager.setToggleState(playerInventory.getItem(2), false);
             AbilityItemManager.setToggleState(playerInventory.getItem(3), false);
-            OngoingAbilityEffectsTracker.removeAllAbilityEffects(player, profileManager.getPlayerProfile(player.getUniqueId()).getStats());
+            AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, profileManager.getPlayerProfile(player.getUniqueId()).getStats());
         }
 
+        AbilityEffectsTracker.removeAllDisplays();
         cooldownManager.stop();
         selectedAbilitiesManager.saveAllSelectedAbilitiesToConfig();
         selectedAbilitiesConfig.saveConfig();

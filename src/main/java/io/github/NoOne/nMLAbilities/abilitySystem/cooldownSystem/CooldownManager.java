@@ -14,11 +14,12 @@ import java.util.*;
 
 public class CooldownManager {
     private NMLAbilities nmlAbilities;
-    private static HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
+    private static HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns;
     private BukkitTask serverCooldownTask;
 
     public CooldownManager(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
+        ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
     }
 
     public void start() {
@@ -33,19 +34,15 @@ public class CooldownManager {
                     while (it.hasNext()) {
                         CooldownInstance ci = it.next();
 
-                        // decrement cooldownSystem
+                        // decrement cooldown
                         ci.setCooldown(ci.getCooldown() - 1);
 
-                        // restore item when cooldownSystem ends
+                        // restore item when cooldown ends
                         if (ci.getCooldown() <= 0) {
                             ItemStack originalItem = ci.getOriginalItem();
 
                             player.getInventory().setItem(ci.getHotbarSlot(), originalItem);
                             it.remove();
-
-                            if (player.hasCooldown(originalItem.getType())) { // remove cooldownSystem on the original ability item
-                                player.setCooldown(originalItem.getType(), 0);
-                            }
                         }
                     }
                 }

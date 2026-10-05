@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.List;
 
-import static io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite.GROUNDED;
+import static io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite.GROUNDED;
 import static io.github.NoOne.nMLItems.enums.ItemType.DAGGER;
 
 public class AssassinAbilityItemCreator extends ExpertiseAbilityItemHelper {

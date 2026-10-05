@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityPrerequisite;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
