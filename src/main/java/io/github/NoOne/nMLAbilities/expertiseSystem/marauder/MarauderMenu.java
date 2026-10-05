@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class MarauderMenu extends ExpertiseAbilityMenuTemplate {
     public MarauderMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new MarauderAbilityItemCreator(skills));
+        super(nmlAbilities, player, clickedItem, new MarauderAbilityItems(skills));
     }
 
     @Override

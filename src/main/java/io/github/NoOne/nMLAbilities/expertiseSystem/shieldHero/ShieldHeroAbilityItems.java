@@ -12,8 +12,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.SHIELD;
 
-public class ShieldHeroAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public ShieldHeroAbilityItemCreator(Skills skills) {
+public class ShieldHeroAbilityItems extends ExpertiseAbilityItemHelper {
+    public ShieldHeroAbilityItems(Skills skills) {
         super(skills);
     }
 

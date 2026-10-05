@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.GLOVE;
 
-public class MartialArtistAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public MartialArtistAbilityItemCreator(Skills skills) {
+public class MartialArtistAbilityItems extends ExpertiseAbilityItemHelper {
+    public MartialArtistAbilityItems(Skills skills) {
         super(skills);
     }
 

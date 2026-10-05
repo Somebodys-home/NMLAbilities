@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.BOW;
 
-public class MarksmanAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public MarksmanAbilityItemCreator(Skills skills) {
+public class MarksmanAbilityItems extends ExpertiseAbilityItemHelper {
+    public MarksmanAbilityItems(Skills skills) {
         super(skills);
     }
 

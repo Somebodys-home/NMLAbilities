@@ -11,8 +11,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SoldierAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public SoldierAbilityItemCreator(Skills skills) {
+public class SoldierAbilityItems extends ExpertiseAbilityItemHelper {
+    public SoldierAbilityItems(Skills skills) {
         super(skills);
     }
 

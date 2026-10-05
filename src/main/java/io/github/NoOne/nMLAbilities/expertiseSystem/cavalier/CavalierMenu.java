@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class CavalierMenu extends ExpertiseAbilityMenuTemplate {
     public CavalierMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new CavalierAbilityItemCreator(skills));
+        super(nmlAbilities, player, clickedItem, new CavalierAbilityItems(skills));
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class MarksmanMenu extends ExpertiseAbilityMenuTemplate {
     public MarksmanMenu(NMLAbilities nmlAbilities, Player player, Skills skills, ItemStack clickedItem) {
-        super(nmlAbilities, player, clickedItem, new MarksmanAbilityItemCreator(skills));
+        super(nmlAbilities, player, clickedItem, new MarksmanAbilityItems(skills));
     }
 
     @Override

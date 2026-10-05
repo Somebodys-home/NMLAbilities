@@ -12,8 +12,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class SorcererAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public SorcererAbilityItemCreator(Skills skills) {
+public class SorcererAbilityItems extends ExpertiseAbilityItemHelper {
+    public SorcererAbilityItems(Skills skills) {
         super(skills);
     }
 

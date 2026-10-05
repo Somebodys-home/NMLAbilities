@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem.cavalier;
+package io.github.NoOne.nMLAbilities.expertiseSystem.assassin;
 
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
@@ -10,37 +10,36 @@ import java.util.HashMap;
 import java.util.List;
 
 import static io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite.GROUNDED;
-import static io.github.NoOne.nMLItems.enums.ItemType.HAMMER;
-import static io.github.NoOne.nMLItems.enums.ItemType.SPEAR;
+import static io.github.NoOne.nMLItems.enums.ItemType.DAGGER;
 
-public class CavalierAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public CavalierAbilityItemCreator(Skills skills) {
+public class AssassinAbilityItems extends ExpertiseAbilityItemHelper {
+    public AssassinAbilityItems(Skills skills) {
         super(skills);
     }
 
-    public static ItemStack seismicSlam() {
+    public static ItemStack slashAndDash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "Seismic Slam",
+                "Slash & Dash",
                 new HashMap<>(){{
-                    put(Expertise.CAVALIER, 10);
+                    put(Expertise.ASSASSIN, 1);
                 }},
-                "Jump into the air, then crash into the ground, launching anyone nearby away from you", 
+                "Dash forwards, dealing damage to anyone in your path",
                 List.of(GROUNDED),
                 false,
                 "Area",
-                16,
+                10,
                 0,
-                20,
-                30,
-                List.of(makeWeaponDamageString(250)),
-                null,
-                List.of(SPEAR, HAMMER), 
+                5,
+                15,
+                List.of(makeWeaponDamageString(150)),
+                List.of(makeInvincibleString(.3)),
+                List.of(DAGGER), 
                 skills
         );
     }
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(seismicSlam());
+        return List.of(slashAndDash());
     }
 }

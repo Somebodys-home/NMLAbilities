@@ -1,9 +1,10 @@
-package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
+package io.github.NoOne.nMLAbilities.expertiseSystem.annulled;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbilityItems;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,29 +13,26 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class HallowedAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public HallowedAbilityItemCreator(Skills skills) {
+public class AnnulledAbilityItems extends ExpertiseAbilityItemHelper {
+    public AnnulledAbilityItems(Skills skills) {
         super(skills);
     }
 
-    public static ItemStack halo() {
+    public static ItemStack blackHole() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
-                "Halo",
+                "Black Hole",
                 new HashMap<>(){{
-                    put(Expertise.HALLOWED, 15);
+                    put(Expertise.ANNULLED, 50);
                 }},
-                "Throw a ring of radiant energy that rebounds back to you, damaging anyone touching it", 
+                "...it's a black hole. It pulls in and spaghettifies things; I don't need to spell this out for you.",
                 null,
                 false,
                 "Area",
-                20,
-                0,
-                17,
-                25,
-                List.of(
-                        makeWeaponDamageString(15) + makeEverySecondString(.25),
-                        makeElementalDamageString(DamageType.RADIANT, .15) + makeEverySecondString(.25)
-                ),
+                13,
+                7.75,
+                30,
+                50,
+                List.of(makeElementalDamageString(DamageType.NECROTIC, 5)),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills
@@ -43,6 +41,6 @@ public class HallowedAbilityItemCreator extends ExpertiseAbilityItemHelper {
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(halo());
+        return List.of(PrimordialAbilityItems.pumpkinBomb(), blackHole());
     }
 }

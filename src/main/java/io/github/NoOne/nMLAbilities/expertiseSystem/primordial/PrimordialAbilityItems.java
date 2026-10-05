@@ -13,8 +13,8 @@ import java.util.List;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-public class PrimordialAbilityItemCreator extends ExpertiseAbilityItemHelper {
-    public PrimordialAbilityItemCreator(Skills skills) {
+public class PrimordialAbilityItems extends ExpertiseAbilityItemHelper {
+    public PrimordialAbilityItems(Skills skills) {
         super(skills);
     }
 
