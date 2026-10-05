@@ -128,9 +128,9 @@ public class ExpertiseAbilityItemMaker {
             } else {
                 for (ItemType weapon : weapons) {
                     if (weapon == BOW) {
-                        lore.add("§e- " + ItemType.toString(weapon) + " & Quiver");
+                        lore.add("§e- Bow & Quiver");
                     } else if (weapon == GLOVE) {
-                        lore.add("§e- " + ItemType.toString(weapon) + "s (both)");
+                        lore.add("§e- Gloves (both)");
                     } else if (weapon == STAFF) {
                         lore.add("§e- Staves");
                     } else {

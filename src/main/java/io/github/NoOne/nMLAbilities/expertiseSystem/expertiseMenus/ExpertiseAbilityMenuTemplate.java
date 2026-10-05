@@ -8,12 +8,15 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 // the parent for the other ability selection menus
@@ -77,11 +80,33 @@ public class ExpertiseAbilityMenuTemplate extends Menu {
 
     @Override
     public final void setMenuItems() {
+        ItemStack abilityBreakdown = ItemCreator.createItem(
+                Material.IRON_SWORD,
+                "§d§l§nAbility Breakdown:",
+                List.of(
+                        "",
+                        "§c§lDamages:",
+                        "  §7- §r§f§n(#)% Weapon Damage \uD83D\uDDE1§r§f =§r§7 % of your damages",
+                        "  §7- §b§nElemental Damage (#x)§r§f =§r§7 your damage for that element",
+                        "      §8§o- Elemental damage multipliers override",
+                        "        §8§oweapon damage multipliers",
+                        "",
+                        "§c§lWeapons: §r§fThe weapon type to hold to use the ability",
+                        "  §7- Gloves require both hands",
+                        "  §7- Shields can be held in either hand",
+                        "  §7- You can't use abilities while guarding",
+                        "  §7- Bows require a quiver"
+                )
+        );
+
+        abilityBreakdown.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         for (int slot : getBorderSlots()) {
             inventory.setItem(slot, ItemCreator.createMenuBorder());
         }
 
         inventory.setItem(4, clickedItem);
+        inventory.setItem(45, abilityBreakdown);
         inventory.setItem(53, ItemCreator.createBackoutButton());
 
         for (ItemStack abilityItem : expertiseAbilityItemHelper.getAllExpertiseAbilityItems()) {
