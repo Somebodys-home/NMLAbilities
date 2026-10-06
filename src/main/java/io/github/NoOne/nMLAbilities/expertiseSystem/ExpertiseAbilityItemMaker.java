@@ -44,9 +44,8 @@ public class ExpertiseAbilityItemMaker {
 
         boolean meetsRequirements = AbilityItemManager.meetsExpertiseRequirements(playerSkills, expertiseRequirements);
         Expertise firstExpertiseRequirement = expertiseRequirements.entrySet().iterator().next().getKey();
-        String color = Expertise.toChatColor(firstExpertiseRequirement);
-        ArrayList<String> lore = new ArrayList<>();
         Material abilityMaterial = Expertise.toMaterial(firstExpertiseRequirement);
+        ArrayList<String> lore = new ArrayList<>();
 
         if (!meetsRequirements) {
             abilityMaterial = Material.BARRIER;
@@ -57,7 +56,7 @@ public class ExpertiseAbilityItemMaker {
             String string = Expertise.toString(entry.getKey());
             String requirementString = "§8Lv. " + entry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
 
-            if (AbilityItemManager.meetsExpertiseRequirements(playerSkills, expertiseRequirements)) {
+            if (meetsRequirements) {
                 requirementString += " §a✔";
             } else {
                 requirementString += " §c✖";
@@ -66,9 +65,8 @@ public class ExpertiseAbilityItemMaker {
             lore.add(requirementString);
         }
 
-        lore.add("");
-
         // description
+        lore.add("");
         lore.addAll(linebreak(description));
         lore.add("");
 
@@ -107,7 +105,6 @@ public class ExpertiseAbilityItemMaker {
         lore.add("§fCooldown: §b" + cooldown + "s");
         lore.add("§fCost: §6" + cost + "⚡");
 
-        // damage stats
         if (damage != null) {
             lore.add("§b§l-----------Damage-----------");
             lore.addAll(damage);
@@ -142,7 +139,7 @@ public class ExpertiseAbilityItemMaker {
 
         ItemStack expertiseItem = ItemCreator.createItem(
                 abilityMaterial,
-                color + "§l" + name,
+                Expertise.toChatColor(firstExpertiseRequirement) + "§l" + name,
                 lore
         );
 
