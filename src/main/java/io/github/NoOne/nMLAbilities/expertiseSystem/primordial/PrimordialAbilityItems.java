@@ -18,7 +18,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack chuckRock() {
+    public ItemStack chuckRock() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Chuck Rock",
                 new HashMap<>(){{
@@ -39,7 +39,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack airBall() {
+    public ItemStack airBall() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Air Ball",
                 new HashMap<>(){{
@@ -63,7 +63,7 @@ public class PrimordialAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack pumpkinBomb() {
+    public ItemStack pumpkinBomb() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Pumpkin Bomb",
                 new LinkedHashMap<>(){{

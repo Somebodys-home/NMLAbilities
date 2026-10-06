@@ -16,7 +16,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack steadyAim() {
+    public ItemStack steadyAim() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Steady Aim",
                 new HashMap<>(){{
@@ -37,7 +37,7 @@ public class MarksmanAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack arrowHailstorm() {
+    public ItemStack arrowHailstorm() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Arrow Hailstorm",
                 new HashMap<>(){{

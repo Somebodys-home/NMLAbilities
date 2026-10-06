@@ -1,7 +1,6 @@
 package io.github.NoOne.nMLAbilities;
 
 import io.github.NoOne.menuSystem.MenuListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -18,7 +17,6 @@ import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NMLAbilities extends JavaPlugin {
@@ -60,11 +58,6 @@ public class NMLAbilities extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : getServer().getOnlinePlayers()) {
-            PlayerInventory playerInventory = player.getInventory();
-
-            AbilityItemManager.setToggleState(playerInventory.getItem(1), false);
-            AbilityItemManager.setToggleState(playerInventory.getItem(2), false);
-            AbilityItemManager.setToggleState(playerInventory.getItem(3), false);
             AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, profileManager.getPlayerProfile(player.getUniqueId()).getStats());
         }
 

@@ -17,7 +17,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack magicMissileEX() {
+    public ItemStack magicMissileEX() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Magic Missile EX",
                 new HashMap<>(){{
@@ -38,7 +38,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack dragonsBreath() {
+    public ItemStack dragonsBreath() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dragon's Breath",
                 new HashMap<>(){{

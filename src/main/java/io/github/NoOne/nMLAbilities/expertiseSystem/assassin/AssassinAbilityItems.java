@@ -17,7 +17,7 @@ public class AssassinAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack slashAndDash() {
+    public ItemStack slashAndDash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash & Dash",
                 new HashMap<>(){{

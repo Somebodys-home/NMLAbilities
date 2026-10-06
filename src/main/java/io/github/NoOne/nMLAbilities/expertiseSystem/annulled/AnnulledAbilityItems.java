@@ -18,7 +18,7 @@ public class AnnulledAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack blackHole() {
+    public ItemStack blackHole() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Black Hole",
                 new HashMap<>(){{
@@ -41,6 +41,8 @@ public class AnnulledAbilityItems extends ExpertiseAbilityItemHelper {
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(PrimordialAbilityItems.pumpkinBomb(), blackHole());
+        PrimordialAbilityItems primordial = new PrimordialAbilityItems(skills);
+
+        return List.of(primordial.pumpkinBomb(), blackHole());
     }
 }

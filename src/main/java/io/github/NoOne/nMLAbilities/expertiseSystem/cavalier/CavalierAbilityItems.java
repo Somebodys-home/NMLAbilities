@@ -18,7 +18,7 @@ public class CavalierAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack seismicSlam() {
+    public ItemStack seismicSlam() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Seismic Slam",
                 new HashMap<>(){{

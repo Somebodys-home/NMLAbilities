@@ -17,7 +17,7 @@ public class HallowedAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack halo() {
+    public ItemStack halo() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Halo",
                 new HashMap<>(){{

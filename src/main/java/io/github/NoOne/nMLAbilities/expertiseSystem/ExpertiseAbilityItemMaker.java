@@ -169,46 +169,56 @@ public class ExpertiseAbilityItemMaker {
     // returns the associated item stack to its name
     public static ItemStack stringToAbilityItem(Skills skills, String name) {
         SoldierAbilityItems soldierAbilityItems = new SoldierAbilityItems(skills);
+        AssassinAbilityItems assassinAbilityItems = new AssassinAbilityItems(skills);
+        MarauderAbilityItems marauderAbilityItems = new MarauderAbilityItems(skills);
+        CavalierAbilityItems cavalierAbilityItems = new CavalierAbilityItems(skills);
+        MartialArtistAbilityItems martialArtistAbilityItems = new MartialArtistAbilityItems(skills);
+        ShieldHeroAbilityItems shieldHeroAbilityItems = new ShieldHeroAbilityItems(skills);
+        MarksmanAbilityItems marksmanAbilityItems = new MarksmanAbilityItems(skills);
+        SorcererAbilityItems sorcererAbilityItems = new SorcererAbilityItems(skills);
+        PrimordialAbilityItems primordialAbilityItems = new PrimordialAbilityItems(skills);
+        HallowedAbilityItems hallowedAbilityItems = new HallowedAbilityItems(skills);
+        AnnulledAbilityItems annulledAbilityItems = new AnnulledAbilityItems(skills);
 
         return switch (name) {
             case "Slash" -> soldierAbilityItems.slash();
 
             // Assassin abilities
-            case "Slash & Dash" -> AssassinAbilityItems.slashAndDash();
+            case "Slash & Dash" -> assassinAbilityItems.slashAndDash();
 
             // Marauder abilities
-            case "Blade Tornado" -> MarauderAbilityItems.bladeTornado();
-            case "Stomping Tantrum" -> MarauderAbilityItems.stompingTantrum();
+            case "Blade Tornado" -> marauderAbilityItems.bladeTornado();
+            case "Stomping Tantrum" -> marauderAbilityItems.stompingTantrum();
 
             // Cavalier abilities
-            case "Seismic Slam" -> CavalierAbilityItems.seismicSlam();
+            case "Seismic Slam" -> cavalierAbilityItems.seismicSlam();
 
             // Martial Artist abilities
-            case "Dropkick" -> MartialArtistAbilityItems.dropKick();
+            case "Dropkick" -> martialArtistAbilityItems.dropKick();
 
             // Shield Hero abilities
-            case "Second Wind" -> ShieldHeroAbilityItems.secondWind();
-            case "Shield Bash" -> ShieldHeroAbilityItems.shieldBash();
-            case "Shield Punch" -> ShieldHeroAbilityItems.shieldPunch();
+            case "Second Wind" -> shieldHeroAbilityItems.secondWind();
+            case "Shield Bash" -> shieldHeroAbilityItems.shieldBash();
+            case "Shield Punch" -> shieldHeroAbilityItems.shieldPunch();
 
             // Marksman abilities
-            case "Arrow Hailstorm" -> MarksmanAbilityItems.arrowHailstorm();
-            case "Steady Aim" -> MarksmanAbilityItems.steadyAim();
+            case "Arrow Hailstorm" -> marksmanAbilityItems.arrowHailstorm();
+            case "Steady Aim" -> marksmanAbilityItems.steadyAim();
 
             // Sorcerer abilities
-            case "Magic Missile EX" -> SorcererAbilityItems.magicMissileEX();
-            case "Dragon's Breath" -> SorcererAbilityItems.dragonsBreath();
+            case "Magic Missile EX" -> sorcererAbilityItems.magicMissileEX();
+            case "Dragon's Breath" -> sorcererAbilityItems.dragonsBreath();
 
             // Primordial abilities
-            case "Chuck Rock" -> PrimordialAbilityItems.chuckRock();
-            case "Pumpkin Bomb" -> PrimordialAbilityItems.pumpkinBomb();
-            case "Air Ball" -> PrimordialAbilityItems.airBall();
+            case "Chuck Rock" -> primordialAbilityItems.chuckRock();
+            case "Pumpkin Bomb" -> primordialAbilityItems.pumpkinBomb();
+            case "Air Ball" -> primordialAbilityItems.airBall();
 
             // Hallowed abilities
-            case "Halo" -> HallowedAbilityItems.halo();
+            case "Halo" -> hallowedAbilityItems.halo();
 
             // Annulled abilities
-            case "Black Hole" -> AnnulledAbilityItems.blackHole();
+            case "Black Hole" -> annulledAbilityItems.blackHole();
             default -> new ItemStack(Material.BARRIER);
         };
     }

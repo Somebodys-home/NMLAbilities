@@ -17,7 +17,7 @@ public class MarauderAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack stompingTantrum() {
+    public ItemStack stompingTantrum() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Stomping Tantrum",
                 new HashMap<>(){{
@@ -41,7 +41,7 @@ public class MarauderAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack bladeTornado() {
+    public ItemStack bladeTornado() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Blade Tornado",
                 new HashMap<>(){{

@@ -17,7 +17,7 @@ public class ShieldHeroAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack secondWind() {
+    public ItemStack secondWind() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Second Wind",
                 new HashMap<>(){{
@@ -38,7 +38,7 @@ public class ShieldHeroAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack shieldBash() {
+    public ItemStack shieldBash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Shield Bash",
                 new HashMap<>(){{
@@ -59,7 +59,7 @@ public class ShieldHeroAbilityItems extends ExpertiseAbilityItemHelper {
         );
     }
 
-    public static ItemStack shieldPunch() {
+    public ItemStack shieldPunch() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Shield Punch",
                 new HashMap<>(){{

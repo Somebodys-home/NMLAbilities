@@ -16,7 +16,7 @@ public class MartialArtistAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack dropKick() {
+    public ItemStack dropKick() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dropkick",
                 new HashMap<>(){{
