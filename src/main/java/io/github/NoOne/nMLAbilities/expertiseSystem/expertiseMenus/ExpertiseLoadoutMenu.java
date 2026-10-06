@@ -39,7 +39,7 @@ public class ExpertiseLoadoutMenu extends Menu {
 
     @Override
     public String getMenuName() {
-        return "§d§lYour Expertise Abilities";
+        return "§7§lChange Ability Loadout";
     }
 
     @Override
@@ -60,33 +60,37 @@ public class ExpertiseLoadoutMenu extends Menu {
                     case LEFT -> { // swapping places
                         leftClicks++;
 
+                        String clickedItemName = clickedItem.getItemMeta().getDisplayName();
+
                         if (leftClicks == 1) {
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise1.getItemMeta().getDisplayName())) {
+                            if (clickedItemName.equals(expertise1.getItemMeta().getDisplayName())) {
                                 leftClickItem1 = expertise1;
                                 leftClickHotbarSlot1 = 1;
                             }
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise2.getItemMeta().getDisplayName())) {
+
+                            if (clickedItemName.equals(expertise2.getItemMeta().getDisplayName())) {
                                 leftClickItem1 = expertise2;
                                 leftClickHotbarSlot1 = 2;
                             }
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise3.getItemMeta().getDisplayName())) {
+
+                            if (clickedItemName.equals(expertise3.getItemMeta().getDisplayName())) {
                                 leftClickItem1 = expertise3;
                                 leftClickHotbarSlot1 = 3;
                             }
 
                             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
-                        }
-
-                        if (leftClicks == 2) {
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise1.getItemMeta().getDisplayName())) {
+                        } else if (leftClicks == 2) {
+                            if (clickedItemName.equals(expertise1.getItemMeta().getDisplayName())) {
                                 leftClickItem2 = expertise1;
                                 leftClickHotbarSlot2 = 1;
                             }
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise2.getItemMeta().getDisplayName())) {
+
+                            if (clickedItemName.equals(expertise2.getItemMeta().getDisplayName())) {
                                 leftClickItem2 = expertise2;
                                 leftClickHotbarSlot2 = 2;
                             }
-                            if (clickedItem.getItemMeta().getDisplayName().equals(expertise3.getItemMeta().getDisplayName())) {
+
+                            if (clickedItemName.equals(expertise3.getItemMeta().getDisplayName())) {
                                 leftClickItem2 = expertise3;
                                 leftClickHotbarSlot2 = 3;
                             }
@@ -103,25 +107,25 @@ public class ExpertiseLoadoutMenu extends Menu {
                     case RIGHT -> { // clearing ability
                         switch (slot) {
                             case 11 -> {
-                                player.getInventory().setItem(1, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 CooldownManager.resetCooldown(player, 1);
                                 CooldownManager.removeHardCooldown(player);
+                                player.getInventory().setItem(1, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise1", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
                                 new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                             }
                             case 13 -> {
-                                player.getInventory().setItem(2, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 CooldownManager.resetCooldown(player, 2);
                                 CooldownManager.removeHardCooldown(player);
+                                player.getInventory().setItem(2, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise2", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
                                 new ExpertiseLoadoutMenu(nmlAbilities, player).open();
                             }
                             case 15 -> {
-                                player.getInventory().setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 CooldownManager.resetCooldown(player, 3);
                                 CooldownManager.removeHardCooldown(player);
+                                player.getInventory().setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                                 Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise3", ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
 
                                 new ExpertiseLoadoutMenu(nmlAbilities, player).open();
@@ -159,11 +163,11 @@ public class ExpertiseLoadoutMenu extends Menu {
         inventory.setItem(15, expertise3);
         inventory.setItem(22, ItemCreator.createItem( // info
                 Material.BOOK,
-                1,
-                "§e- Left click two abilities to swap their places",
+                "§7§l§nHow To:",
                 List.of(
-                        "§e- Right click an ability to remove it",
-                        "§e- Shift right click this item to clear all expertise abilities"
+                        "§f- Left click two abilities to swap their places",
+                        "§f- Right click an ability to remove it",
+                        "§f- Shift right click this item to clear all expertise abilities"
                 )
         ));
         inventory.setItem(35, ItemCreator.createBackoutButton());
