@@ -37,11 +37,7 @@ public class SelectedAbilities {
         ItemStack expertise2 = playerInventory.getItem(2);
         ItemStack expertise3 = playerInventory.getItem(3);
 
-        if (AbilityItemManager.isAnAbility(style)) {
-            this.style = AbilityItemManager.getRawAbilityName(style);
-        } else {
-            this.style = AbilityItemManager.getRawAbilityName(style);
-        }
+        this.style = AbilityItemManager.getRawAbilityName(style);
 
         if (AbilityItemManager.isAnAbility(expertise1)) {
             this.expertise1 = AbilityItemManager.getRawAbilityName(expertise1);

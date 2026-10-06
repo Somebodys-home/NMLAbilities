@@ -140,6 +140,7 @@ public class AbilityItemManager {
         ability.setItemMeta(itemMeta);
     }
 
+    // todo: skills is null here when creating ability items on join
     public static boolean meetsExpertiseRequirements(Skills skills, Map<Expertise, Integer> requirements) {
         for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
             int playerSkillLevel = switch (entry.getKey()) {

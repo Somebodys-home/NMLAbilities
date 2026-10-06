@@ -1,7 +1,6 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class SelectedAbilitiesManager {
     private SelectedAbilitiesConfig selectedAbilitiesConfig;
 
     public SelectedAbilitiesManager(NMLAbilities nmlAbilities) {
-        selectedAbilitiesConfig = nmlAbilities.getSelectedConfig();
+        selectedAbilitiesConfig = nmlAbilities.getSelectedAbilitiesConfig();
         config = selectedAbilitiesConfig.getConfig();
     }
 

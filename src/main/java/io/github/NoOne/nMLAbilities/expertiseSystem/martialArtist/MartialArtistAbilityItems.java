@@ -16,7 +16,7 @@ public class MartialArtistAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack dropkick() {
+    public static ItemStack dropKick() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Dropkick",
                 new HashMap<>(){{
@@ -39,6 +39,6 @@ public class MartialArtistAbilityItems extends ExpertiseAbilityItemHelper {
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(dropkick());
+        return List.of(dropKick());
     }
 }

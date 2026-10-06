@@ -2,8 +2,8 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import org.bukkit.*;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.LivingEntity;

@@ -21,11 +21,11 @@ import java.util.Objects;
 
 // the parent for the other ability selection menus
 public class ExpertiseAbilityMenuTemplate extends Menu {
-    private ItemStack clickedItem;
-    private ExpertiseAbilityItemHelper expertiseAbilityItemHelper;
     protected NMLAbilities nmlAbilities;
     protected SelectedAbilities selectedAbilities;
     protected Skills skills;
+    private ItemStack clickedItem;
+    private ExpertiseAbilityItemHelper expertiseAbilityItemHelper;
 
     public ExpertiseAbilityMenuTemplate(NMLAbilities nmlAbilities, Player player, ItemStack clickedItem, ExpertiseAbilityItemHelper expertiseAbilityItemHelper) {
         super(player);
@@ -33,7 +33,7 @@ public class ExpertiseAbilityMenuTemplate extends Menu {
         this.nmlAbilities = nmlAbilities;
         this.clickedItem = clickedItem;
         this.expertiseAbilityItemHelper = expertiseAbilityItemHelper;
-        selectedAbilities = nmlAbilities.getSelectedManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
+        selectedAbilities = nmlAbilities.getSelectedAbilitiesManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
         skills = nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills();
     }
 

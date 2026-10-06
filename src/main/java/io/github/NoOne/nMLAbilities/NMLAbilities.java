@@ -1,9 +1,9 @@
 package io.github.NoOne.nMLAbilities;
 
 import io.github.NoOne.menuSystem.MenuListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
@@ -47,6 +47,8 @@ public class NMLAbilities extends JavaPlugin {
         cooldownManager = new CooldownManager(this);
         cooldownManager.start();
 
+        AbilityEffectsTracker.startDisplayTracker();
+
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));
         getCommand("setRotation").setExecutor(new SetRotationCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
@@ -76,7 +78,7 @@ public class NMLAbilities extends JavaPlugin {
         return instance;
     }
 
-    public SelectedAbilitiesManager getSelectedManager() {
+    public SelectedAbilitiesManager getSelectedAbilitiesManager() {
         return selectedAbilitiesManager;
     }
 
@@ -84,7 +86,7 @@ public class NMLAbilities extends JavaPlugin {
         return skillSetManager;
     }
 
-    public SelectedAbilitiesConfig getSelectedConfig() {
+    public SelectedAbilitiesConfig getSelectedAbilitiesConfig() {
         return selectedAbilitiesConfig;
     }
 

@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLAbilities.abilitySystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLPlayerStats.statSystem.StatChangeEvent;

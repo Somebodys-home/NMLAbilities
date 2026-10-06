@@ -16,7 +16,7 @@ public class SoldierAbilityItems extends ExpertiseAbilityItemHelper {
         super(skills);
     }
 
-    public static ItemStack slash() {
+    public ItemStack slash() {
         return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
                 "Slash",
                 new HashMap<>(){{

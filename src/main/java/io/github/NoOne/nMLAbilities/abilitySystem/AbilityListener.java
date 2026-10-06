@@ -1,13 +1,17 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
+package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -25,17 +29,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.MetadataValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
 public class AbilityListener implements Listener {
     private ProfileManager profileManager;
-    private ItemStack expertiseAbilityItem = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
-    private ItemStack styleAbilityItem = AbilityItemManager.emptyStyleAbilityItem();
+    private SelectedAbilitiesManager selectedAbilitiesManager;
+    private SkillSetManager skillSetManager;
+    private ArrayList<Player> loadedAbilitiesPlayers;
 
     public AbilityListener(NMLAbilities nmlAbilities) {
-        this.profileManager = nmlAbilities.getProfileManager();
+        profileManager = nmlAbilities.getProfileManager();
+        selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
+        skillSetManager = nmlAbilities.getSkillSetManager();
+        loadedAbilitiesPlayers = new ArrayList<>();
     }
 
     @EventHandler
@@ -104,14 +113,27 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler
-    public void blankAbilitiesOnJoin(PlayerJoinEvent event) {
+    public void resetAbilitiesOnJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PlayerInventory playerInventory = player.getInventory();
+        SelectedAbilities selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(player.getUniqueId());
+        Skills skills = skillSetManager.getSkillSet(player.getUniqueId()).getSkills();
 
-        if (playerInventory.getItem(0) == null) player.getInventory().setItem(0, styleAbilityItem);
-        if (playerInventory.getItem(1) == null) player.getInventory().setItem(1, expertiseAbilityItem);
-        if (playerInventory.getItem(2) == null) player.getInventory().setItem(2, expertiseAbilityItem);
-        if (playerInventory.getItem(3) == null) player.getInventory().setItem(3, expertiseAbilityItem);
+        if (!loadedAbilitiesPlayers.contains(player)) {
+            if (selectedAbilities == null) { // first time the player joins the server, give em the default ability items
+                playerInventory.setItem(0, AbilityItemManager.emptyStyleAbilityItem());
+                playerInventory.setItem(1, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+                playerInventory.setItem(2, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+                playerInventory.setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+            } else { // load their abilities from config
+                playerInventory.setItem(0, AbilityItemManager.emptyStyleAbilityItem());
+                playerInventory.setItem(1, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise1()));
+                playerInventory.setItem(2, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise2()));
+                playerInventory.setItem(3, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise3()));
+            }
+
+            loadedAbilitiesPlayers.add(player);
+        }
     }
 
     @EventHandler

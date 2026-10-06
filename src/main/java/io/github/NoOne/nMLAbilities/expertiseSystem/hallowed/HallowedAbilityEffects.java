@@ -2,7 +2,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.hallowed;
 
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public class HallowedAbilityEffects extends AbilityEffectsHelper {
     public static void halo(Player player) {
-        HashMap<DamageType, Double> damage = getDamageForAbility(player, .15, new HashMap<>(){{put(DamageType.RADIANT, .35);}});
+        HashMap<DamageType, Double> damage = getDamageForAbility(player, .15, DamageType.RADIANT, .35);
 
         EnergyManager.useEnergy(player, 25);
         putOnInfiniteCooldown(player);

@@ -1,9 +1,9 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsTracker;
-import io.github.NoOne.nMLAbilities.abilitySystem.OngoingAbilityEffect;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.OngoingAbilityEffect;
 import io.github.NoOne.nMLEnergySystem.EnergyManager;
 import io.github.NoOne.nMLWeapons.ArrowTracker;
 import org.bukkit.*;
@@ -78,7 +78,7 @@ public class MarksmanAbilityEffects extends AbilityEffectsHelper {
         }
     }
 
-    public static void arrowHailStorm(Player player) {
+    public static void arrowHailstorm(Player player) {
         HashMap<DamageType, Double> damage = getDamageForAbility(player, .35);
         World world = player.getWorld();
         int maxTargetingRange = 15;

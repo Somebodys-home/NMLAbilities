@@ -3,7 +3,7 @@ package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityEffectsHelper;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
@@ -23,7 +23,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
         double speed = Maneuvers.getSpeed(player) / 10;
         Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.4);
 
-        if (!player.isOnGround()) { // so the dropkick is about the same both in the air and the ground
+        if (!player.isOnGround()) { // so the dropKick is about the same both in the air and the ground
             dropKick = player.getVelocity().add(dropkickDirection.multiply(.75).setY(.3)).setY(.3);
         }
 
@@ -31,7 +31,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
         player.setVelocity(dropKick);
         player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
 
-        // dropkick runnable
+        // dropKick runnable
         new BukkitRunnable() {
             int groundGracePeriod = 5;
             boolean inHitStop = false;

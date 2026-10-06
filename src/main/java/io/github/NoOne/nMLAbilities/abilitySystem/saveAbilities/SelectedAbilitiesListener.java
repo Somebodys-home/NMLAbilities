@@ -13,8 +13,8 @@ public class SelectedAbilitiesListener implements Listener {
     private SelectedAbilitiesConfig selectedAbilitiesConfig;
 
     public SelectedAbilitiesListener(NMLAbilities nmlAbilities) {
-        selectedAbilitiesManager = nmlAbilities.getSelectedManager();
-        this.selectedAbilitiesConfig = nmlAbilities.getSelectedConfig();
+        selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
+        this.selectedAbilitiesConfig = nmlAbilities.getSelectedAbilitiesConfig();
     }
 
     @EventHandler

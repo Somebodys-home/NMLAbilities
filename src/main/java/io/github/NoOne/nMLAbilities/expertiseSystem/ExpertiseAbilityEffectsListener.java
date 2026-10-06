@@ -26,7 +26,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
     private SelectedAbilitiesManager selectedAbilitiesManager;
 
     public ExpertiseAbilityEffectsListener(NMLAbilities nmlAbilities) {
-        selectedAbilitiesManager = nmlAbilities.getSelectedManager();
+        selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
     }
 
     @EventHandler
@@ -61,7 +61,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
                 case "Shield Punch" -> ShieldHeroAbilityEffects.shieldPunch(player);
 
                 // Marksman abilities
-                case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailStorm(player);
+                case "Arrow Hailstorm" -> MarksmanAbilityEffects.arrowHailstorm(player);
                 case "Steady Aim" -> MarksmanAbilityEffects.steadyAim(player, toggleState);
 
                 // Sorcerer abilities
