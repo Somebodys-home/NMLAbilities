@@ -35,40 +35,37 @@ public class AbilityItemManager {
     private static NamespacedKey weaponsKey = new NamespacedKey(nmlAbilities, "weapons");
 
     public static ItemStack emptyStyleAbilityItem() {
-        ItemStack emptyStyle = ItemCreator.createItem(
+        return makeAbilityItem(ItemCreator.createItem(
                 Material.LIGHT_BLUE_DYE,
                 "§bEmpty Style Ability",
                 List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
-        );
-        ItemMeta itemMeta = emptyStyle.getItemMeta();
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-
-        pdc.set(abilityKey, PersistentDataType.INTEGER, 0);
-        emptyStyle.setItemMeta(itemMeta);
-        return emptyStyle;
+        ));
     }
 
     public static ItemStack cooldownItem() {
-        ItemStack cooldown = ItemCreator.createItem(Material.GRAY_DYE, "§7This ability is on cooldown!");
-        ItemMeta itemMeta = cooldown.getItemMeta();
+        return makeAbilityItem(ItemCreator.createItem(Material.GRAY_DYE, "§7This ability is on cooldown!"));
+    }
+
+    public static ItemStack makeAbilityItem(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
-        pdc.set(abilityKey, PersistentDataType.INTEGER, 0);
-        cooldown.setItemMeta(itemMeta);
-        return cooldown;
+        pdc.set(abilityKey, PersistentDataType.BOOLEAN, true);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     public static void setExpertiseKeys(ItemStack ability, int cooldown, int energyCost, boolean toggleable) {
         ItemMeta itemMeta = ability.getItemMeta();
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
-        pdc.set(AbilityItemManager.getAbilityKey(), PersistentDataType.BOOLEAN, true);
-        pdc.set(AbilityItemManager.getCooldownKey(), PersistentDataType.INTEGER, cooldown);
-        pdc.set(AbilityItemManager.getEnergyKey(), PersistentDataType.INTEGER, energyCost);
+        pdc.set(abilityKey, PersistentDataType.BOOLEAN, true);
+        pdc.set(cooldownKey, PersistentDataType.INTEGER, cooldown);
+        pdc.set(energyKey, PersistentDataType.INTEGER, energyCost);
 
         if (toggleable) {
-            pdc.set(AbilityItemManager.getToggleKey(), PersistentDataType.BOOLEAN, false);
-            pdc.set(AbilityItemManager.getOriginalItemKey(), PersistentDataType.STRING, ability.getType().toString());
+            pdc.set(toggleKey, PersistentDataType.BOOLEAN, false);
+            pdc.set(originalItemKey, PersistentDataType.STRING, ability.getType().toString());
         }
 
         ability.setItemMeta(itemMeta);
@@ -140,7 +137,6 @@ public class AbilityItemManager {
         ability.setItemMeta(itemMeta);
     }
 
-    // todo: skills is null here when creating ability items on join
     public static boolean meetsExpertiseRequirements(Skills skills, Map<Expertise, Integer> requirements) {
         for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
             int playerSkillLevel = switch (entry.getKey()) {
@@ -182,6 +178,24 @@ public class AbilityItemManager {
         return meetsExpertiseRequirements(skills, requirements);
     }
 
+    public static boolean meetsExpertiseRequirement(Skills skills, Expertise expertise, int level) {
+        int playerSkillLevel = switch (expertise) {
+            case SOLDIER -> skills.getSoldierLevel();
+            case ASSASSIN -> skills.getAssassinLevel();
+            case MARAUDER -> skills.getMarauderLevel();
+            case CAVALIER -> skills.getCavalierLevel();
+            case MARTIAL_ARTIST -> skills.getMartialArtistLevel();
+            case SHIELD_HERO -> skills.getShieldHeroLevel();
+            case MARKSMAN -> skills.getMarksmanLevel();
+            case SORCERER -> skills.getSorcererLevel();
+            case PRIMORDIAL -> skills.getPrimordialLevel();
+            case HALLOWED -> skills.getHallowedLevel();
+            case ANNULLED -> skills.getAnnulledLevel();
+        };
+
+        return playerSkillLevel >= level;
+    }
+
     public static boolean meetsPrerequisites(Player player, ItemStack ability) {
         ArrayList<AbilityPrerequisite> prerequisites = getPrerequisitesForAbility(ability);
 
@@ -205,7 +219,7 @@ public class AbilityItemManager {
         ItemStack mainHand = player.getInventory().getItemInMainHand();
         ItemStack offhand = player.getInventory().getItemInOffHand();
 
-        if (requiredWeapons.isEmpty()) { // if an ability doesnt use weapons
+        if (requiredWeapons == null || requiredWeapons.isEmpty()) { // if an ability doesnt use weapons
             return true;
         } else {
             for (ItemType itemType : requiredWeapons) { // iterates thru all the weapon types, returning true if the player matches one of em
@@ -341,33 +355,5 @@ public class AbilityItemManager {
         }
 
         return null;
-    }
-
-    public static NamespacedKey getAbilityKey() {
-        return abilityKey;
-    }
-
-    public static NamespacedKey getExpertiseRequirementsKey() {
-        return expertiseRequirementsKey;
-    }
-
-    public static NamespacedKey getCooldownKey() {
-        return cooldownKey;
-    }
-
-    public static NamespacedKey getToggleKey() {
-        return toggleKey;
-    }
-
-    public static NamespacedKey getOriginalItemKey() {
-        return originalItemKey;
-    }
-
-    public static NamespacedKey getEnergyKey() {
-        return energyKey;
-    }
-
-    public static NamespacedKey getPrerequisitesKey() {
-        return prerequisitesKey;
     }
 }

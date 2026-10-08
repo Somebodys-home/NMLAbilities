@@ -33,6 +33,7 @@ public class SorcererAbilityEffects extends AbilityEffectsHelper {
                 activeMissiles++;
 
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, .6f, 1f);
+                player.swingMainHand();
 
                 Random random = new Random();
                 Vector direction = player.getEyeLocation().getDirection();

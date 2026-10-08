@@ -85,7 +85,6 @@ public class ExpertiseMainMenu extends Menu {
         inventory.setItem(33, expertiseMenuItems.annulled());
         inventory.setItem(44, ItemCreator.createItem(
                 Material.STRUCTURE_BLOCK,
-                1,
                 "§7§lChange Ability Loadout",
                 null
         ));

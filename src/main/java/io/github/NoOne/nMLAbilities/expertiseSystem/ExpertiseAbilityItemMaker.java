@@ -19,9 +19,6 @@ import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +29,11 @@ import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class ExpertiseAbilityItemMaker {
     public static ItemStack emptyExpertiseAbilityItem() {
-        ItemStack expertise = ItemCreator.createItem(
+        return AbilityItemManager.makeAbilityItem(ItemCreator.createItem(
                 Material.MAGENTA_DYE,
-                1,
                 "§dEmpty Expertise Ability",
-                List.of(
-                        "§7An empty ability slot. Dunno why you'd put nothing here."
-                )
-        );
-
-        ItemMeta meta = expertise.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-
-        pdc.set(AbilityItemManager.getAbilityKey(), PersistentDataType.INTEGER, 1);
-        expertise.setItemMeta(meta);
-        return expertise;
+                List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
+        ));
     }
 
     public static ItemStack makeExpertiseAbilityItem(String name, Map<Expertise, Integer> expertiseRequirements, String description, List<AbilityPrerequisite> prerequisites,
@@ -66,8 +53,9 @@ public class ExpertiseAbilityItemMaker {
         for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
             String string = Expertise.toString(entry.getKey());
             String requirementString = "§8Lv. " + entry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
+            boolean meets = AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue());
 
-            if (meetsRequirements) {
+            if (meets) {
                 requirementString += " §a✔";
             } else {
                 requirementString += " §c✖";
@@ -182,6 +170,7 @@ public class ExpertiseAbilityItemMaker {
 
         return switch (name) {
             case "Slash" -> soldierAbilityItems.slash();
+            case "X-Slash" -> soldierAbilityItems.xSlash();
 
             // Assassin abilities
             case "Slash & Dash" -> assassinAbilityItems.slashAndDash();
@@ -219,45 +208,60 @@ public class ExpertiseAbilityItemMaker {
 
             // Annulled abilities
             case "Black Hole" -> annulledAbilityItems.blackHole();
-            default -> new ItemStack(Material.BARRIER);
+
+            // misc
+            case "Empty Expertise Ability" -> ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
+            default -> AbilityItemManager.makeAbilityItem(ItemCreator.createItem(
+                    Material.BARRIER,
+                    "§cThis ability didn't load properly!",
+                    List.of(
+                            "§8§oIf you're reading this, then",
+                            "§8§othis ability didn't load properly",
+                            "§8§ofrom the server's config.",
+                            "§8§oSorry. (._.7)"
+                    )
+            ));
         };
     }
 
     private static ArrayList<String> linebreak(String string) {
         ArrayList<String> breaks = new ArrayList<>();
-        int startingIndex = 0;
 
-        while (startingIndex < string.length()) {
-            // the ending index of the current string break is 36 characters or the length of the string
-            int end = Math.min(string.length(), startingIndex + 36);
+        for (String string2 : string.split("\n")) {
+            int startingIndex = 0;
 
-            // if there's more to the string, and it doesn't end on a space, move the end to the previous word
-            if (end < string.length() && string.charAt(end) != ' ') {
-                int lastSpace = string.lastIndexOf(' ', end);
+            while (startingIndex < string2.length()) {
+                // the ending index of the current string break is 36 characters or the length of the string
+                int end = Math.min(string2.length(), startingIndex + 36);
 
-                if (lastSpace > startingIndex) {
-                    end = lastSpace;
+                // if there's more to the string, and it doesn't end on a space, move the end to the previous word
+                if (end < string2.length() && string2.charAt(end) != ' ') {
+                    int lastSpace = string2.lastIndexOf(' ', end);
+
+                    if (lastSpace > startingIndex) {
+                        end = lastSpace;
+                    }
                 }
-            }
 
-            // actually getting that chunk of the string and making it gray
-            String chunk = "§7" + string.substring(startingIndex, end).trim();
+                // actually getting that chunk of the string and making it gray
+                String chunk = "§7" + string2.substring(startingIndex, end).trim();
 
-            // censoring swear words in abilities
-            while (chunk.contains("&k")) {
-                int censorIndex = chunk.indexOf("&k");
-                String tempChunk = chunk.substring(censorIndex);
-                String censorWord = tempChunk.substring(0, tempChunk.indexOf(" ")); // the idea is the censored word would be "&kblah ", for example
-                String censoredWord = censorWord.replace("&", "§") + "§r§7";
+                // censoring swear words in abilities
+                while (chunk.contains("&k")) {
+                    int censorIndex = chunk.indexOf("&k");
+                    String tempChunk = chunk.substring(censorIndex);
+                    String censorWord = tempChunk.substring(0, tempChunk.indexOf(" ")); // the idea is the censored word would be "&kblah ", for example
+                    String censoredWord = censorWord.replace("&", "§") + "§r§7";
 
-                chunk = chunk.replace(censorWord, censoredWord);
-            }
+                    chunk = chunk.replace(censorWord, censoredWord);
+                }
 
-            breaks.add(chunk);
-            startingIndex = end;
+                breaks.add(chunk);
+                startingIndex = end;
 
-            while (startingIndex < string.length() && string.charAt(startingIndex) == ' ') {
-                startingIndex++;
+                while (startingIndex < string2.length() && string2.charAt(startingIndex) == ' ') {
+                    startingIndex++;
+                }
             }
         }
 

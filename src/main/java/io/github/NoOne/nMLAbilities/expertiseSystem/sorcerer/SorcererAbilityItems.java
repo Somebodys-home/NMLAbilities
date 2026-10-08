@@ -31,7 +31,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItemHelper {
                 0,
                 8,
                 15,
-                List.of(makeWeaponDamageString(50) + makePerString("missile")),
+                List.of(makeWeaponDamageString(50) + makeTimesString(5)),
                 null,
                 List.of(WAND, STAFF, CATALYST), 
                 skills
@@ -50,7 +50,7 @@ public class SorcererAbilityItems extends ExpertiseAbilityItemHelper {
                 "Area",
                 12,
                 5,
-                1,
+                15,
                 25,
                 List.of(makeElementalDamageString(DamageType.FIRE, .25) + makeEverySecondString(.25)),
                 null,

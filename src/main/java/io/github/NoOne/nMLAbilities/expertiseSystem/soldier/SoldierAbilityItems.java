@@ -22,7 +22,7 @@ public class SoldierAbilityItems extends ExpertiseAbilityItemHelper {
                 new HashMap<>(){{
                     put(Expertise.SOLDIER, 1);
                 }},
-                "Yep.", 
+                "Yep.",
                 null,
                 false,
                 "Area",
@@ -32,13 +32,34 @@ public class SoldierAbilityItems extends ExpertiseAbilityItemHelper {
                 15,
                 List.of(makeWeaponDamageString(120)),
                 null,
-                List.of(SWORD, AXE, SPEAR), 
+                List.of(SWORD, AXE, SPEAR),
+                skills
+        );
+    }
+
+    public ItemStack xSlash() {
+        return ExpertiseAbilityItemMaker.makeExpertiseAbilityItem(
+                "X-Slash",
+                new HashMap<>(){{
+                    put(Expertise.SOLDIER, 10);
+                }},
+                "It's a slash in an X shape!\n...\nI'm so bad at describing soldier abilities I promise it's cool.",
+                null,
+                false,
+                "Area",
+                3,
+                0,
+                0,
+                15,
+                List.of(makeWeaponDamageString(80) + makeTimesString(2)),
+                null,
+                List.of(SWORD),
                 skills
         );
     }
 
     @Override
     public List<ItemStack> getAllExpertiseAbilityItems() {
-        return List.of(slash());
+        return List.of(slash(), xSlash());
     }
 }

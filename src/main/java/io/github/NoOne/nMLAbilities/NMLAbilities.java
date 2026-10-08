@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities;
 
 import io.github.NoOne.menuSystem.MenuListener;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;

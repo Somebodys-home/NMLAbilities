@@ -41,6 +41,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
             switch (abilityName) {
                 // Soldier abilities
                 case "Slash" -> SoldierAbilityEffects.slash(player);
+                case "X-Slash" -> SoldierAbilityEffects.xSlash(player);
 
                 // Assassin abilities
                 case "Slash & Dash" -> AssassinAbilityEffects.slashAndDash(player);

@@ -18,8 +18,7 @@ public class ExpertiseMenuItems {
     public ItemStack soldier() {
         double percent = skills.getSoldierExp() / skills.getExp2LvlUpSoldier() * 100.0;
         ItemStack soldier = ItemCreator.createItem(
-                Material.IRON_SWORD,
-                1,
+                Material.DIAMOND_SWORD,
                 "§fLv. " + skills.getSoldierLevel() +  " §c§lSoldier",
                 List.of(
                         "§8" + skills.getSoldierExp() + " / " + skills.getExp2LvlUpSoldier() + " exp (" + percent + "%)",
@@ -40,7 +39,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.BLACK_WOOL,
-                1,
                 "§fLv. " + skills.getAssassinLevel() +  " §0§lAssassin",
                 List.of(
                         "§8" + skills.getAssassinExp() + " / " + skills.getExp2LvlUpAssassin() + " exp (" + percent + "%)",
@@ -57,8 +55,7 @@ public class ExpertiseMenuItems {
     public ItemStack marauder() {
         double percent = skills.getMarauderExp() / skills.getExp2LvlUpMarauder() * 100.0;
         ItemStack marauder = ItemCreator.createItem(
-                Material.IRON_AXE,
-                1,
+                Material.GOLDEN_AXE,
                 "§fLv. " + skills.getMarauderLevel() +  " §4§lMarauder",
                 List.of(
                         "§8" + skills.getMarauderExp() + " / " + skills.getExp2LvlUpMarauder() + " exp (" + percent + "%)",
@@ -78,7 +75,6 @@ public class ExpertiseMenuItems {
         double percent = skills.getCavalierExp() / skills.getExp2LvlUpCavalier() * 100.0;
         ItemStack cavalier = ItemCreator.createItem(
                 Material.MACE,
-                1,
                 "§fLv. " + skills.getCavalierLevel() +  " §1§lCavalier",
                 List.of(
                         "§8" + skills.getCavalierExp() + " / " + skills.getExp2LvlUpCavalier() + " exp (" + percent + "%)",
@@ -99,7 +95,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.RED_GLAZED_TERRACOTTA,
-                1,
                 "§fLv. " + skills.getMartialArtistLevel() +  " §4§lMartial Artist",
                 List.of(
                         "§8" + skills.getMartialArtistExp() + " / " + skills.getExp2LvlUpCombat() + " exp (" + percent + "%)",
@@ -117,7 +112,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.SHIELD,
-                1,
                 "§fLv. " + skills.getShieldHeroLevel() +  " §3§lShield Hero",
                 List.of(
                         "§8" + skills.getShieldHeroExp() + " / " + skills.getExp2LvlUpShieldHero() + " exp (" + percent + "%)",
@@ -134,7 +128,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.BOW,
-                1,
                 "§fLv. " + skills.getMarksmanLevel() +  " §a§lMarksman",
                 List.of(
                         "§8" + skills.getMarksmanExp() + " / " + skills.getExp2LvlUpMarksman() + " exp (" + percent + "%)",
@@ -151,7 +144,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.ENCHANTED_BOOK,
-                1,
                 "§fLv. " + skills.getSorcererLevel() +  " §6§lSorcerer",
                 List.of(
                         "§8" + skills.getSorcererExp() + " / " + skills.getExp2LvlUpSorcerer() + " exp (" + percent + "%)",
@@ -169,7 +161,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.OAK_SAPLING,
-                1,
                 "§fLv. " + skills.getPrimordialLevel() +  " §2§lPrimordial",
                 List.of(
                         "§8" + skills.getPrimordialExp() + " / " + skills.getExp2LvlUpPrimordial() + " exp (" + percent + "%)",
@@ -186,7 +177,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.OXEYE_DAISY,
-                1,
                 "§fLv. " + skills.getHallowedLevel() +  " §f§lHallowed",
                 List.of(
                         "§8" + skills.getHallowedExp() + " / " + skills.getExp2LvlUpHallowed() + " exp (" + percent + "%)",
@@ -203,7 +193,6 @@ public class ExpertiseMenuItems {
 
         return ItemCreator.createItem(
                 Material.CRYING_OBSIDIAN,
-                1,
                 "§fLv. " + skills.getAnnulledLevel() +  " §5§lAnnulled",
                 List.of(
                         "§8" + skills.getAnnulledExp() + " / " + skills.getExp2LvlUpAnnulled() + " exp (" + percent + "%)",

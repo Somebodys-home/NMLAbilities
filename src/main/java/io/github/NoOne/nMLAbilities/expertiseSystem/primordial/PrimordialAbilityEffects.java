@@ -24,6 +24,7 @@ public class PrimordialAbilityEffects extends AbilityEffectsHelper {
         world.spawnParticle(Particle.SWEEP_ATTACK, playerLocation.add(0, 1, 0).add(playerLocation.getDirection().multiply(1.2)), 1);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, .5f, 1f);
         useEnergyAndCooldown(player, 10, .5);
+        player.swingMainHand();
 
         // rock
         FallingBlock rock = world.spawnFallingBlock(playerLocation, Bukkit.createBlockData(Material.STONE_BUTTON));
@@ -78,6 +79,7 @@ public class PrimordialAbilityEffects extends AbilityEffectsHelper {
         useEnergyAndCooldown(player, 30, 1.25);
         player.playSound(player.getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 1f, 1f);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+        player.swingMainHand();
 
         new BukkitRunnable() {
             int candyInterval = 4; // interval for how long it takes for candy to pop out of the pumpkin

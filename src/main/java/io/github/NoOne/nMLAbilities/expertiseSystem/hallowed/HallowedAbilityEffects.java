@@ -23,6 +23,7 @@ public class HallowedAbilityEffects extends AbilityEffectsHelper {
         putOnInfiniteCooldown(player);
         player.playSound(player, Sound.ITEM_TRIDENT_RIPTIDE_1, 1f, 1f);
         player.playSound(player, Sound.ITEM_ELYTRA_FLYING, .5f, 1f);
+        player.swingMainHand();
 
         new BukkitRunnable() {
             int ticks = 0;

@@ -1,10 +1,10 @@
-package io.github.NoOne.nMLAbilities.abilitySystem;
+package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
 import io.github.NoOne.damagePlugin.customDamage.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
@@ -99,12 +99,12 @@ public class AbilityListener implements Listener {
                 } else { // if it will be turned off, put on cooldown
                     AbilityItemManager.setToggleState(ability, false);
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
-                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
+                    CooldownManager.putOnSoftCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 }
             } else { // if it isn't a toggleable
                 if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) { // energy check
                     Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
-                    CooldownManager.putOnCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
+                    CooldownManager.putOnSoftCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 } else {
                     player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                 }

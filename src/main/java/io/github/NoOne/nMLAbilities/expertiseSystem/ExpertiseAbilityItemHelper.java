@@ -37,12 +37,10 @@ public class ExpertiseAbilityItemHelper {
     }
 
     protected static String makeEverySecondString(double time) {
-        String timeString = String.valueOf(time);
+        String timeString = String.valueOf(time).replace("0.", ".");
 
         if (time == (int) time) {
             timeString = String.valueOf((int) time);
-        } else {
-            timeString = timeString.replace(".0", "");
         }
 
         return " §8§o(every " + timeString + "s)";

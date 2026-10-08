@@ -220,6 +220,7 @@ public class AbilityEffectsHelper {
         }
     }
 
+    // wireframe methods are generally just for testing purposes
     public static void makeWireFrameRectangle(Location center, double length, double height, double width, int ticks) {
         new BukkitRunnable() {
             World world = center.getWorld();
@@ -273,6 +274,18 @@ public class AbilityEffectsHelper {
 
     public static Vector makeKnockbackVector(Location entityLocation, Location epicenter, double scale, double y) {
         return entityLocation.toVector().subtract(epicenter.toVector()).normalize().multiply(scale).setY(y);
+    }
+
+    // directionalOffset = how far to the left/right
+    // (-) = left, (+) = right
+    public static Location rotateLocationAroundYaw(Location initalLocation, float yaw, double forwardOffset, double directionalOffset) {
+        double radians = Math.toRadians(yaw);
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+        double dx = -sin * forwardOffset + cos * -directionalOffset;
+        double dz =  cos * forwardOffset + sin * -directionalOffset;
+
+        return initalLocation.clone().add(dx, 0, dz);
     }
     
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, HashMap<DamageType, Double> elementalDamages) {
