@@ -49,9 +49,9 @@ public class SoldierAbilityItems extends ExpertiseAbilityItemHelper {
                 "Area",
                 3,
                 0,
-                0,
-                15,
-                List.of(makeWeaponDamageString(80) + makeTimesString(2)),
+                7,
+                20,
+                List.of(makeWeaponDamageString(115) + makeTimesString(2)),
                 null,
                 List.of(SWORD),
                 skills

@@ -220,6 +220,19 @@ public class AbilityEffectsHelper {
         }
     }
 
+    public static void particleLine(Particle.DustOptions dustOptions, Location start, Location end, int particleCount) {
+        World world = start.getWorld();
+        Vector startVec = start.toVector();
+        Vector direction = end.toVector().subtract(startVec);
+
+        for (int i = 0; i < particleCount; i++) {
+            double t = (double) i / (particleCount - 1); // 0 → 1 inclusive
+
+            Vector point = startVec.clone().add(direction.clone().multiply(t));
+            world.spawnParticle(Particle.DUST, point.toLocation(world), 1, 0, 0, 0, 0, dustOptions);
+        }
+    }
+
     // wireframe methods are generally just for testing purposes
     public static void makeWireFrameRectangle(Location center, double length, double height, double width, int ticks) {
         new BukkitRunnable() {
@@ -272,20 +285,65 @@ public class AbilityEffectsHelper {
         makeWireFrameRectangle(center, radius, radius, radius, ticks);
     }
 
+    public static void makeWireFrameRectangle(Location corner1, Location corner2) {
+        World world = corner1.getWorld();
+        double minX = Math.min(corner1.getX(), corner2.getX());
+        double minY = Math.min(corner1.getY(), corner2.getY());
+        double minZ = Math.min(corner1.getZ(), corner2.getZ());
+        double maxX = Math.max(corner1.getX(), corner2.getX());
+        double maxY = Math.max(corner1.getY(), corner2.getY());
+        double maxZ = Math.max(corner1.getZ(), corner2.getZ());
+        double step = .5;
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.FUCHSIA, 1f);
+
+        for (double x = minX; x <= maxX; x += step) {
+            world.spawnParticle(Particle.DUST, new Location(world, x, minY, minZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, x, maxY, minZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, x, minY, maxZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, x, maxY, maxZ), 1, 0, 0, 0, 0, dustOptions);
+        }
+
+        for (double y = minY; y <= maxY; y += step) {
+            world.spawnParticle(Particle.DUST, new Location(world, minX, y, minZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, maxX, y, minZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, minX, y, maxZ), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, maxX, y, maxZ), 1, 0, 0, 0, 0, dustOptions);
+        }
+
+        for (double z = minZ; z <= maxZ; z += step) {
+            world.spawnParticle(Particle.DUST, new Location(world, minX, minY, z), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, maxX, minY, z), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, minX, maxY, z), 1, 0, 0, 0, 0, dustOptions);
+            world.spawnParticle(Particle.DUST, new Location(world, maxX, maxY, z), 1, 0, 0, 0, 0, dustOptions);
+        }
+    }
+
     public static Vector makeKnockbackVector(Location entityLocation, Location epicenter, double scale, double y) {
         return entityLocation.toVector().subtract(epicenter.toVector()).normalize().multiply(scale).setY(y);
     }
 
-    // directionalOffset = how far to the left/right
-    // (-) = left, (+) = right
-    public static Location rotateLocationAroundYaw(Location initalLocation, float yaw, double forwardOffset, double directionalOffset) {
-        double radians = Math.toRadians(yaw);
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        double dx = -sin * forwardOffset + cos * -directionalOffset;
-        double dz =  cos * forwardOffset + sin * -directionalOffset;
+    // returns the direction of a location with its y value zeroed out
+    public static Vector getPlanarDirection(Location location) {
+        Vector vector = location.getDirection();
 
-        return initalLocation.clone().add(dx, 0, dz);
+        vector.setY(0);
+        return vector.normalize();
+    }
+
+    // returns a vector that points to the left of a given location, based on the direction of the location
+    public static Vector pointToTheLeft(Location location) {
+        float yaw = location.getYaw() - 90f;
+        double yawRad = yaw * (Math.PI / 180d);
+
+        return new Vector(-Math.sin(yawRad), 0, Math.cos(yawRad));
+    }
+
+    // returns a vector that points to the right of a given location, based on the direction of the location
+    public static Vector pointToTheRight(Location location) {
+        float yaw = location.getYaw() - 90f;
+        double yawRad = yaw * (Math.PI / 180d);
+
+        return new Vector(Math.sin(yawRad), 0, -Math.cos(yawRad));
     }
     
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, HashMap<DamageType, Double> elementalDamages) {
