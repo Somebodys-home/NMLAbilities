@@ -48,6 +48,7 @@ public class SelectedAbilitiesManager {
         for (UUID uuid : selectedAbilitiesMap.keySet()) {
             SelectedAbilities selectedAbilities = selectedAbilitiesMap.get(uuid);
 
+            selectedAbilities.errorAbilityCheck();
             config.set(uuid + ".abilities.style", selectedAbilities.getStyle());
             config.set(uuid + ".abilities.expertise1", selectedAbilities.getExpertise1());
             config.set(uuid + ".abilities.expertise2", selectedAbilities.getExpertise2());
@@ -59,6 +60,7 @@ public class SelectedAbilitiesManager {
         UUID uuid = player.getUniqueId();
         SelectedAbilities selectedAbilities = selectedAbilitiesMap.get(uuid);
 
+        selectedAbilities.errorAbilityCheck();
         config.set(uuid + ".abilities.style", selectedAbilities.getStyle());
         config.set(uuid + ".abilities.expertise1", selectedAbilities.getExpertise1());
         config.set(uuid + ".abilities.expertise2", selectedAbilities.getExpertise2());

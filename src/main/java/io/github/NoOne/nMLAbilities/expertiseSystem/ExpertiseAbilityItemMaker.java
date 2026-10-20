@@ -211,16 +211,7 @@ public class ExpertiseAbilityItemMaker {
 
             // misc
             case "Empty Expertise Ability" -> ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
-            default -> AbilityItemManager.makeAbilityItem(ItemCreator.createItem(
-                    Material.BARRIER,
-                    "§cThis ability didn't load properly!",
-                    List.of(
-                            "§8§oIf you're reading this, then",
-                            "§8§othis ability didn't load properly",
-                            "§8§ofrom the server's config.",
-                            "§8§oSorry. (._.7)"
-                    )
-            ));
+            default -> AbilityItemManager.errorLoadingAbilityItem();
         };
     }
 

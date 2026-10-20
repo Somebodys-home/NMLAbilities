@@ -11,12 +11,14 @@ public class SelectedAbilities {
     private String expertise1;
     private String expertise2;
     private String expertise3;
+    private String emptyExpertiseAbilityName;
 
     public SelectedAbilities(String style, String expertise3, String expertise1, String expertise2) {
         this.style = style;
         this.expertise1 = expertise1;
         this.expertise2 = expertise2;
         this.expertise3 = expertise3;
+        emptyExpertiseAbilityName = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
     }
 
     public String[] getSelectedAbilitiesArray() {
@@ -25,9 +27,9 @@ public class SelectedAbilities {
 
     public void clearSelectedAbilities() {
         style = AbilityItemManager.getRawAbilityName(AbilityItemManager.emptyStyleAbilityItem());
-        expertise1 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
-        expertise2 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
-        expertise3 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+        expertise1 = emptyExpertiseAbilityName;
+        expertise2 = emptyExpertiseAbilityName;
+        expertise3 = emptyExpertiseAbilityName;
     }
 
     public void syncSelectedAbilitiesToInventory(Player player) {
@@ -42,20 +44,33 @@ public class SelectedAbilities {
         if (AbilityItemManager.isAnAbility(expertise1)) {
             this.expertise1 = AbilityItemManager.getRawAbilityName(expertise1);
         } else {
-            this.expertise1 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+            this.expertise1 = emptyExpertiseAbilityName;
         }
 
         if (AbilityItemManager.isAnAbility(expertise2)) {
             this.expertise2 = AbilityItemManager.getRawAbilityName(expertise2);
         } else {
-            this.expertise2 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+            this.expertise2 = emptyExpertiseAbilityName;
         }
 
         if (AbilityItemManager.isAnAbility(expertise3)) {
             this.expertise3 = AbilityItemManager.getRawAbilityName(expertise3);
         } else {
-            this.expertise3 = AbilityItemManager.getRawAbilityName(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
+            this.expertise3 = emptyExpertiseAbilityName;
         }
+    }
+
+    // method that checks if any saved abilities are of the AbilityItemManager.errorLoadingAbilityItem()
+    public void errorAbilityCheck() {
+        String errorName = AbilityItemManager.getRawAbilityName(AbilityItemManager.errorLoadingAbilityItem());
+
+        System.out.println(errorName);
+        System.out.println(expertise1);
+        System.out.println(expertise2);
+        System.out.println(expertise3);
+        if (expertise1.equals(errorName)) expertise1 = emptyExpertiseAbilityName;
+        if (expertise2.equals(errorName)) expertise2 = emptyExpertiseAbilityName;
+        if (expertise3.equals(errorName)) expertise3 = emptyExpertiseAbilityName;
     }
 
     public String getStyle() {

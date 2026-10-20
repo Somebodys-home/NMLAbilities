@@ -46,6 +46,19 @@ public class AbilityItemManager {
         return makeAbilityItem(ItemCreator.createItem(Material.GRAY_DYE, "§7This ability is on cooldown!"));
     }
 
+    public static ItemStack errorLoadingAbilityItem() {
+        return makeAbilityItem(ItemCreator.createItem(
+                Material.BARRIER,
+                "§cThis ability didn't load properly!",
+                List.of(
+                        "§8§oIf you're reading this, then",
+                        "§8§othis ability didn't load properly",
+                        "§8§ofrom the server's config.",
+                        "§8§oSorry. (._.7)"
+                )
+        ));
+    }
+
     public static ItemStack makeAbilityItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
