@@ -11,16 +11,14 @@ import org.jetbrains.annotations.NotNull;
 public class UseAbilityEvent extends Event implements Cancellable {
     private static HandlerList handlers = new HandlerList();
     private Player player;
-    private ItemStack weapon;
     private ItemStack ability;
-    private int hotbarSlot;
+    private String abilityClass; // for if the ability is an expertise or style ability
     private boolean cancelled;
 
-    public UseAbilityEvent(@NotNull Player player, ItemStack weapon, ItemStack ability, int hotbarSlot) {
+    public UseAbilityEvent(@NotNull Player player, ItemStack ability, String abilityClass) {
         this.player = player;
-        this.weapon = weapon;
         this.ability = ability;
-        this.hotbarSlot = hotbarSlot;
+        this.abilityClass = abilityClass;
         cancelled = false;
     }
 
@@ -37,16 +35,12 @@ public class UseAbilityEvent extends Event implements Cancellable {
         return player;
     }
 
-    public ItemStack getWeapon() {
-        return weapon;
-    }
-
     public ItemStack getAbility() {
         return ability;
     }
 
-    public int getHotbarSlot() {
-        return hotbarSlot;
+    public String getAbilityClass() {
+        return abilityClass;
     }
 
     @Override

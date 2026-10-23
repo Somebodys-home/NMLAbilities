@@ -64,10 +64,6 @@ public class SelectedAbilities {
     public void errorAbilityCheck() {
         String errorName = AbilityItemManager.getRawAbilityName(AbilityItemManager.errorLoadingAbilityItem());
 
-        System.out.println(errorName);
-        System.out.println(expertise1);
-        System.out.println(expertise2);
-        System.out.println(expertise3);
         if (expertise1.equals(errorName)) expertise1 = emptyExpertiseAbilityName;
         if (expertise2.equals(errorName)) expertise2 = emptyExpertiseAbilityName;
         if (expertise3.equals(errorName)) expertise3 = emptyExpertiseAbilityName;

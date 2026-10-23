@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.NoOne</groupId>
-    <artifactId>nmlAbilities</artifactId>
+    <artifactId>NMLAbilities</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>nmlAbilities</name>
+    <name>NMLAbilities</name>
 
     <properties>
         <java.version>25</java.version>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLSkills</artifactId>
-            <version>8623857344</version>
+            <version>a6c53e7897</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

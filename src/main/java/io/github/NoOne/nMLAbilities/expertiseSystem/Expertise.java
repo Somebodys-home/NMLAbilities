@@ -32,18 +32,18 @@ public enum Expertise {
     }
 
     public static Expertise fromString(String string) {
-        return switch (string) {
-            case "Soldier" -> SOLDIER;
-            case "Assassin" -> ASSASSIN;
-            case "Marauder" -> MARAUDER;
-            case "Cavalier" -> CAVALIER;
-            case "Martial Artist" -> MARTIAL_ARTIST;
-            case "Shield Hero" -> SHIELD_HERO;
-            case "Marksman" -> MARKSMAN;
-            case "Sorcerer" -> SORCERER;
-            case "Primordial" -> PRIMORDIAL;
-            case "Hallowed" -> HALLOWED;
-            case "Annulled" -> ANNULLED;
+        return switch (string.toLowerCase().replace(" ", "")) {
+            case "soldier" -> SOLDIER;
+            case "assassin" -> ASSASSIN;
+            case "marauder" -> MARAUDER;
+            case "cavalier" -> CAVALIER;
+            case "martialartist" -> MARTIAL_ARTIST;
+            case "shieldhero" -> SHIELD_HERO;
+            case "marksman" -> MARKSMAN;
+            case "sorcerer" -> SORCERER;
+            case "primordial" -> PRIMORDIAL;
+            case "hallowed" -> HALLOWED;
+            case "annulled" -> ANNULLED;
             default -> null;
         };
     }

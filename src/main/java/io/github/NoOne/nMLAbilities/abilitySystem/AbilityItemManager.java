@@ -7,6 +7,7 @@ import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -16,10 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
@@ -33,6 +31,7 @@ public class AbilityItemManager {
     private static NamespacedKey energyKey = new NamespacedKey(nmlAbilities, "energy");
     private static NamespacedKey prerequisitesKey = new NamespacedKey(nmlAbilities, "prerequisites");
     private static NamespacedKey weaponsKey = new NamespacedKey(nmlAbilities, "weapons");
+    private static NamespacedKey descriptionKey = new NamespacedKey(nmlAbilities, "description");
 
     public static ItemStack emptyStyleAbilityItem() {
         return makeAbilityItem(ItemCreator.createItem(
@@ -150,6 +149,19 @@ public class AbilityItemManager {
         ability.setItemMeta(itemMeta);
     }
 
+    public static void setDescription(ItemStack ability, List<String> description) {
+        ItemMeta itemMeta = ability.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        String descriptionString = "";
+
+        for (String s : description) {
+            descriptionString += s + "/";
+        }
+
+        pdc.set(descriptionKey, PersistentDataType.STRING, descriptionString);
+        ability.setItemMeta(itemMeta);
+    }
+
     public static boolean meetsExpertiseRequirements(Skills skills, Map<Expertise, Integer> requirements) {
         for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
             int playerSkillLevel = switch (entry.getKey()) {
@@ -175,20 +187,7 @@ public class AbilityItemManager {
     }
 
     public static boolean meetsExpertiseRequirements(Skills skills, ItemStack ability) {
-        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
-        HashMap<Expertise, Integer> requirements = new HashMap<>(){{
-            if (pdc.has(expertiseRequirementsKey, PersistentDataType.STRING)) {
-                String requirements = pdc.get(expertiseRequirementsKey, PersistentDataType.STRING);
-
-                for (String requirement : requirements.split("/")) {
-                    String[] splits = requirement.split("-");
-
-                    put(Expertise.fromString(splits[0]), Integer.parseInt(splits[1]));
-                }
-            }
-        }};
-
-        return meetsExpertiseRequirements(skills, requirements);
+       return meetsExpertiseRequirements(skills, getExpertiseRequirements(ability));
     }
 
     public static boolean meetsExpertiseRequirement(Skills skills, Expertise expertise, int level) {
@@ -301,6 +300,10 @@ public class AbilityItemManager {
         return -1;
     }
 
+    public static int getExpertiseRequirement(ItemStack ability, Expertise expertise) {
+        return getExpertiseRequirements(ability).getOrDefault(expertise, -1);
+    }
+
     public static String getRawAbilityName(ItemStack item) {
         return ChatColor.stripColor(item.getItemMeta().getDisplayName());
     }
@@ -319,19 +322,6 @@ public class AbilityItemManager {
         }
 
         return null;
-    }
-
-    public static ArrayList<Expertise> getExpertisesForAbility(ItemStack item) {
-        ArrayList<Expertise> expertises = new ArrayList<>();
-        PersistentDataContainer persistentDataContainer = item.getItemMeta().getPersistentDataContainer();
-
-        for (Expertise expertise : Expertise.values()) {
-            if (persistentDataContainer.has(new NamespacedKey(nmlAbilities, Expertise.toString(expertise)))) {
-                expertises.add(expertise);
-            }
-        }
-
-        return expertises;
     }
 
     public static ArrayList<AbilityPrerequisite> getPrerequisitesForAbility(ItemStack item) {
@@ -368,5 +358,31 @@ public class AbilityItemManager {
         }
 
         return null;
+    }
+
+    public static ArrayList<String> getDescription(ItemStack ability) {
+        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
+
+        return new ArrayList<>(){{
+            if (pdc.has(descriptionKey, PersistentDataType.STRING)) {
+                this.addAll(Arrays.asList(pdc.get(descriptionKey, PersistentDataType.STRING).split("/")));
+            }
+        }};
+    }
+
+    public static HashMap<Expertise, Integer> getExpertiseRequirements(ItemStack ability) {
+        PersistentDataContainer pdc = ability.getItemMeta().getPersistentDataContainer();
+
+        return new HashMap<>(){{
+            if (pdc.has(expertiseRequirementsKey, PersistentDataType.STRING)) {
+                String requirements = pdc.get(expertiseRequirementsKey, PersistentDataType.STRING);
+
+                for (String requirement : requirements.split("/")) {
+                    String[] splits = requirement.split("-");
+
+                    put(Expertise.fromString(splits[0]), Integer.parseInt(splits[1]));
+                }
+            }
+        }};
     }
 }

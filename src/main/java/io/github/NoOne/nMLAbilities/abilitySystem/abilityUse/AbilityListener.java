@@ -92,18 +92,18 @@ public class AbilityListener implements Listener {
                 if (eventualToggleState) { // if it will be turned on, energy check
                     if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) {
                         AbilityItemManager.setToggleState(ability, true);
-                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
+                        Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, ability, "expertise"));
                     } else {
                         player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");
                     }
                 } else { // if it will be turned off, put on cooldown
                     AbilityItemManager.setToggleState(ability, false);
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, ability, "expertise"));
                     CooldownManager.putOnSoftCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 }
             } else { // if it isn't a toggleable
                 if (AbilityItemManager.getRequiredEnergy(ability) <= currentEnergy) { // energy check
-                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, weapon, ability, newSlot));
+                    Bukkit.getPluginManager().callEvent(new UseAbilityEvent(player, ability, "expertise"));
                     CooldownManager.putOnSoftCooldown(player, newSlot, AbilityItemManager.getCooldown(ability));
                 } else {
                     player.sendMessage("§c⚠ §nNot enough energy!§r§c ⚠");

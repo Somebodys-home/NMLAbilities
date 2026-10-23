@@ -146,6 +146,7 @@ public class ExpertiseAbilityItemMaker {
         AbilityItemManager.setExpertiseKeys(expertiseItem, cooldown, cost, toggleable);
         AbilityItemManager.setExpertiseRequirements(expertiseItem, expertiseRequirements);
         AbilityItemManager.setWeaponsForAbility(expertiseItem, weapons);
+        AbilityItemManager.setDescription(expertiseItem, linebreak(description));
 
         if (prerequisites != null) {
             AbilityItemManager.setPrerequisites(expertiseItem, prerequisites);
