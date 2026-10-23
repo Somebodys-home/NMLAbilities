@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer;
 
-import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.CustomDamageEvent;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

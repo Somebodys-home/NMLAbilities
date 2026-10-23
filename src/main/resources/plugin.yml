@@ -1,11 +1,16 @@
 name: NMLAbilities
-version: '1.0'
+version: '${version}'
+
 main: io.github.NoOne.nMLAbilities.NMLAbilities
-api-version: '1.21'
+api-version: '26.3'
+load: POSTWORLD
 depend:
-  - DamagePlugin
-  - NMLEnergySystem
+  - NMLDamages
+  - NMLEnergy
+  - NMLItems
   - NMLShields
+  - NMLPlayerStats
+  - NMLSkills
   - NMLWeapons
   - NMLAcrobatics
 commands:

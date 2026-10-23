@@ -1,10 +1,10 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.OngoingAbilityEffect;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
+import io.github.NoOne.nMLEnergy.EnergyManager;
 import io.github.NoOne.nMLWeapons.ArrowTracker;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;

@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.CustomDamageEvent;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;

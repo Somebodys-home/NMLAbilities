@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;

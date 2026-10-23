@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <outputDirectory>C:\No Man's Land\plugins</outputDirectory>
                 </configuration>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.8-R0.1-SNAPSHOT</version>
+            <version>[26.3.build,)</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -93,14 +93,14 @@
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
-            <artifactId>DamagePlugin</artifactId>
-            <version>e10f95869b</version>
+            <artifactId>NMLDamages</artifactId>
+            <version>703bea28b6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
-            <artifactId>NMLEnergySystem</artifactId>
-            <version>4dd6002d90</version>
+            <artifactId>NMLEnergy</artifactId>
+            <version>c25b309325</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -130,7 +130,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLWeapons</artifactId>
-            <version>d269416c19</version>
+            <version>16ffbc4771</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

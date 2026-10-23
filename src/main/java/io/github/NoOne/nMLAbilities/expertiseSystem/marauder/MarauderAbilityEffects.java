@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marauder;
 
-import io.github.NoOne.damagePlugin.customDamage.CustomDamageEvent;
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.CustomDamageEvent;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;

@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 

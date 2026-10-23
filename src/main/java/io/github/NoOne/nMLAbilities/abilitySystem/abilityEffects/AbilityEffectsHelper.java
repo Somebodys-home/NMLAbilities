@@ -1,10 +1,10 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects;
 
-import io.github.NoOne.damagePlugin.customDamage.DamageHelper;
-import io.github.NoOne.damagePlugin.customDamage.DamageType;
+import io.github.NoOne.nMLDamages.DamageHelper;
+import io.github.NoOne.nMLDamages.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLEnergySystem.EnergyManager;
+import io.github.NoOne.nMLEnergy.EnergyManager;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLShields.GuardingSystem;
