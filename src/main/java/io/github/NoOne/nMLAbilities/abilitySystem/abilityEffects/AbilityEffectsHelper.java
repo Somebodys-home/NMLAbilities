@@ -281,6 +281,41 @@ public class AbilityEffectsHelper {
         }.runTaskTimer(nmlAbilities, 0L, 1L);
     }
 
+    // same thing just for the electric spark particle, for nmlacrobatics
+    public static void makeWireFrameRectangle(Location center, double length, double height, double width) {
+        World world = center.getWorld();
+        Location corner1 = center.clone().add(-length, -height, -width);
+        Location corner2 = center.clone().add(length, height, width);
+        double minX = Math.min(corner1.getX(), corner2.getX());
+        double minY = Math.min(corner1.getY(), corner2.getY());
+        double minZ = Math.min(corner1.getZ(), corner2.getZ());
+        double maxX = Math.max(corner1.getX(), corner2.getX());
+        double maxY = Math.max(corner1.getY(), corner2.getY());
+        double maxZ = Math.max(corner1.getZ(), corner2.getZ());
+        double step = .25;
+
+        for (double x = minX; x <= maxX; x += step) {
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, x, minY, minZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, x, maxY, minZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, x, minY, maxZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, x, maxY, maxZ), 1, 0, 0, 0, 0);
+        }
+
+        for (double y = minY; y <= maxY; y += step) {
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, minX, y, minZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, maxX, y, minZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, minX, y, maxZ), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, maxX, y, maxZ), 1, 0, 0, 0, 0);
+        }
+
+        for (double z = minZ; z <= maxZ; z += step) {
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, minX, minY, z), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, maxX, minY, z), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, minX, maxY, z), 1, 0, 0, 0, 0);
+            world.spawnParticle(Particle.ELECTRIC_SPARK, new Location(world, maxX, maxY, z), 1, 0, 0, 0, 0);
+        }
+    }
+
     public static void makeWireFrameRectangle(Location center, double radius, int ticks) {
         makeWireFrameRectangle(center, radius, radius, radius, ticks);
     }
