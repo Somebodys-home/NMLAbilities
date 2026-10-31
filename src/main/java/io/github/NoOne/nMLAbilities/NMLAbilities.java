@@ -42,9 +42,7 @@ public class NMLAbilities extends JavaPlugin {
         selectedAbilitiesManager = new SelectedAbilitiesManager(this);
         selectedAbilitiesManager.loadSelectedAbilitiesFromConfig();
 
-        cooldownManager = new CooldownManager(this);
-        cooldownManager.start();
-
+        CooldownManager.start();
         AbilityEffectsTracker.startDisplayTracker();
 
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));

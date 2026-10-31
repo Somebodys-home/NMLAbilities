@@ -49,7 +49,7 @@ public class AbilityEffectsHelper {
     }
 
     public static void removeInfiniteCooldown(Player player) {
-        CooldownManager.removeHardCooldown(player);
+        CooldownManager.putOnHardCooldown(player, CooldownManager.getSavedHardCooldown(player));
         AttackCooldownSystem.resumeAttackCooldown(player);
     }
 

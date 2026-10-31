@@ -13,17 +13,12 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 public class CooldownManager {
-    private NMLAbilities nmlAbilities;
-    private static HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns;
-    private BukkitTask serverCooldownTask;
+    private static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
+    private static HashMap<UUID, HashSet<CooldownInstance>> ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
+    private static HashMap<UUID, Integer> hardCooldowns = new HashMap<>();
 
-    public CooldownManager(NMLAbilities nmlAbilities) {
-        this.nmlAbilities = nmlAbilities;
-        ongoingCooldowns = new HashMap<>(); // {uuid, [cooldown1, cooldown2, cooldown3, cooldown4]}
-    }
-
-    public void start() {
-        serverCooldownTask = new BukkitRunnable() {
+    public static void start() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -47,7 +42,7 @@ public class CooldownManager {
                     }
                 }
             }
-        }.runTaskTimer(nmlAbilities, 0L, 20L); // every second
+        }.runTaskTimer(nmlAbilities, 0, 20);
     }
 
     public void stop() {
@@ -60,7 +55,6 @@ public class CooldownManager {
         }
 
         ongoingCooldowns.clear();
-        serverCooldownTask.cancel();
     }
 
     public static void putOnSoftCooldown(Player player, int hotbarSlot, double seconds) {
@@ -87,6 +81,7 @@ public class CooldownManager {
     }
 
     public static void putOnInfiniteHardCooldown(Player player) {
+        hardCooldowns.put(player.getUniqueId(), player.getCooldown(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem()));
         putOnHardCooldown(player, 9999);
     }
 
@@ -117,6 +112,10 @@ public class CooldownManager {
                 player.getInventory().setItem(cooldownInstance.getHotbarSlot(), cooldownInstance.getOriginalItem());
             }
         }
+    }
+
+    public static int getSavedHardCooldown(Player player) {
+        return hardCooldowns.get(player.getUniqueId());
     }
 
     public static CooldownInstance getCooldownInstance(Player player, int hotbarSlot) {
