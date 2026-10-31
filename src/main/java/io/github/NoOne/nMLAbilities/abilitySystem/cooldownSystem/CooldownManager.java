@@ -3,6 +3,7 @@ package io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.Expertise;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -79,6 +80,10 @@ public class CooldownManager {
         for (Expertise expertise : Expertise.values()) {
             player.setCooldown(Expertise.toMaterial(expertise), (int) (seconds * 20));
         }
+
+        player.setCooldown(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem(), (int) (seconds * 20));
+        player.setCooldown(AbilityItemManager.cooldownItem(), (int) (seconds * 20));
+        player.setCooldown(AbilityItemManager.emptyStyleAbilityItem(), (int) (seconds * 20));
     }
 
     public static void putOnInfiniteHardCooldown(Player player) {
