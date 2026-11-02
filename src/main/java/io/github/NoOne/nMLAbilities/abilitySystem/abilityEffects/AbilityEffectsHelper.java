@@ -173,6 +173,22 @@ public class AbilityEffectsHelper {
         }
     }
 
+    public static void verticalParticleCircleInFrontOfEntity(Particle.DustOptions dustOptions, Entity entity, double radius, int particleCount, double distanceFromEntity) {
+        Location center = entity.getLocation().add(0, 1.5, 0).add(getPlanarDirection(entity.getLocation()).multiply(distanceFromEntity)); // blocks in front
+        Vector dirX = entity.getLocation().getDirection(); // Face forward vector
+        Vector dirY = new Vector(0, 1, 0); // Up vector
+        Vector dirZ = dirX.clone().crossProduct(dirY).normalize(); // Right vector
+
+        for (int i = 0; i < particleCount; i++) {
+            double angle = (2 * Math.PI / particleCount) * i;
+            double xOffset = Math.cos(angle) * radius;
+            double yOffset = Math.sin(angle) * radius;
+            Location loc = center.clone().add(dirZ.clone().multiply(xOffset)).add(dirY.clone().multiply(yOffset));
+
+            entity.getWorld().spawnParticle(Particle.DUST, loc, 1, 0, 0, 0, 0, dustOptions);
+        }
+    }
+
     public static void verticalParticleCircleFacingEntity(Particle.DustOptions dustOptions, Entity entity, double radius, int particleCount, double distanceFromEntity) {
         Location center = entity.getLocation().add(0, 1.5, 0).add(entity.getLocation().getDirection().multiply(distanceFromEntity)); // blocks in front
         Vector dirX = entity.getLocation().getDirection(); // Face forward vector
