@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.soldier;
 
-import io.github.NoOne.nMLDamages.CustomDamageEvent;
-import io.github.NoOne.nMLDamages.DamageType;
+import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;

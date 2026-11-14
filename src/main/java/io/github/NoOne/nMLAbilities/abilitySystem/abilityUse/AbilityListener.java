@@ -1,8 +1,8 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import io.github.NoOne.nMLDamages.CustomDamageEvent;
-import io.github.NoOne.nMLDamages.DamageType;
+import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
@@ -10,6 +10,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
@@ -51,7 +52,7 @@ public class AbilityListener implements Listener {
     public void onUseAbility(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        double currentEnergy = profileManager.getPlayerProfile(uuid).getStats().getCurrentEnergy();
+        double currentEnergy = profileManager.getStats(uuid).getStatValue(PlayerStat.CURRENT_ENERGY);
         int newSlot = event.getNewSlot();
         ItemStack ability = player.getInventory().getItem(newSlot);
         ItemStack weapon = player.getInventory().getItem(event.getPreviousSlot());

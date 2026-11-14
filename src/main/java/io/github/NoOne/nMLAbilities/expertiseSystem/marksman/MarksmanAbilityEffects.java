@@ -1,10 +1,11 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
-import io.github.NoOne.nMLDamages.DamageType;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.OngoingAbilityEffect;
 import io.github.NoOne.nMLEnergy.EnergyManager;
+import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLWeapons.ArrowTracker;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
@@ -60,8 +61,8 @@ public class MarksmanAbilityEffects extends AbilityEffectsHelper {
         OngoingAbilityEffect steadyAimEffect = new OngoingAbilityEffect(
                 "steady aim",
                 new HashMap<>(){{
-                    put("critchance", 30.0);
-                    put("speed", -50.0);
+                    put(PlayerStat.CRIT_CHANCE, 30.0);
+                    put(PlayerStat.SPEED, -50.0);
                 }},
                 steadyAimRunnable,
                 0,

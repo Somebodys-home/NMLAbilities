@@ -56,7 +56,7 @@ public class NMLAbilities extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : getServer().getOnlinePlayers()) {
-            AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, profileManager.getPlayerProfile(player.getUniqueId()).getStats());
+            AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, profileManager.getStats(player.getUniqueId()));
         }
 
         AbilityEffectsTracker.removeAllDisplays();

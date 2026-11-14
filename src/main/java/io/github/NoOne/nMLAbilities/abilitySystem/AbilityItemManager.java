@@ -140,7 +140,7 @@ public class AbilityItemManager {
                 weaponsString = "any";
             } else {
                 for (ItemType itemType : weapons) {
-                    weaponsString += ItemType.toString(itemType) + "/";
+                    weaponsString += itemType.toString() + "/";
                 }
             }
         }

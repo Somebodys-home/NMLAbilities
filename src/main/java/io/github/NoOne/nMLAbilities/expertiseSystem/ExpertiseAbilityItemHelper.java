@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem;
 
-import io.github.NoOne.nMLDamages.DamageType;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,13 +26,13 @@ public class ExpertiseAbilityItemHelper {
 
     protected static String makeElementalDamageString(DamageType damageType, double value) {
         if (value == (int) value) {
-            return DamageType.toChatColor(damageType) + "§n" + (int) value + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
-                    DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
+            return damageType.toChatColor() + "§n" + (int) value + "x" + "§r" + damageType.toChatColor() + " " +
+                    damageType + " Damage " + damageType.toEmoji();
         } else {
             String valueString = Double.toString(value).replace("0.", ".");
 
-            return DamageType.toChatColor(damageType) + "§n" + valueString + "x" + "§r" + DamageType.toChatColor(damageType) + " " +
-                    DamageType.toString(damageType) + " Damage " + DamageType.toEmoji(damageType);
+            return damageType.toChatColor() + "§n" + valueString + "x" + "§r" + damageType.toChatColor() + " " +
+                    damageType + " Damage " + damageType.toEmoji();
         }
     }
 

@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLPlayerStats.statSystem.StatChangeEvent;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ public class AbilityEffectsTracker {
     public static void addOngoingAbilityEffect(NMLAbilities nmlAbilities, Player player, OngoingAbilityEffect ongoingAbilityEffect) {
         ArrayList<OngoingAbilityEffect> arrayList = ongoingAbilityEffects.getOrDefault(player.getUniqueId(), new ArrayList<>());
 
-        for (Map.Entry<String, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
+        for (Map.Entry<PlayerStat, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
             Bukkit.getServer().getPluginManager().callEvent(new StatChangeEvent(player, entry.getKey(), entry.getValue()));
         }
 
@@ -47,7 +48,7 @@ public class AbilityEffectsTracker {
             if (ongoingAbilityEffect.abilityEffectName().equals(abilityEffectName)) {
                 ongoingAbilityEffect.abilityEffect().cancel();
 
-                for (Map.Entry<String, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
+                for (Map.Entry<PlayerStat, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
                     Bukkit.getServer().getPluginManager().callEvent(new StatChangeEvent(player, entry.getKey(), -entry.getValue()));
                 }
 
@@ -66,7 +67,7 @@ public class AbilityEffectsTracker {
             OngoingAbilityEffect ongoingAbilityEffect = iterator.next();
             ongoingAbilityEffect.abilityEffect().cancel();
 
-            for (Map.Entry<String, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
+            for (Map.Entry<PlayerStat, Double> entry : ongoingAbilityEffect.statChanges().entrySet()) {
                 stats.removeFromStat(entry.getKey(), entry.getValue());
             }
 

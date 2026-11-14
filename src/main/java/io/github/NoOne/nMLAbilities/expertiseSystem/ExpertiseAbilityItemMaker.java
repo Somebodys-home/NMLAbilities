@@ -130,7 +130,7 @@ public class ExpertiseAbilityItemMaker {
                     } else if (weapon == STAFF) {
                         lore.add("§e- Staves");
                     } else {
-                        lore.add("§e- " + ItemType.toString(weapon) + "s");
+                        lore.add("§e- " + weapon.toString() + "s");
                     }
                 }
             }

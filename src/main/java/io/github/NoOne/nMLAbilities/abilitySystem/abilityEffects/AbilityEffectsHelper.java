@@ -1,7 +1,7 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects;
 
 import io.github.NoOne.nMLDamages.DamageHelper;
-import io.github.NoOne.nMLDamages.DamageType;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLEnergy.EnergyManager;
@@ -398,8 +398,8 @@ public class AbilityEffectsHelper {
     }
     
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, HashMap<DamageType, Double> elementalDamages) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
+        Stats stats = profileManager.getStats(player.getUniqueId());
+        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
         HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(playerDamages, weaponDamageMultiplier);
 
         for (Map.Entry<DamageType, Double> entry : elementalDamages.entrySet()) { // elementalDamages being every ability's damage type and multiplier for that type
@@ -414,14 +414,14 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
+        Stats stats = profileManager.getStats(player.getUniqueId());
 
-        return DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamageMultiplier);
+        return DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages()), weaponDamageMultiplier);
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, HashMap<DamageType, Double> elementalDamages) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
+        Stats stats = profileManager.getStats(player.getUniqueId());
+        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
         HashMap<DamageType, Double> totalDamage = new HashMap<>();
 
         for (Map.Entry<DamageType, Double> entry : elementalDamages.entrySet()) { // elementalDamages being every ability's damage type and multiplier for that type
@@ -436,11 +436,11 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, DamageType damageType, double multiplier) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
+        Stats stats = profileManager.getStats(player.getUniqueId());
+        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
 
         return new HashMap<>() {{
-            putAll(DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStats2Damage(stats), weaponDamageMultiplier));
+            putAll(DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages()), weaponDamageMultiplier));
 
             if (playerDamages.containsKey(damageType)) {
                 put(damageType, playerDamages.get(damageType) * multiplier);
@@ -449,8 +449,8 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, DamageType damageType, double multiplier) {
-        Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
-        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStats2Damage(stats);
+        Stats stats = profileManager.getStats(player.getUniqueId());
+        HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
 
         return new HashMap<>(){{
             if (playerDamages.containsKey(damageType)) {
