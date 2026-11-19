@@ -127,7 +127,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
         }
 
         for (Map.Entry<Expertise, Double> entry : expertisePercents.entrySet()) {
-            Bukkit.getPluginManager().callEvent(new SkillChangeEvent(event.getPlayer(), entry.getKey().toSkill(), true, entry.getValue() * expForSkill));
+            Bukkit.getPluginManager().callEvent(new SkillChangeEvent(event.getPlayer(), entry.getKey().toSkill(), true, (int) (entry.getValue() * expForSkill)));
         }
     }
 
