@@ -26,7 +26,7 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffect
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityItems;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityItems;
-import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
 import io.github.NoOne.nMLSkills.skillSystem.SkillChangeEvent;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
@@ -35,26 +35,24 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
 public class ExpertiseAbilityEffectsListener implements Listener {
     private NMLAbilities nmlAbilities;
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SkillSetManager skillSetManager;
+    private SaveSkillsManager saveSkillsManager;
 
     public ExpertiseAbilityEffectsListener(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
-        skillSetManager = nmlAbilities.getSkillSetManager();
+        saveSkillsManager = nmlAbilities.getSaveSkillsManager();
     }
 
     @EventHandler
@@ -129,20 +127,20 @@ public class ExpertiseAbilityEffectsListener implements Listener {
         }
 
         for (Map.Entry<Expertise, Double> entry : expertisePercents.entrySet()) {
-            Bukkit.getPluginManager().callEvent(new SkillChangeEvent(event.getPlayer(), Expertise.toString(entry.getKey()) + "exp", entry.getValue() * expForSkill));
+            Bukkit.getPluginManager().callEvent(new SkillChangeEvent(event.getPlayer(), entry.getKey().toSkill(), true, entry.getValue() * expForSkill));
         }
     }
 
     @EventHandler
     public void expertiseSkillLevelUp(SkillChangeEvent event) {
-        Expertise expertise = Expertise.fromString(event.getSkill());
+        Expertise expertise = Expertise.fromSkill(event.getSkill());
 
         if (event.getChange() > 0 && expertise != null) {
             Player player = event.getPlayer();
-            Skills skills = skillSetManager.getSkillSet(player.getUniqueId()).getSkills();
+            Skills skills = saveSkillsManager.getSkills(player.getUniqueId());
             int expertiseLevel = skills.getSkillLevel(event.getSkill());
             int prevLevel = Math.max(expertiseLevel - (int) event.getChange(), 1);
-            String color = Expertise.toChatColor(expertise);
+            String color = expertise.toChatColor();
             String boldColor = color + "§l";
             String unlockedLock = boldColor + "\uD83D\uDD13";
             ArrayList<ItemStack> unlockedAbilities = getUnlockedAbilities(expertise, skills, prevLevel, expertiseLevel);
@@ -151,8 +149,8 @@ public class ExpertiseAbilityEffectsListener implements Listener {
 
             // chat message
             player.sendMessage(boldColor + "---------------------------");
-            player.sendMessage(boldColor + Expertise.toString(expertise).toUpperCase() + " LEVEL UP!");
-            player.sendMessage("§fLv. §r§8" + prevLevel + " -> §r" + color + expertiseLevel + " §r§f" + Expertise.toString(expertise));
+            player.sendMessage(boldColor + expertise.toString().toUpperCase() + " LEVEL UP!");
+            player.sendMessage("§fLv. §r§8" + prevLevel + " -> §r" + color + expertiseLevel + " §r§f" + expertise);
 
             if (!unlockedAbilities.isEmpty()) {
                 player.sendMessage("");

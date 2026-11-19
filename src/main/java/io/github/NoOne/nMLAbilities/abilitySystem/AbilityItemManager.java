@@ -89,7 +89,7 @@ public class AbilityItemManager {
         String expertiseString = "";
 
         for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
-            expertiseString += Expertise.toString(entry.getKey()) + "-" + entry.getValue() + "/";
+            expertiseString += entry.getKey().toString() + "-" + entry.getValue() + "/";
         }
 
         pdc.set(expertiseRequirementsKey, PersistentDataType.STRING, expertiseString);
@@ -164,21 +164,7 @@ public class AbilityItemManager {
 
     public static boolean meetsExpertiseRequirements(Skills skills, Map<Expertise, Integer> requirements) {
         for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
-            int playerSkillLevel = switch (entry.getKey()) {
-                case SOLDIER -> skills.getSoldierLevel();
-                case ASSASSIN -> skills.getAssassinLevel();
-                case MARAUDER -> skills.getMarauderLevel();
-                case CAVALIER -> skills.getCavalierLevel();
-                case MARTIAL_ARTIST -> skills.getMartialArtistLevel();
-                case SHIELD_HERO -> skills.getShieldHeroLevel();
-                case MARKSMAN -> skills.getMarksmanLevel();
-                case SORCERER -> skills.getSorcererLevel();
-                case PRIMORDIAL -> skills.getPrimordialLevel();
-                case HALLOWED -> skills.getHallowedLevel();
-                case ANNULLED -> skills.getAnnulledLevel();
-            };
-
-            if (playerSkillLevel < entry.getValue()) {
+            if (skills.getSkillLevel(entry.getKey().toSkill()) < entry.getValue()) {
                 return false;
             }
         }
@@ -191,21 +177,7 @@ public class AbilityItemManager {
     }
 
     public static boolean meetsExpertiseRequirement(Skills skills, Expertise expertise, int level) {
-        int playerSkillLevel = switch (expertise) {
-            case SOLDIER -> skills.getSoldierLevel();
-            case ASSASSIN -> skills.getAssassinLevel();
-            case MARAUDER -> skills.getMarauderLevel();
-            case CAVALIER -> skills.getCavalierLevel();
-            case MARTIAL_ARTIST -> skills.getMartialArtistLevel();
-            case SHIELD_HERO -> skills.getShieldHeroLevel();
-            case MARKSMAN -> skills.getMarksmanLevel();
-            case SORCERER -> skills.getSorcererLevel();
-            case PRIMORDIAL -> skills.getPrimordialLevel();
-            case HALLOWED -> skills.getHallowedLevel();
-            case ANNULLED -> skills.getAnnulledLevel();
-        };
-
-        return playerSkillLevel >= level;
+        return skills.getSkillLevel(expertise.toSkill()) >= level;
     }
 
     public static boolean meetsPrerequisites(Player player, ItemStack ability) {

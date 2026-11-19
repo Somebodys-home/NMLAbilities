@@ -72,7 +72,7 @@ public class CooldownManager {
 
     public static void putOnHardCooldown(Player player, double seconds) {
         for (Expertise expertise : Expertise.values()) {
-            player.setCooldown(Expertise.toMaterial(expertise), (int) (seconds * 20));
+            player.setCooldown(expertise.toMaterial(), (int) (seconds * 20));
         }
 
         player.setCooldown(ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem(), (int) (seconds * 20));

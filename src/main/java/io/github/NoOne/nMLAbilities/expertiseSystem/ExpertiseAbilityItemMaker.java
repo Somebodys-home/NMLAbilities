@@ -42,7 +42,7 @@ public class ExpertiseAbilityItemMaker {
 
         boolean meetsRequirements = AbilityItemManager.meetsExpertiseRequirements(playerSkills, expertiseRequirements);
         Expertise firstExpertiseRequirement = expertiseRequirements.entrySet().iterator().next().getKey();
-        Material abilityMaterial = Expertise.toMaterial(firstExpertiseRequirement);
+        Material abilityMaterial = firstExpertiseRequirement.toMaterial();
         ArrayList<String> lore = new ArrayList<>();
 
         if (!meetsRequirements) {
@@ -51,7 +51,7 @@ public class ExpertiseAbilityItemMaker {
 
         // skill requirements
         for (Map.Entry<Expertise, Integer> entry : expertiseRequirements.entrySet()) {
-            String string = Expertise.toString(entry.getKey());
+            String string = entry.getKey().toString();
             String requirementString = "§8Lv. " + entry.getValue() + " " + string.substring(0, 1).toUpperCase() + string.substring(1);
             boolean meets = AbilityItemManager.meetsExpertiseRequirement(playerSkills, entry.getKey(), entry.getValue());
 
@@ -138,7 +138,7 @@ public class ExpertiseAbilityItemMaker {
 
         ItemStack expertiseItem = ItemCreator.createItem(
                 abilityMaterial,
-                Expertise.toChatColor(firstExpertiseRequirement) + "§l" + name,
+                firstExpertiseRequirement.toChatColor() + "§l" + name,
                 lore
         );
 

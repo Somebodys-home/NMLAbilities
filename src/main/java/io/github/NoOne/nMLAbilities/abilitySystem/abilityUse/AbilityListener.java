@@ -11,7 +11,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
-import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
@@ -38,13 +38,13 @@ import java.util.UUID;
 public class AbilityListener implements Listener {
     private ProfileManager profileManager;
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SkillSetManager skillSetManager;
+    private SaveSkillsManager saveSkillsManager;
     private ArrayList<Player> loadedAbilitiesPlayers;
 
     public AbilityListener(NMLAbilities nmlAbilities) {
         profileManager = nmlAbilities.getProfileManager();
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
-        skillSetManager = nmlAbilities.getSkillSetManager();
+        saveSkillsManager = nmlAbilities.getSaveSkillsManager();
         loadedAbilitiesPlayers = new ArrayList<>();
     }
 
@@ -118,7 +118,7 @@ public class AbilityListener implements Listener {
         Player player = event.getPlayer();
         PlayerInventory playerInventory = player.getInventory();
         SelectedAbilities selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(player.getUniqueId());
-        Skills skills = skillSetManager.getSkillSet(player.getUniqueId()).getSkills();
+        Skills skills = saveSkillsManager.getSkills(player.getUniqueId());
 
         if (!loadedAbilitiesPlayers.contains(player)) {
             if (selectedAbilities == null) { // first time the player joins the server, give em the default ability items

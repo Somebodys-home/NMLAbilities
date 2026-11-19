@@ -124,7 +124,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLSkills</artifactId>
-            <version>a6c53e7897</version>
+            <version>660295867f</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

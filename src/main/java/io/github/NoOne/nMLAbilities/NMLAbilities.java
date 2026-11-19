@@ -15,14 +15,14 @@ import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
-import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NMLAbilities extends JavaPlugin {
     private static NMLAbilities instance;
     private ProfileManager profileManager;
-    private SkillSetManager skillSetManager;
+    private SaveSkillsManager saveSkillsManager;
     private GuardingSystem guardingSystem;
     private SelectedAbilitiesManager selectedAbilitiesManager;
     private SelectedAbilitiesConfig selectedAbilitiesConfig;
@@ -33,7 +33,7 @@ public class NMLAbilities extends JavaPlugin {
         instance = this;
 
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
-        skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
+        saveSkillsManager = JavaPlugin.getPlugin(NMLSkills.class).getSaveSkillsManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
 
         selectedAbilitiesConfig = new SelectedAbilitiesConfig(this, "abilities");
@@ -73,8 +73,8 @@ public class NMLAbilities extends JavaPlugin {
         return selectedAbilitiesManager;
     }
 
-    public SkillSetManager getSkillSetManager() {
-        return skillSetManager;
+    public SaveSkillsManager getSaveSkillsManager() {
+        return saveSkillsManager;
     }
 
     public SelectedAbilitiesConfig getSelectedAbilitiesConfig() {

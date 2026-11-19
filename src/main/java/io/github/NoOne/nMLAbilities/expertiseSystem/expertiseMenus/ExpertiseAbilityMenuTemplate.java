@@ -34,7 +34,7 @@ public class ExpertiseAbilityMenuTemplate extends Menu {
         this.clickedItem = clickedItem;
         this.expertiseAbilityItemHelper = expertiseAbilityItemHelper;
         selectedAbilities = nmlAbilities.getSelectedAbilitiesManager().getSelectedAbilities(playerMenuUtility.getOwner().getUniqueId());
-        skills = nmlAbilities.getSkillSetManager().getSkillSet(playerMenuUtility.getOwner().getUniqueId()).getSkills();
+        skills = nmlAbilities.getSaveSkillsManager().getSkills(playerMenuUtility.getOwner().getUniqueId());
     }
 
     @Override
