@@ -2,6 +2,7 @@ package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLConfig.ConfigTemplate;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class SelectedAbilitiesListener implements Listener {
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SelectedAbilitiesConfig selectedAbilitiesConfig;
+    private ConfigTemplate selectedAbilitiesConfig;
 
     public SelectedAbilitiesListener(NMLAbilities nmlAbilities) {
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();

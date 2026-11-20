@@ -26,7 +26,7 @@ import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityEffect
 import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityItems;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityEffects;
 import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityItems;
-import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
+import io.github.NoOne.nMLSkills.SaveSkillsManager;
 import io.github.NoOne.nMLSkills.skillSystem.SkillChangeEvent;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;

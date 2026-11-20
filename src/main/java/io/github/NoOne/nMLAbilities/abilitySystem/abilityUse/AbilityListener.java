@@ -11,7 +11,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
-import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
+import io.github.NoOne.nMLSkills.SaveSkillsManager;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;

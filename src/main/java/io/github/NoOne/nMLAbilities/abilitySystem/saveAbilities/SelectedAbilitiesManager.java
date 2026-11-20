@@ -1,20 +1,18 @@
 package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
+import io.github.NoOne.nMLConfig.ConfigManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SelectedAbilitiesManager {
+public class SelectedAbilitiesManager extends ConfigManager {
     private static Map<UUID, SelectedAbilities> selectedAbilitiesMap = new HashMap<>(); // hashmap of all the profiles of all the players online atm
-    private FileConfiguration config;
-    private SelectedAbilitiesConfig selectedAbilitiesConfig;
 
     public SelectedAbilitiesManager(NMLAbilities nmlAbilities) {
-        selectedAbilitiesConfig = nmlAbilities.getSelectedAbilitiesConfig();
-        config = selectedAbilitiesConfig.getConfig();
+        super(nmlAbilities.getSelectedAbilitiesConfig());
     }
 
     public void createDefaultSelectedAbilities(Player player) {

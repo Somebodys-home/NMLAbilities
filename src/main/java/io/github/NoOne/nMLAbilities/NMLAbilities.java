@@ -4,18 +4,18 @@ import io.github.NoOne.menuSystem.MenuListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesConfig;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.commands.ExpertiseCommand;
 import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
+import io.github.NoOne.nMLConfig.ConfigTemplate;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
-import io.github.NoOne.nMLSkills.saveSkillsSystem.SaveSkillsManager;
+import io.github.NoOne.nMLSkills.SaveSkillsManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,8 +25,7 @@ public class NMLAbilities extends JavaPlugin {
     private SaveSkillsManager saveSkillsManager;
     private GuardingSystem guardingSystem;
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SelectedAbilitiesConfig selectedAbilitiesConfig;
-    private CooldownManager cooldownManager;
+    private ConfigTemplate selectedAbilitiesConfig;
 
     @Override
     public void onEnable() {
@@ -36,7 +35,7 @@ public class NMLAbilities extends JavaPlugin {
         saveSkillsManager = JavaPlugin.getPlugin(NMLSkills.class).getSaveSkillsManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
 
-        selectedAbilitiesConfig = new SelectedAbilitiesConfig(this, "abilities");
+        selectedAbilitiesConfig = new ConfigTemplate(this, "abilities");
         selectedAbilitiesConfig.loadConfig();
 
         selectedAbilitiesManager = new SelectedAbilitiesManager(this);
@@ -60,7 +59,6 @@ public class NMLAbilities extends JavaPlugin {
         }
 
         AbilityEffectsTracker.removeAllDisplays();
-        cooldownManager.stop();
         selectedAbilitiesManager.saveAllSelectedAbilitiesToConfig();
         selectedAbilitiesConfig.saveConfig();
     }
@@ -77,7 +75,7 @@ public class NMLAbilities extends JavaPlugin {
         return saveSkillsManager;
     }
 
-    public SelectedAbilitiesConfig getSelectedAbilitiesConfig() {
+    public ConfigTemplate getSelectedAbilitiesConfig() {
         return selectedAbilitiesConfig;
     }
 

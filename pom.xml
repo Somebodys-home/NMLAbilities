@@ -93,6 +93,11 @@
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLConfig</artifactId>
+            <version>4460f2fe0e</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLDamages</artifactId>
             <version>7dedbcff99</version>
             <scope>provided</scope>
@@ -124,7 +129,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLSkills</artifactId>
-            <version>26ff95dd76</version>
+            <version>a7a981fc11</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
