@@ -11,7 +11,7 @@ import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
 import io.github.NoOne.nMLConfig.ConfigTemplate;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLShields.NMLShields;
 import io.github.NoOne.nMLSkills.NMLSkills;
@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NMLAbilities extends JavaPlugin {
     private static NMLAbilities instance;
-    private ProfileManager profileManager;
+    private StatConfigManager statConfigManager;
     private SaveSkillsManager saveSkillsManager;
     private GuardingSystem guardingSystem;
     private SelectedAbilitiesManager selectedAbilitiesManager;
@@ -31,7 +31,7 @@ public class NMLAbilities extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
+        statConfigManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getStatConfigManager();
         saveSkillsManager = JavaPlugin.getPlugin(NMLSkills.class).getSaveSkillsManager();
         guardingSystem = JavaPlugin.getPlugin(NMLShields.class).getGuardingSystem();
 
@@ -55,7 +55,7 @@ public class NMLAbilities extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player : getServer().getOnlinePlayers()) {
-            AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, profileManager.getStats(player.getUniqueId()));
+            AbilityEffectsTracker.removeAllOngoingAbilityEffects(player, statConfigManager.getStats(player.getUniqueId()));
         }
 
         AbilityEffectsTracker.removeAllDisplays();
@@ -83,7 +83,7 @@ public class NMLAbilities extends JavaPlugin {
         return guardingSystem;
     }
 
-    public ProfileManager getProfileManager() {
-        return profileManager;
+    public StatConfigManager getStatConfigManager() {
+        return statConfigManager;
     }
 }

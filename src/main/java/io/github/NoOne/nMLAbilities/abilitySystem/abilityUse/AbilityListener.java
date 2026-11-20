@@ -9,7 +9,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLSkills.SaveSkillsManager;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
@@ -36,13 +36,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AbilityListener implements Listener {
-    private ProfileManager profileManager;
+    private StatConfigManager statConfigManager;
     private SelectedAbilitiesManager selectedAbilitiesManager;
     private SaveSkillsManager saveSkillsManager;
     private ArrayList<Player> loadedAbilitiesPlayers;
 
     public AbilityListener(NMLAbilities nmlAbilities) {
-        profileManager = nmlAbilities.getProfileManager();
+        statConfigManager = nmlAbilities.getStatConfigManager();
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
         saveSkillsManager = nmlAbilities.getSaveSkillsManager();
         loadedAbilitiesPlayers = new ArrayList<>();
@@ -52,7 +52,7 @@ public class AbilityListener implements Listener {
     public void onUseAbility(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        double currentEnergy = profileManager.getStats(uuid).getStatValue(PlayerStat.CURRENT_ENERGY);
+        double currentEnergy = statConfigManager.getStats(uuid).getStatValue(PlayerStat.CURRENT_ENERGY);
         int newSlot = event.getNewSlot();
         ItemStack ability = player.getInventory().getItem(newSlot);
         ItemStack weapon = player.getInventory().getItem(event.getPreviousSlot());

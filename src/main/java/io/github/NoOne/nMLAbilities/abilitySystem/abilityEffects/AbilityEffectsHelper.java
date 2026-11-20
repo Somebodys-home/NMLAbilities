@@ -5,7 +5,7 @@ import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
 import io.github.NoOne.nMLEnergy.EnergyManager;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLShields.GuardingSystem;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
@@ -29,7 +29,7 @@ import java.util.Map;
 // parent class for the classes that make expertise ability effects
 public class AbilityEffectsHelper {
     protected static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
-    protected static ProfileManager profileManager = nmlAbilities.getProfileManager();
+    protected static StatConfigManager statConfigManager = nmlAbilities.getStatConfigManager();
     protected static GuardingSystem guardingSystem = nmlAbilities.getGuardingSystem();
 
     public static void useEnergyAndCooldown(Player player, int energyUse, double cooldown) {
@@ -398,7 +398,7 @@ public class AbilityEffectsHelper {
     }
     
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, HashMap<DamageType, Double> elementalDamages) {
-        Stats stats = profileManager.getStats(player.getUniqueId());
+        Stats stats = statConfigManager.getStats(player.getUniqueId());
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
         HashMap<DamageType, Double> totalDamage = DamageHelper.multiplyDamageMap(playerDamages, weaponDamageMultiplier);
 
@@ -414,13 +414,13 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier) {
-        Stats stats = profileManager.getStats(player.getUniqueId());
+        Stats stats = statConfigManager.getStats(player.getUniqueId());
 
         return DamageHelper.multiplyDamageMap(DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages()), weaponDamageMultiplier);
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, HashMap<DamageType, Double> elementalDamages) {
-        Stats stats = profileManager.getStats(player.getUniqueId());
+        Stats stats = statConfigManager.getStats(player.getUniqueId());
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
         HashMap<DamageType, Double> totalDamage = new HashMap<>();
 
@@ -436,7 +436,7 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, double weaponDamageMultiplier, DamageType damageType, double multiplier) {
-        Stats stats = profileManager.getStats(player.getUniqueId());
+        Stats stats = statConfigManager.getStats(player.getUniqueId());
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
 
         return new HashMap<>() {{
@@ -449,7 +449,7 @@ public class AbilityEffectsHelper {
     }
 
     public static HashMap<DamageType, Double> getDamageForAbility(Player player, DamageType damageType, double multiplier) {
-        Stats stats = profileManager.getStats(player.getUniqueId());
+        Stats stats = statConfigManager.getStats(player.getUniqueId());
         HashMap<DamageType, Double> playerDamages = DamageHelper.convertPlayerStatsToDamage(stats.getAllDamages());
 
         return new HashMap<>(){{
