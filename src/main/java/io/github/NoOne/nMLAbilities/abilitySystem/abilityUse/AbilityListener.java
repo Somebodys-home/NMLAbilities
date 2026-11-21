@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
+// the general listener for making abilities work, not expertise/style specific
 public class AbilityListener implements Listener {
     private StatConfigManager statConfigManager;
     private SelectedAbilitiesManager selectedAbilitiesManager;
@@ -55,7 +56,6 @@ public class AbilityListener implements Listener {
         double currentEnergy = statConfigManager.getStats(uuid).getStatValue(PlayerStat.CURRENT_ENERGY);
         int newSlot = event.getNewSlot();
         ItemStack ability = player.getInventory().getItem(newSlot);
-        ItemStack weapon = player.getInventory().getItem(event.getPreviousSlot());
 
         if (AbilityItemManager.isAnAbility(ability)) { // if it's an ability item
             event.setCancelled(true);

@@ -26,7 +26,8 @@ import java.util.Map;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
-
+// this is literally just the class to make expertise ability items
+// this includes the empty one
 public class ExpertiseAbilityItemMaker {
     public static ItemStack emptyExpertiseAbilityItem() {
         return AbilityItemManager.makeAbilityItem(ItemCreator.createItem(

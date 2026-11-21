@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-// parent class for the classes that make expertise ability effects
+// parent class for the classes that make ability effects
 public class AbilityEffectsHelper {
     protected static NMLAbilities nmlAbilities = NMLAbilities.getInstance();
     protected static StatConfigManager statConfigManager = nmlAbilities.getStatConfigManager();
