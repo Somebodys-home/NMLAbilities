@@ -44,12 +44,12 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
 
-public class ExpertiseAbilityEffectsListener implements Listener {
+public class ExpertiseListener implements Listener {
     private NMLAbilities nmlAbilities;
     private SelectedAbilitiesManager selectedAbilitiesManager;
     private SaveSkillsManager saveSkillsManager;
 
-    public ExpertiseAbilityEffectsListener(NMLAbilities nmlAbilities) {
+    public ExpertiseListener(NMLAbilities nmlAbilities) {
         this.nmlAbilities = nmlAbilities;
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
         saveSkillsManager = nmlAbilities.getSaveSkillsManager();
@@ -122,7 +122,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
             combinedLevel += level;
         }
 
-        for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) { //
+        for (Map.Entry<Expertise, Integer> entry : requirements.entrySet()) {
             expertisePercents.put(entry.getKey(), entry.getValue() / (double) combinedLevel);
         }
 
@@ -135,7 +135,7 @@ public class ExpertiseAbilityEffectsListener implements Listener {
     public void expertiseSkillLevelUp(SkillChangeEvent event) {
         Expertise expertise = Expertise.fromSkill(event.getSkill());
 
-        if (event.getChange() > 0 && expertise != null) {
+        if (event.getChange() > 0 && expertise != null && !event.isExpChange()) {
             Player player = event.getPlayer();
             Skills skills = saveSkillsManager.getSkills(player.getUniqueId());
             int expertiseLevel = skills.getSkillLevel(event.getSkill());

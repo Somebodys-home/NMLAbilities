@@ -8,7 +8,7 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.commands.ExpertiseCommand;
 import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
-import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityEffectsListener;
+import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseListener;
 import io.github.NoOne.nMLConfig.ConfigTemplate;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.StatConfigManager;
@@ -49,7 +49,7 @@ public class NMLAbilities extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new SelectedAbilitiesListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
-        getServer().getPluginManager().registerEvents(new ExpertiseAbilityEffectsListener(this), this);
+        getServer().getPluginManager().registerEvents(new ExpertiseListener(this), this);
     }
 
     @Override
