@@ -23,8 +23,8 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
         double speed = Speedometer.getSpeedPerSecond(player) / 10;
         Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.4);
 
-        if (!player.isOnGround()) { // so the dropKick is about the same both in the air and the ground
-            dropKick = player.getVelocity().add(dropkickDirection.multiply(.75).setY(.3)).setY(.3);
+        if (!player.isOnGround()) { // so the dropkick velocity is about the same both in the air and the ground
+            dropKick = player.getVelocity().add(dropkickDirection.multiply(.75)).setY(.3);
         }
 
         useEnergyAndCooldown(player, 15, 1.5);
@@ -33,7 +33,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
 
         // dropKick runnable
         new BukkitRunnable() {
-            int groundGracePeriod = 5;
+            int groundGracePeriod = 5; // the amount of ticks that the ground check will be ignored, so it doesn't immediately end when dropkick's used
             boolean inHitStop = false;
             int hitStopGracePeriodTimer = 0; // the time that you have to chain hitstops
             double incomingSpeed = Speedometer.getSpeedPerSecond(player) / 10;
@@ -152,7 +152,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
                                     for (LivingEntity hitEntity : hitEntities) { // apply knockback and damage for every hit enemy
                                         hitEntity.setVelocity(knockbacks.get(hitEntity));
                                         Bukkit.getPluginManager().callEvent(new CustomDamageEvent(hitEntity, player, finalPhysicalDamage));
-                                        alreadyHitEntities.add(hitEntity); // and make sure they can't be hit again
+                                        alreadyHitEntities.add(hitEntity); // and make sure they can't be hit in the same drpokick again
                                     }
 
                                     for (Entity nearbyEntity : prevVelocities.keySet()) { // and knockback for every nearby guy that isn't the player
