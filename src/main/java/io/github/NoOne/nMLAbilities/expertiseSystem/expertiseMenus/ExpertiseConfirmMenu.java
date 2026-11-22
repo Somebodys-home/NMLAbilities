@@ -10,20 +10,20 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class ExpertiseConfirmMenu extends Menu {
+    private Menu previousMenu;
     private ItemStack expertise1;
     private ItemStack expertise2;
     private ItemStack expertise3;
     private ItemStack newAbility;
-    private Menu previousMenu;
 
-    public ExpertiseConfirmMenu(Player player, ItemStack newAbility, Menu previousMenu) {
+    public ExpertiseConfirmMenu(Player player, Menu previousMenu, ItemStack newAbility) {
         super(player);
 
+        this.previousMenu = previousMenu;
         this.expertise1 = player.getInventory().getItem(1);
         this.expertise2 = player.getInventory().getItem(2);
         this.expertise3 = player.getInventory().getItem(3);
         this.newAbility = newAbility;
-        this.previousMenu = previousMenu;
     }
 
     @Override

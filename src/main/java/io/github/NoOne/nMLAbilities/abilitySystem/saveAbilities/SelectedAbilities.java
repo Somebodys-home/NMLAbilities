@@ -23,10 +23,6 @@ public class SelectedAbilities {
         this.expertise1 = playerInventory.getItem(1);
         this.expertise2 = playerInventory.getItem(2);
         this.expertise3 = playerInventory.getItem(3);
-    } 
-
-    public ItemStack[] getSelectedAbilitiesArray() {
-        return new ItemStack[]{style, expertise3, expertise1, expertise2};
     }
 
     public void clearSelectedAbilities() {
@@ -34,6 +30,14 @@ public class SelectedAbilities {
         expertise1 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
         expertise2 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
         expertise3 = ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
+    }
+
+    public boolean hasAbility(ItemStack ability) {
+       return style.isSimilar(ability) || expertise1.isSimilar(ability) || expertise2.isSimilar(ability) || expertise3.isSimilar(ability);
+    }
+
+    public ItemStack[] getSelectedAbilitiesArray() {
+        return new ItemStack[]{style, expertise3, expertise1, expertise2};
     }
 
     public ItemStack getStyle() {

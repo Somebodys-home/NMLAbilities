@@ -7,7 +7,6 @@ import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitie
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemHelper;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,9 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 // the parent for the other ability selection menus
 public class ExpertiseAbilityMenuTemplate extends Menu {
@@ -57,19 +54,19 @@ public class ExpertiseAbilityMenuTemplate extends Menu {
         if (event.getSlot() == 53) {
             new ExpertiseMainMenu(nmlAbilities, player).open();
         } else if (AbilityItemManager.isAnAbility(selected)) {
-            if (Arrays.stream(selectedAbilities.getSelectedAbilitiesArray()).anyMatch(element -> element.equals(ChatColor.stripColor(Objects.requireNonNull(selected.getItemMeta()).getDisplayName())))) {
-                playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou already have this ability selected!§r§c ⚠");
+            if (selectedAbilities.hasAbility(selected)) {
+                playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou already have this ability!§r§c ⚠");
                 playerMenuUtility.getOwner().playSound(playerMenuUtility.getOwner(), Sound.BLOCK_NOTE_BLOCK_BASS, 2f, .5f);
                 return;
             }
 
             if (!AbilityItemManager.meetsExpertiseRequirements(skills, selected)) {
-                playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou are too inexperienced for this ability!§r§c ⚠");
+                playerMenuUtility.getOwner().sendMessage("§c⚠ §nYou're too inexperienced for this ability!§r§c ⚠");
                 playerMenuUtility.getOwner().playSound(playerMenuUtility.getOwner(), Sound.BLOCK_NOTE_BLOCK_BASS, 2f, .5f);
                 return;
             }
 
-            new ExpertiseConfirmMenu(player, selected, this).open();
+            new ExpertiseConfirmMenu(player, this, selected).open();
         }
     }
 

@@ -10,9 +10,11 @@ import io.github.NoOne.nMLItems.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -52,51 +54,49 @@ public class ExpertiseLoadoutMenu extends Menu {
         event.setCancelled(true);
 
         int slot = event.getSlot();
-        ItemStack clickedItem = inventory.getItem(slot);
 
         switch (slot) {
-            case 11, 13, 15 -> {
-                switch (event.getClick()) { // editing ability loadout
+            case 11, 13, 15 -> { // editing ability loadout
+                switch (event.getClick()) {
                     case LEFT -> { // swapping places
                         leftClicks++;
 
-                        String clickedItemName = clickedItem.getItemMeta().getDisplayName();
-
-                        if (leftClicks == 1) {
-                            if (clickedItemName.equals(expertise1.getItemMeta().getDisplayName())) {
+                        if (leftClicks == 1) { // first left click selects the item to be swapped
+                            if (slot == 11) {
                                 leftClickItem1 = expertise1;
                                 leftClickHotbarSlot1 = 1;
                             }
 
-                            if (clickedItemName.equals(expertise2.getItemMeta().getDisplayName())) {
+                            if (slot == 13) {
                                 leftClickItem1 = expertise2;
                                 leftClickHotbarSlot1 = 2;
                             }
 
-                            if (clickedItemName.equals(expertise3.getItemMeta().getDisplayName())) {
+                            if (slot == 15) {
                                 leftClickItem1 = expertise3;
                                 leftClickHotbarSlot1 = 3;
                             }
 
+                            inventory.setItem(slot, addEnchantmentGlint(inventory.getItem(slot)));
                             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 1f, 1f);
-                        } else if (leftClicks == 2) {
-                            if (clickedItemName.equals(expertise1.getItemMeta().getDisplayName())) {
+                        } else if (leftClicks == 2) { // second click selects the second item to be swapped
+                            if (slot == 11) {
                                 leftClickItem2 = expertise1;
                                 leftClickHotbarSlot2 = 1;
                             }
 
-                            if (clickedItemName.equals(expertise2.getItemMeta().getDisplayName())) {
+                            if (slot == 13) {
                                 leftClickItem2 = expertise2;
                                 leftClickHotbarSlot2 = 2;
                             }
 
-                            if (clickedItemName.equals(expertise3.getItemMeta().getDisplayName())) {
+                            if (slot == 15) {
                                 leftClickItem2 = expertise3;
                                 leftClickHotbarSlot2 = 3;
                             }
 
-                            player.getInventory().setItem(leftClickHotbarSlot2, leftClickItem1);
                             player.getInventory().setItem(leftClickHotbarSlot1, leftClickItem2);
+                            player.getInventory().setItem(leftClickHotbarSlot2, leftClickItem1);
                             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 2f, 2f);
                             Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise" + leftClickHotbarSlot2, leftClickItem1));
                             Bukkit.getPluginManager().callEvent(new AbilityChangeEvent(player, "expertise" + leftClickHotbarSlot1, leftClickItem2));
@@ -171,5 +171,11 @@ public class ExpertiseLoadoutMenu extends Menu {
                 )
         ));
         inventory.setItem(35, ItemCreator.createBackoutButton());
+    }
+
+    private ItemStack addEnchantmentGlint(ItemStack itemStack) {
+        itemStack.addEnchantment(Enchantment.UNBREAKING, 1);
+        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        return itemStack;
     }
 }
