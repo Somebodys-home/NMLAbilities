@@ -7,7 +7,6 @@ import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -34,8 +33,7 @@ public class AbilityItemManager {
     private static NamespacedKey descriptionKey = new NamespacedKey(nmlAbilities, "description");
 
     public static ItemStack emptyStyleAbilityItem() {
-        return makeAbilityItem(ItemCreator.createItem(
-                Material.LIGHT_BLUE_DYE,
+        return makeAbilityItem(ItemCreator.createItem(Material.LIGHT_BLUE_DYE,
                 "§bEmpty Style Ability",
                 List.of("§7An empty ability slot. Dunno why you'd put nothing here.")
         ));
@@ -43,19 +41,6 @@ public class AbilityItemManager {
 
     public static ItemStack cooldownItem() {
         return makeAbilityItem(ItemCreator.createItem(Material.GRAY_DYE, "§7This ability is on cooldown!"));
-    }
-
-    public static ItemStack errorLoadingAbilityItem() {
-        return makeAbilityItem(ItemCreator.createItem(
-                Material.BARRIER,
-                "§cThis ability didn't load properly!",
-                List.of(
-                        "§8§oIf you're reading this, then",
-                        "§8§othis ability didn't load properly",
-                        "§8§ofrom the server's config.",
-                        "§8§oSorry. (._.7)"
-                )
-        ));
     }
 
     public static ItemStack makeAbilityItem(ItemStack itemStack) {

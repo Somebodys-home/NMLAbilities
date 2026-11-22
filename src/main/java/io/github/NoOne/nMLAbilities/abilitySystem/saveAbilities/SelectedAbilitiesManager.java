@@ -2,40 +2,30 @@ package io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities;
 
 import io.github.NoOne.nMLAbilities.NMLAbilities;
 import io.github.NoOne.nMLConfig.ConfigManager;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class SelectedAbilitiesManager extends ConfigManager {
-    private static Map<UUID, SelectedAbilities> selectedAbilitiesMap = new HashMap<>(); // hashmap of all the profiles of all the players online atm
+    private HashMap<UUID, SelectedAbilities> selectedAbilitiesMap = new HashMap<>(); // hashmap of all the selected abilities of all the players
 
     public SelectedAbilitiesManager(NMLAbilities nmlAbilities) {
         super(nmlAbilities.getSelectedAbilitiesConfig());
     }
 
-    public void createDefaultSelectedAbilities(Player player) {
-        SelectedAbilities selectedAbilities = new SelectedAbilities(
-                player.getInventory().getItem(0).getItemMeta().getDisplayName(),
-                player.getInventory().getItem(1).getItemMeta().getDisplayName(),
-                player.getInventory().getItem(2).getItemMeta().getDisplayName(),
-                player.getInventory().getItem(3).getItemMeta().getDisplayName());
-
+    public void addSelectedAbilities(Player player, SelectedAbilities selectedAbilities) {
         selectedAbilitiesMap.put(player.getUniqueId(), selectedAbilities);
-    }
-
-    public SelectedAbilities getSelectedAbilities(UUID uuid) {
-        return selectedAbilitiesMap.get(uuid);
     }
 
     public void loadSelectedAbilitiesFromConfig() {
         for (String id : config.getConfigurationSection("").getKeys(false)) {
             UUID uuid = UUID.fromString(id);
-            String style1 = config.getString(id + ".abilities.style");
-            String expertise1 = config.getString(id + ".abilities.expertise1");
-            String expertise2 = config.getString(id + ".abilities.expertise2");
-            String expertise3 = config.getString(id + ".abilities.expertise3");
+            ItemStack style1 = config.getItemStack(id + ".abilities.style");
+            ItemStack expertise1 = config.getItemStack(id + ".abilities.expertise1");
+            ItemStack expertise2 = config.getItemStack(id + ".abilities.expertise2");
+            ItemStack expertise3 = config.getItemStack(id + ".abilities.expertise3");
             SelectedAbilities selectedAbilities = new SelectedAbilities(style1, expertise1, expertise2, expertise3);
 
             selectedAbilitiesMap.put(uuid, selectedAbilities);
@@ -46,7 +36,6 @@ public class SelectedAbilitiesManager extends ConfigManager {
         for (UUID uuid : selectedAbilitiesMap.keySet()) {
             SelectedAbilities selectedAbilities = selectedAbilitiesMap.get(uuid);
 
-            selectedAbilities.errorAbilityCheck();
             config.set(uuid + ".abilities.style", selectedAbilities.getStyle());
             config.set(uuid + ".abilities.expertise1", selectedAbilities.getExpertise1());
             config.set(uuid + ".abilities.expertise2", selectedAbilities.getExpertise2());
@@ -58,10 +47,13 @@ public class SelectedAbilitiesManager extends ConfigManager {
         UUID uuid = player.getUniqueId();
         SelectedAbilities selectedAbilities = selectedAbilitiesMap.get(uuid);
 
-        selectedAbilities.errorAbilityCheck();
         config.set(uuid + ".abilities.style", selectedAbilities.getStyle());
         config.set(uuid + ".abilities.expertise1", selectedAbilities.getExpertise1());
         config.set(uuid + ".abilities.expertise2", selectedAbilities.getExpertise2());
         config.set(uuid + ".abilities.expertise3", selectedAbilities.getExpertise3());
+    }
+
+    public SelectedAbilities getSelectedAbilities(UUID uuid) {
+        return selectedAbilitiesMap.get(uuid);
     }
 }

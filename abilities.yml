@@ -1,6 +1,81 @@
 cf942050-e942-4990-a113-e3df70b289be:
   abilities:
-    style: Empty Style Ability
-    expertise1: Empty Expertise Ability
-    expertise2: Slash
-    expertise3: Empty Expertise Ability
+    style:
+      ==: org.bukkit.inventory.ItemStack
+      DataVersion: 5023
+      id: minecraft:light_blue_dye
+      count: 1
+      components:
+        minecraft:lore: '[{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"An
+          empty ability slot. Dunno why you''d put nothing here.",underlined:0b}],text:""}]'
+        minecraft:custom_name: '{extra:[{bold:0b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"Empty
+          Style Ability",underlined:0b}],text:""}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b}}'
+      schema_version: 1
+    expertise1:
+      ==: org.bukkit.inventory.ItemStack
+      DataVersion: 5023
+      id: minecraft:oak_sapling
+      count: 1
+      components:
+        minecraft:lore: '[{extra:[{bold:0b,color:"dark_gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+          1 Primordial ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"You
+          pick up and chuck a rock. It''s",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"not
+          magical or anything, you just",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"find
+          a rock and throw it.",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
+          ",underlined:0b},{color:"blue",italic:0b,text:"Single"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Range:
+          ",underlined:0b},{color:"green",italic:0b,text:"20m"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
+          ",underlined:0b},{color:"aqua",italic:0b,text:"5s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
+          ",underlined:0b},{color:"gold",italic:0b,text:"10⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Damage-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"dark_red",italic:0b,obfuscated:0b,strikethrough:0b,text:"1.5x",underlined:1b},{color:"dark_red",italic:0b,text:"
+          Physical Damage ⚔"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          (Any)",underlined:0b}],text:""}]'
+        minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers"]}'
+        minecraft:custom_name: '{extra:[{bold:1b,color:"dark_green",italic:0b,obfuscated:0b,strikethrough:0b,text:"Chuck
+          Rock",underlined:0b}],text:""}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":5,"nmlabilities:description":"§7You
+          pick up and chuck a rock. It''s/§7not magical or anything, you just/§7find
+          a rock and throw it./","nmlabilities:energy":10,"nmlabilities:expertiserequirements":"Primordial-1/","nmlabilities:weapons":"any"}}'
+      schema_version: 1
+    expertise2:
+      ==: org.bukkit.inventory.ItemStack
+      DataVersion: 5023
+      id: minecraft:diamond_sword
+      count: 1
+      components:
+        minecraft:lore: '[{extra:[{bold:0b,color:"dark_gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+          1 Soldier ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Yep.",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
+          ",underlined:0b},{color:"blue",italic:0b,text:"Area"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Range:
+          ",underlined:0b},{color:"green",italic:0b,text:"3m"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
+          ",underlined:0b},{color:"aqua",italic:0b,text:"2s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
+          ",underlined:0b},{color:"gold",italic:0b,text:"15⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Damage-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"120%",underlined:1b},{color:"white",italic:0b,text:"
+          Weapon Damage 🗡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Swords",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Axes",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Spears",underlined:0b}],text:""}]'
+        minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers"]}'
+        minecraft:custom_name: '{extra:[{bold:1b,color:"red",italic:0b,obfuscated:0b,strikethrough:0b,text:"Slash",underlined:0b}],text:""}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":2,"nmlabilities:description":"§7Yep./","nmlabilities:energy":15,"nmlabilities:expertiserequirements":"Soldier-1/","nmlabilities:weapons":"Sword/Axe/Spear/"}}'
+      schema_version: 1
+    expertise3:
+      ==: org.bukkit.inventory.ItemStack
+      DataVersion: 5023
+      id: minecraft:red_glazed_terracotta
+      count: 1
+      components:
+        minecraft:lore: '[{extra:[{bold:0b,color:"dark_gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+          10 Martial Artist ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:''"Officer
+          I dropkicked that child in'',underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:''self
+          defense."'',underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
+          ",underlined:0b},{color:"blue",italic:0b,text:"Single"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Range:
+          ",underlined:0b},{color:"green",italic:0b,text:"Depends"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
+          ",underlined:0b},{color:"aqua",italic:0b,text:"10s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
+          ",underlined:0b},{color:"gold",italic:0b,text:"15⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Damage-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"dark_red",italic:0b,obfuscated:0b,strikethrough:0b,text:"1-3x",underlined:1b},{color:"dark_red",italic:0b,text:"
+          Physical Damage ⚔"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Effects-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Damage
+          & range based on ",underlined:0b},{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"velocity",underlined:1b}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Gloves (both)",underlined:0b}],text:""}]'
+        minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers"]}'
+        minecraft:custom_name: '{extra:[{bold:1b,color:"dark_red",italic:0b,obfuscated:0b,strikethrough:0b,text:"Dropkick",underlined:0b}],text:""}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":10,"nmlabilities:description":''§7"Officer
+          I dropkicked that child in/§7self defense."/'',"nmlabilities:energy":15,"nmlabilities:expertiserequirements":"Martial
+          Artist-10/","nmlabilities:weapons":"Glove/"}}'
+      schema_version: 1

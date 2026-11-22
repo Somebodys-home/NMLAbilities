@@ -1,10 +1,9 @@
 package io.github.NoOne.nMLAbilities;
 
 import io.github.NoOne.menuSystem.MenuListener;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
-import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesListener;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.commands.ExpertiseCommand;
 import io.github.NoOne.nMLAbilities.commands.SetRotationCommand;
@@ -47,7 +46,6 @@ public class NMLAbilities extends JavaPlugin {
         getCommand("expertise").setExecutor(new ExpertiseCommand(this));
         getCommand("setRotation").setExecutor(new SetRotationCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
-        getServer().getPluginManager().registerEvents(new SelectedAbilitiesListener(this), this);
         getServer().getPluginManager().registerEvents(new AbilityListener(this), this);
         getServer().getPluginManager().registerEvents(new ExpertiseListener(this), this);
     }

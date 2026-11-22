@@ -1,18 +1,18 @@
-package io.github.NoOne.nMLAbilities.abilitySystem.abilityUse;
+package io.github.NoOne.nMLAbilities.abilitySystem;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
-import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.NMLAbilities;
-import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.UseAbilityEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.cooldownSystem.CooldownManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.AbilityChangeEvent;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilities;
 import io.github.NoOne.nMLAbilities.abilitySystem.saveAbilities.SelectedAbilitiesManager;
 import io.github.NoOne.nMLAbilities.expertiseSystem.ExpertiseAbilityItemMaker;
+import io.github.NoOne.nMLConfig.ConfigTemplate;
+import io.github.NoOne.nMLDamages.enums.DamageType;
+import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
 import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
-import io.github.NoOne.nMLSkills.SaveSkillsManager;
-import io.github.NoOne.nMLSkills.skillSystem.Skills;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -39,13 +39,13 @@ import java.util.UUID;
 public class AbilityListener implements Listener {
     private StatConfigManager statConfigManager;
     private SelectedAbilitiesManager selectedAbilitiesManager;
-    private SaveSkillsManager saveSkillsManager;
+    private ConfigTemplate selectedAbilitiesConfig;
     private ArrayList<Player> loadedAbilitiesPlayers;
 
     public AbilityListener(NMLAbilities nmlAbilities) {
         statConfigManager = nmlAbilities.getStatConfigManager();
         selectedAbilitiesManager = nmlAbilities.getSelectedAbilitiesManager();
-        saveSkillsManager = nmlAbilities.getSaveSkillsManager();
+        selectedAbilitiesConfig = nmlAbilities.getSelectedAbilitiesConfig();
         loadedAbilitiesPlayers = new ArrayList<>();
     }
 
@@ -114,29 +114,72 @@ public class AbilityListener implements Listener {
     }
 
     @EventHandler
-    public void resetAbilitiesOnJoin(PlayerJoinEvent event) {
+    public void setAbilitiesOnJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PlayerInventory playerInventory = player.getInventory();
         SelectedAbilities selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(player.getUniqueId());
-        Skills skills = saveSkillsManager.getSkills(player.getUniqueId());
 
-        if (!loadedAbilitiesPlayers.contains(player)) {
-            if (selectedAbilities == null) { // first time the player joins the server, give em the default ability items
-                playerInventory.setItem(0, AbilityItemManager.emptyStyleAbilityItem());
+        if (!loadedAbilitiesPlayers.contains(player)) { // if we haven't already loaded the abilities of the player
+            loadedAbilitiesPlayers.add(player);
+            playerInventory.setItem(0, AbilityItemManager.emptyStyleAbilityItem());
+
+            if (selectedAbilities == null) { // if the player doesn't have any saved abilities, then give them the default ones
                 playerInventory.setItem(1, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                 playerInventory.setItem(2, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
                 playerInventory.setItem(3, ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem());
-            } else { // load their abilities from config
-                playerInventory.setItem(0, AbilityItemManager.emptyStyleAbilityItem());
-                playerInventory.setItem(1, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise1()));
-                playerInventory.setItem(2, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise2()));
-                playerInventory.setItem(3, ExpertiseAbilityItemMaker.stringToAbilityItem(skills, selectedAbilities.getExpertise3()));
+                selectedAbilitiesManager.addSelectedAbilities(player, new SelectedAbilities(playerInventory));
+                selectedAbilitiesManager.saveSelectedAbilitiesToConfig(player);
+                selectedAbilitiesConfig.saveConfig();
+            } else { // load their abilities from config as items, just in case they would have lingering cooldown items when they rejoin
+                playerInventory.setItem(1, selectedAbilities.getExpertise1());
+                playerInventory.setItem(2, selectedAbilities.getExpertise2());
+                playerInventory.setItem(3, selectedAbilities.getExpertise3());
             }
-
-            loadedAbilitiesPlayers.add(player);
         }
     }
 
+    @EventHandler
+    public void onChangeAbility(AbilityChangeEvent event) {
+        Player player = event.getPlayer();
+        ItemStack newAbility = event.getNewAbility();
+        SelectedAbilities selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(player.getUniqueId());
+
+        if (event.isResettingAbilities()) {
+            selectedAbilities.clearSelectedAbilities();
+        } else {
+            switch (event.getChangedAbility()) {
+                case "expertise1" -> selectedAbilities.setExpertise1(newAbility);
+                case "expertise2" -> selectedAbilities.setExpertise2(newAbility);
+                case "expertise3" -> selectedAbilities.setExpertise3(newAbility);
+            }
+        }
+
+        selectedAbilitiesManager.saveSelectedAbilitiesToConfig(player);
+        selectedAbilitiesConfig.saveConfig();
+    }
+
+    @EventHandler
+    public void damageWithAbilityArrow(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player player && arrow.hasMetadata("ability_arrow")) {
+            MetadataValue meta = arrow.getMetadata("ability_arrow").get(0);
+            HashMap<DamageType, Double> damageMap = (HashMap<DamageType, Double>) meta.value();
+
+            event.setDamage(0);
+            arrow.remove();
+            if (event.getEntity() instanceof LivingEntity livingEntity) livingEntity.setNoDamageTicks(0);
+
+            Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) event.getEntity(), player, damageMap));
+        }
+    }
+
+    @EventHandler
+    public void noJumping(PlayerJumpEvent event) {
+        if (event.getPlayer().hasMetadata("ability_no_jump")) {
+            event.setCancelled(true);
+        }
+    }
+
+    // all of this is for making ability items unmovable in the inventory
     @EventHandler
     public void dontDropAbilities(PlayerDropItemEvent event) {
         if (AbilityItemManager.isAnAbility(event.getItemDrop().getItemStack())) {
@@ -207,27 +250,6 @@ public class AbilityListener implements Listener {
             if (AbilityItemManager.isAnAbility(item)) {
                 event.setCancelled(true);
             }
-        }
-    }
-
-    @EventHandler
-    public void damageWithAbilityArrow(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player player && arrow.hasMetadata("ability_arrow")) {
-            MetadataValue meta = arrow.getMetadata("ability_arrow").get(0);
-            HashMap<DamageType, Double> damageMap = (HashMap<DamageType, Double>) meta.value();
-
-            event.setDamage(0);
-            arrow.remove();
-            if (event.getEntity() instanceof LivingEntity livingEntity) livingEntity.setNoDamageTicks(0);
-
-            Bukkit.getPluginManager().callEvent(new CustomDamageEvent((LivingEntity) event.getEntity(), player, damageMap));
-        }
-    }
-
-    @EventHandler
-    public void noJumping(PlayerJumpEvent event) {
-        if (event.getPlayer().hasMetadata("ability_no_jump")) {
-            event.setCancelled(true);
         }
     }
 

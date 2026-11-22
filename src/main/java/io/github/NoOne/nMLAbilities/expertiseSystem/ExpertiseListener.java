@@ -42,7 +42,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExpertiseListener implements Listener {
     private NMLAbilities nmlAbilities;
@@ -58,13 +61,12 @@ public class ExpertiseListener implements Listener {
     @EventHandler
     public void expertiseAbilityEffect(UseAbilityEvent event) {
         Player player = event.getPlayer();
-        String[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
+        ItemStack[] selectedAbilities = selectedAbilitiesManager.getSelectedAbilities(event.getPlayer().getUniqueId()).getSelectedAbilitiesArray();
         ItemStack ability = event.getAbility();
-        String abilityName = AbilityItemManager.getRawAbilityName(ability);
         boolean toggleState = AbilityItemManager.getToggleState(ability);
 
-        if (event.getAbilityClass().equals("expertise") && Arrays.asList(selectedAbilities).contains(abilityName)) {
-            switch (abilityName) {
+        if (event.getAbilityClass().equals("expertise") && Arrays.asList(selectedAbilities).contains(ability)) {
+            switch (AbilityItemManager.getRawAbilityName(ability)) {
                 // Soldier abilities
                 case "Slash" -> SoldierAbilityEffects.slash(player);
                 case "X-Slash" -> SoldierAbilityEffects.xSlash(player);

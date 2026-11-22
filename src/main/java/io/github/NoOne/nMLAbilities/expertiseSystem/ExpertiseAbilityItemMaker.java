@@ -2,17 +2,6 @@ package io.github.NoOne.nMLAbilities.expertiseSystem;
 
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityUse.AbilityPrerequisite;
-import io.github.NoOne.nMLAbilities.expertiseSystem.annulled.AnnulledAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.assassin.AssassinAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.cavalier.CavalierAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.hallowed.HallowedAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marauder.MarauderAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.marksman.MarksmanAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist.MartialArtistAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.primordial.PrimordialAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.shieldHero.ShieldHeroAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.soldier.SoldierAbilityItems;
-import io.github.NoOne.nMLAbilities.expertiseSystem.sorcerer.SorcererAbilityItems;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLSkills.skillSystem.Skills;
@@ -154,67 +143,6 @@ public class ExpertiseAbilityItemMaker {
         }
 
         return expertiseItem;
-    }
-
-    // returns the associated item stack to its name
-    public static ItemStack stringToAbilityItem(Skills skills, String name) {
-        SoldierAbilityItems soldierAbilityItems = new SoldierAbilityItems(skills);
-        AssassinAbilityItems assassinAbilityItems = new AssassinAbilityItems(skills);
-        MarauderAbilityItems marauderAbilityItems = new MarauderAbilityItems(skills);
-        CavalierAbilityItems cavalierAbilityItems = new CavalierAbilityItems(skills);
-        MartialArtistAbilityItems martialArtistAbilityItems = new MartialArtistAbilityItems(skills);
-        ShieldHeroAbilityItems shieldHeroAbilityItems = new ShieldHeroAbilityItems(skills);
-        MarksmanAbilityItems marksmanAbilityItems = new MarksmanAbilityItems(skills);
-        SorcererAbilityItems sorcererAbilityItems = new SorcererAbilityItems(skills);
-        PrimordialAbilityItems primordialAbilityItems = new PrimordialAbilityItems(skills);
-        HallowedAbilityItems hallowedAbilityItems = new HallowedAbilityItems(skills);
-        AnnulledAbilityItems annulledAbilityItems = new AnnulledAbilityItems(skills);
-
-        return switch (name) {
-            case "Slash" -> soldierAbilityItems.slash();
-            case "X-Slash" -> soldierAbilityItems.xSlash();
-
-            // Assassin abilities
-            case "Slash & Dash" -> assassinAbilityItems.slashAndDash();
-
-            // Marauder abilities
-            case "Blade Tornado" -> marauderAbilityItems.bladeTornado();
-            case "Stomping Tantrum" -> marauderAbilityItems.stompingTantrum();
-
-            // Cavalier abilities
-            case "Seismic Slam" -> cavalierAbilityItems.seismicSlam();
-
-            // Martial Artist abilities
-            case "Dropkick" -> martialArtistAbilityItems.dropKick();
-
-            // Shield Hero abilities
-            case "Second Wind" -> shieldHeroAbilityItems.secondWind();
-            case "Shield Bash" -> shieldHeroAbilityItems.shieldBash();
-            case "Shield Punch" -> shieldHeroAbilityItems.shieldPunch();
-
-            // Marksman abilities
-            case "Arrow Hailstorm" -> marksmanAbilityItems.arrowHailstorm();
-            case "Steady Aim" -> marksmanAbilityItems.steadyAim();
-
-            // Sorcerer abilities
-            case "Magic Missile EX" -> sorcererAbilityItems.magicMissileEX();
-            case "Dragon's Breath" -> sorcererAbilityItems.dragonsBreath();
-
-            // Primordial abilities
-            case "Chuck Rock" -> primordialAbilityItems.chuckRock();
-            case "Pumpkin Bomb" -> primordialAbilityItems.pumpkinBomb();
-            case "Air Ball" -> primordialAbilityItems.airBall();
-
-            // Hallowed abilities
-            case "Halo" -> hallowedAbilityItems.halo();
-
-            // Annulled abilities
-            case "Black Hole" -> annulledAbilityItems.blackHole();
-
-            // misc
-            case "Empty Expertise Ability" -> ExpertiseAbilityItemMaker.emptyExpertiseAbilityItem();
-            default -> AbilityItemManager.errorLoadingAbilityItem();
-        };
     }
 
     private static ArrayList<String> linebreak(String string) {

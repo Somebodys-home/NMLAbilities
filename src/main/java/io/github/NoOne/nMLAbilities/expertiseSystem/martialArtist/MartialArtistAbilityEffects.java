@@ -1,10 +1,10 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.martialArtist;
 
-import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
+import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
+import io.github.NoOne.nMLAcrobatics.Speedometer;
 import io.github.NoOne.nMLDamages.DamageHelper;
 import io.github.NoOne.nMLDamages.enums.DamageType;
-import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
-import io.github.NoOne.nMLAcrobatics.maneuvers.Maneuvers;
+import io.github.NoOne.nMLDamages.event.CustomDamageEvent;
 import io.github.NoOne.nMLWeapons.AttackCooldownSystem;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -20,7 +20,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
     public static void dropKick(Player player) {
         HashMap<DamageType, Double> physicalDamage = getDamageForAbility(player, DamageType.PHYSICAL, 1);
         Vector dropkickDirection = player.getLocation().getDirection().setY(0).normalize();
-        double speed = Maneuvers.getSpeed(player) / 10;
+        double speed = Speedometer.getSpeedPerSecond(player) / 10;
         Vector dropKick = dropkickDirection.multiply(1.25 + (speed / 2)).setY(.4);
 
         if (!player.isOnGround()) { // so the dropKick is about the same both in the air and the ground
@@ -35,8 +35,8 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
         new BukkitRunnable() {
             int groundGracePeriod = 5;
             boolean inHitStop = false;
-            int hitstopGracePeriodTimer = 0; // the time that you have to chain hitstops
-            double incomingSpeed = Maneuvers.getSpeed(player) / 10;
+            int hitStopGracePeriodTimer = 0; // the time that you have to chain hitstops
+            double incomingSpeed = Speedometer.getSpeedPerSecond(player) / 10;
             HashSet<LivingEntity> alreadyHitEntities = new HashSet<>();
 
             @Override
@@ -47,7 +47,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
                 Location behind = baseLocation.clone().subtract(baseLocation.getDirection().setY(0).normalize().multiply(0.5));
 
                 groundGracePeriod--;
-                hitstopGracePeriodTimer--;
+                hitStopGracePeriodTimer--;
                 hitEntities.removeIf(alreadyHitEntities::contains);
 
                 if (!inHitStop) {
@@ -61,8 +61,8 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
                 }
 
                 // update speed when not in hitstop or its grace period
-                if (hitstopGracePeriodTimer <= 0 && !inHitStop) {
-                    incomingSpeed = Maneuvers.getSpeed(player) / 10;
+                if (hitStopGracePeriodTimer <= 0 && !inHitStop) {
+                    incomingSpeed = Speedometer.getSpeedPerSecond(player) / 10;
                 }
 
                 // you've hit something
@@ -161,7 +161,7 @@ public class MartialArtistAbilityEffects extends AbilityEffectsHelper {
 
                                     player.playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, .5f);
                                     inHitStop = false;
-                                    hitstopGracePeriodTimer = 5; // ticks in when the hitstop can be chained
+                                    hitStopGracePeriodTimer = 5; // ticks in when the hitstop can be chained
 
                                     cancel();
                                 }
