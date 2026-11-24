@@ -1,9 +1,9 @@
 package io.github.NoOne.nMLAbilities.expertiseSystem.marksman;
 
-import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsHelper;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.AbilityEffectsTracker;
 import io.github.NoOne.nMLAbilities.abilitySystem.abilityEffects.OngoingAbilityEffect;
+import io.github.NoOne.nMLDamages.enums.DamageType;
 import io.github.NoOne.nMLEnergy.EnergyManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLWeapons.ArrowTracker;
@@ -80,7 +80,6 @@ public class MarksmanAbilityEffects extends AbilityEffectsHelper {
     }
 
     public static void arrowHailstorm(Player player) {
-        HashMap<DamageType, Double> damage = getDamageForAbility(player, .35);
         World world = player.getWorld();
         int maxTargetingRange = 15;
         int radius = 6;
@@ -164,7 +163,7 @@ public class MarksmanAbilityEffects extends AbilityEffectsHelper {
                     Location startingLocation = finalReticuleCenterLocation.clone().add(xOffset, 30, zOffset);
                     Arrow arrow = world.spawnArrow(startingLocation, new Vector(0, -1, 0), 3f, 3f);
 
-                    turnIntoAbilityArrow(arrow, player, damage, false, 150);
+                    turnIntoAbilityArrow(arrow, player, getDamageForAbility(player, .35), false, 150);
                     setNoDamageTicks(arrow, 5);
 
                     if (i == 0 || i == 3) {

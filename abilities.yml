@@ -27,32 +27,50 @@ cf942050-e942-4990-a113-e3df70b289be:
     expertise2:
       ==: org.bukkit.inventory.ItemStack
       DataVersion: 5023
-      id: minecraft:magenta_dye
+      id: minecraft:target
       count: 1
       components:
-        minecraft:lore: '[{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"An
-          empty ability slot. Dunno why you''d put nothing here.",underlined:0b}],text:""}]'
-        minecraft:custom_name: '{extra:[{bold:0b,color:"light_purple",italic:0b,obfuscated:0b,strikethrough:0b,text:"Empty
-          Expertise Ability",underlined:0b}],text:""}'
-        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b}}'
+        minecraft:lore: '[{extra:[{bold:0b,color:"dark_gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+          8 Marksman ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Slow
+          your movements to increase your",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"accuracy,
+          making critical shots land",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"easier.",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
+          ",underlined:0b},{color:"blue",italic:0b,text:"Self, Toggle"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
+          ",underlined:0b},{color:"aqua",italic:0b,text:"10s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
+          ",underlined:0b},{color:"gold",italic:0b,text:"15⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Effects-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"-50%
+          ",underlined:0b},{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Speed",underlined:1b},{color:"gray",italic:0b,text:"
+          ✦"}],text:""},{extra:[{bold:0b,color:"blue",italic:0b,obfuscated:0b,strikethrough:0b,text:"+30%
+          ",underlined:0b},{bold:0b,color:"blue",italic:0b,obfuscated:0b,strikethrough:0b,text:"Crit.
+          Chance",underlined:1b},{color:"blue",italic:0b,text:" ☠"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Bow & Quiver",underlined:0b}],text:""}]'
+        minecraft:custom_name: '{extra:[{bold:1b,color:"green",italic:0b,obfuscated:0b,strikethrough:0b,text:"Steady
+          Aim",underlined:0b}],text:""}'
+        minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers"]}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":10,"nmlabilities:description":"§7Slow
+          your movements to increase your/§7accuracy, making critical shots land/§7easier./","nmlabilities:energy":15,"nmlabilities:expertiserequirements":"Marksman-8/","nmlabilities:originalitem":"TARGET","nmlabilities:toggle":0b,"nmlabilities:weapons":"Bow/"}}'
       schema_version: 1
     expertise3:
       ==: org.bukkit.inventory.ItemStack
       DataVersion: 5023
-      id: minecraft:diamond_sword
+      id: minecraft:target
       count: 1
       components:
         minecraft:lore: '[{extra:[{bold:0b,color:"dark_gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
-          1 Soldier ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Yep.",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
+          30 Marksman ",underlined:0b},{color:"green",italic:0b,text:"✔"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"EXTREME
+          WEATHER WARNING: A storm of",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"hail-sized
+          arrows has been",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"forecasted
+          in your area. Find",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"shelter
+          immediately.",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Target:
           ",underlined:0b},{color:"blue",italic:0b,text:"Area"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Range:
-          ",underlined:0b},{color:"green",italic:0b,text:"3m"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
-          ",underlined:0b},{color:"aqua",italic:0b,text:"2s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
-          ",underlined:0b},{color:"gold",italic:0b,text:"15⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Damage-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"120%",underlined:1b},{color:"white",italic:0b,text:"
-          Weapon Damage 🗡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
-          Swords",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
-          Axes",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
-          Spears",underlined:0b}],text:""}]'
+          ",underlined:0b},{color:"green",italic:0b,text:"22m"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Duration:
+          ",underlined:0b},{color:"dark_aqua",italic:0b,text:"5s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cooldown:
+          ",underlined:0b},{color:"aqua",italic:0b,text:"25s"}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Cost:
+          ",underlined:0b},{color:"gold",italic:0b,text:"30⚡"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Damage-----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"35%",underlined:1b},{color:"white",italic:0b,text:"
+          Weapon Damage 🗡 "},{color:"dark_gray",italic:1b,text:"(per arrow)"}],text:""},{extra:[{bold:1b,color:"aqua",italic:0b,obfuscated:0b,strikethrough:0b,text:"-----------Weapons----------",underlined:0b}],text:""},{extra:[{bold:0b,color:"yellow",italic:0b,obfuscated:0b,strikethrough:0b,text:"-
+          Bow & Quiver",underlined:0b}],text:""}]'
+        minecraft:custom_name: '{extra:[{bold:1b,color:"green",italic:0b,obfuscated:0b,strikethrough:0b,text:"Arrow
+          Hailstorm",underlined:0b}],text:""}'
         minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers"]}'
-        minecraft:custom_name: '{extra:[{bold:1b,color:"red",italic:0b,obfuscated:0b,strikethrough:0b,text:"Slash",underlined:0b}],text:""}'
-        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":2,"nmlabilities:description":"§7Yep./","nmlabilities:energy":15,"nmlabilities:expertiserequirements":"Soldier-1/","nmlabilities:weapons":"Sword/Axe/Spear/"}}'
+        minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b,"nmlabilities:cooldown":25,"nmlabilities:description":"§7EXTREME
+          WEATHER WARNING: A storm of/§7hail-sized arrows has been/§7forecasted in
+          your area. Find/§7shelter immediately./","nmlabilities:energy":30,"nmlabilities:expertiserequirements":"Marksman-30/","nmlabilities:weapons":"Bow/"}}'
       schema_version: 1
